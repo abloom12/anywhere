@@ -1,0 +1,38 @@
+{
+  "name": "client",
+  "private": true,
+  "version": "5.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "chalk": "^5.3.0",
+    "chart.js": "^4.4.3",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
+    "filepond": "^4.31.1",
+    "immer": "^10.1.1",
+    "reselect": "^5.1.1",
+    "signature_pad": "^5.0.2",
+    "tailwind-merge": "^2.4.0",
+    "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@total-typescript/ts-reset": "^0.5.1",
+    "@types/node": "^20.14.11",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.39",
+    "tailwindcss": "^3.4.6",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.4",
+    "vitest": "^2.0.3"
+  }
+}
