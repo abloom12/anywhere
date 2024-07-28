@@ -309,3 +309,46 @@ function createRouter(options?: RouterOptions) {
 }
 
 export { createRouter };
+
+// USAGE EXAMPLE
+// import { createRouter } from "./lib/router";
+//
+// const router = createRouter();
+// let authToken: string | null = null;
+//
+// router.use(async ({ next, path }) => {
+//   if (!authToken && path !== "/login") {
+//     router.navigate("/login");
+//     return;
+//   }
+//   await next();
+// });
+//
+// router.on("/login", () => {
+//   return {
+//     skeleton: "<div>Loading...</div>",
+//     loadModule: async () => {
+//       await new Promise((resolve) => setTimeout(resolve, 5000));
+//       const element = document.createElement("div");
+//       element.innerHTML = `<h1>Login Page</h1>`;
+//       return element;
+//     },
+//   };
+// });
+//
+// router.on("/", () => {
+//   return {
+//     skeleton: "<div>Home Loading...</div>",
+//     loadModule: async () => {
+//       const element = document.createElement("div");
+//       element.innerHTML = `<h1>Home Page</h1>`;
+//       return element;
+//     },
+//   };
+// });
+//
+// router.on("/user/:id", () => {})
+// router.on("/product/:category/:id", () => {})
+// router.on("/settings/:section?", () => {})
+// router.on("/blog/*", () => {})
+// router.on("*", () => {}) //// wildcard catch all must be last round added

@@ -2,7 +2,8 @@
 //TODO: do we want to use some form of actions? reducer?
 
 import { produce } from "immer";
-import { createSelector } from "reselect";
+//import { createSelector } from "reselect";
+import { log } from "@/util/logger";
 
 function shallowEqual(obj1: any, obj2: any): boolean {
   if (obj1 === obj2) return true;
@@ -80,30 +81,18 @@ function createStore(
     selector: (state: State) => T,
     listener: (selectedState: T) => void
   ) {
-    const memoizedSelector = createSelector(selector, (result) => result);
-
-    const selectedState = memoizedSelector(state);
+    log("subscribe fired");
+    const selectedState = selector(state);
     const previousSelection = { current: selectedState };
 
-    const wrappedListener = (state: State) => {
-      const selectedState = memoizedSelector(state);
-      if (!shallowEqual(previousSelection.current, selectedState)) {
-        listener(selectedState);
-        previousSelection.current = selectedState;
-      }
-    };
-
     subscriptions.push({
-      selector: memoizedSelector,
-      listener: wrappedListener,
+      selector,
+      listener,
       previousSelection,
     });
-    listener(selectedState);
 
     return () => {
-      const index = subscriptions.findIndex(
-        (s) => s.listener === wrappedListener
-      );
+      const index = subscriptions.findIndex((s) => s.listener === listener);
       if (index > -1) {
         subscriptions.splice(index, 1);
       }
@@ -113,6 +102,7 @@ function createStore(
   function setState(
     producer: (draft: State) => void | Array<(draft: State) => void>
   ): void {
+    log("setstate fired");
     const newState = produce(state, (draft) => {
       if (Array.isArray(producer)) {
         producer.forEach((fn) => fn(draft));
@@ -138,6 +128,7 @@ function createStore(
     }
 
     subscriptions.forEach(({ selector, listener, previousSelection }) => {
+      log("setstate listener fired");
       const selectedState = selector(state);
       if (!shallowEqual(previousSelection.current, selectedState)) {
         listener(selectedState);

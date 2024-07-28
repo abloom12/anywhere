@@ -72,3 +72,57 @@ class Form {
 }
 
 export { Form };
+
+//* normal form
+// new Form({
+//   fields: [
+//     [
+//       field.input("text", "firstname", "First Name"),
+//       field.input("text", "lastname", "Last Name"),
+//     ],
+//     field.select("state", "State"),
+//     field.textarea("about", "About yourself"),
+//   ],
+// });
+
+//* multi step form idea 1
+// new Form({
+//   fields: [
+//     [
+//       field.input("text", "firstname", "First Name"),
+//       field.input("text", "lastname", "Last Name"),
+//     ],
+//     field.select("state", "State"),
+//     field.textarea("about", "About yourself"),
+//   ],
+//   steps: {
+//     0: {
+//       name: "step one",
+//       fields: ["firstname", "lastname", "state"],
+//     },
+//     1: {
+//       name: "step two",
+//       fields: ["about"],
+//     },
+//   },
+// });
+
+//* multi step form idea 2
+// new Form({
+//   fields: [
+//     {
+//       name: "step one",
+//       fields: [
+//         [
+//           field.input("text", "firstname", "First Name"),
+//           field.input("text", "lastname", "Last Name"),
+//         ],
+//         field.select("state", "State"),
+//       ],
+//     },
+//     {
+//       name: "step two",
+//       fields: [field.textarea("about", "About yourself")],
+//     },
+//   ],
+// });
