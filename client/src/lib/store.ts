@@ -29,17 +29,27 @@ type Subscription<T> = {
   previousSelection: { current: T };
 };
 
+// type Middleware = (params: {
+//   next: Function;
+//   path: string;
+//   query: { [key: string]: string };
+// }) => Promise<void> | void;
+
 function createStore(
   initialState: State,
   historyLimit: number = 100
 ): StoreMethods {
   let state = initialState;
-  let subscriptions: Array<Subscription<any>> = [];
+  const subscriptions: Array<Subscription<any>> = [];
+  //const middlewares: Array<Middleware> = [];
+  // history
   let head = node(initialState);
   let current = head;
   let tail = head;
   let size = 1;
 
+  // Public APIs
+  //----------------------------
   function subscribe<T>(
     selector: (state: State) => T,
     listener: (selectedState: T) => void

@@ -1,208 +1,130 @@
+import chalk from 'chalk';
+import { log } from '@/util/logger';
+
 type RouterOptions = {};
 
-type RouteAction = (
-  params?: { [key: string]: string },
-  query?: { [key: string]: string }
-) => { skeleton: string; loadModule: () => Promise<HTMLElement> };
+type RouteAction = (query?: { [key: string]: string }) => {
+  skeleton: string;
+  loadModule: () => Promise<HTMLElement>;
+};
 
 type Routes = {
   [path: string]: RouteAction;
 };
 
-type NestedRoute = {
-  path: string;
-  action: RouteAction;
-  children?: NestedRoute[];
-};
-
 type MatchedRoute = {
-  action: any;
-  params: { [key: string]: string };
-  queryString: ParsedQuery;
-  hashString: string;
+  action: RouteAction;
+  query?: { [key: string]: string };
+  hashString?: string;
 } | null;
 
 type ParsedQuery = {
   [key: string]: string;
 };
 
-type Middleware = (params: {
-  next: Function;
-  path: string;
-  query: { [key: string]: string };
-}) => Promise<void> | void;
+type Middleware = (params: { next: Function; path: string }) => Promise<void> | void;
 
 function stringToElement(htmlString: string): HTMLElement {
-  const template = document.createElement("template");
+  const template = document.createElement('template');
   template.innerHTML = htmlString.trim();
   return template.content.firstElementChild as HTMLElement;
 }
 
 function createRouter(options?: RouterOptions) {
   const routes: Routes = {};
-  const middlewares: Middleware[] = [];
+  const middlewares: Array<Middleware> = [];
 
   function parseQuery(queryString: string): ParsedQuery {
     if (!queryString) return {};
 
     return queryString
       .substring(1)
-      .split("&")
-      .reduce((acc, pair) => {
-        let [key, value] = pair.split("=");
-        key = decodeURIComponent(key);
-        value = decodeURIComponent(value || "");
+      .split('&')
+      .reduce(
+        (acc, pair) => {
+          let [key, value] = pair.split('=');
 
-        if (key.endsWith("[]")) {
-          key = key.substring(0, key.length - 2);
-          if (!acc[key]) {
-            acc[key] = [];
+          key = decodeURIComponent(key);
+          value = decodeURIComponent(value || '');
+
+          // array paramaters check
+          if (key.endsWith('[]')) {
+            key = key.substring(0, key.length - 2);
+
+            if (!acc[key]) {
+              acc[key] = [];
+            }
+
+            acc[key].push(value);
+
+            return acc;
           }
-          acc[key].push(value);
-        } else if (acc[key]) {
-          if (!Array.isArray(acc[key])) {
-            acc[key] = [acc[key]];
+
+          // same param check
+          if (acc[key]) {
+            if (!Array.isArray(acc[key])) {
+              acc[key] = [acc[key]];
+            }
+
+            acc[key].push(value);
+
+            return acc;
           }
-          acc[key].push(value);
-        } else {
-          if (value === "true" || value === "false") {
-            acc[key] = value === "true";
+
+          // default
+          if (value === 'true' || value === 'false') {
+            acc[key] = value === 'true';
           } else if (!isNaN(Number(value))) {
             acc[key] = Number(value);
           } else {
             acc[key] = value;
           }
-        }
 
-        return acc;
-      }, {} as { [key: string]: any });
+          return acc;
+        },
+        {} as { [key: string]: any },
+      );
   }
 
   function matchRoute(path: string): MatchedRoute {
-    const [urlPath, hashFragment] = path.split("#");
-    const [pathname, queryString] = urlPath.split("?");
-    const queryParams = parseQuery(queryString || "");
+    const routePaths: string[] = Object.keys(routes);
 
-    if (pathname === "/") {
-      const route = routes["/"];
-      if (route) {
+    log(chalk.yellow('Searching for route match....'));
+    for (const routePath of routePaths) {
+      const regexStr = routePath.replace(/:[^\s/]+/g, '([^/]+)');
+      const regex = new RegExp(`^${regexStr}$`);
+
+      log(`Checking path ${chalk.cyan.bold(path)} against route ${chalk.cyan.bold(routePath)}`);
+
+      if (regex.test(path)) {
+        log(chalk.green('Matched Route Found'));
         return {
-          action: route,
-          params: {},
-          queryString: queryParams,
-          hashString: hashFragment || "",
+          action: routes[routePath],
         };
       }
-      return null;
     }
 
-    const segments = pathname.split("/").filter(Boolean);
-    const params: { [key: string]: string } = {};
-    let matchedRoute: MatchedRoute = null;
-
-    const checkMatch = (routePath: string, segment: string): boolean => {
-      const paramNames: string[] = [];
-      const regexPath = routePath
-        .replace(/:([^\/]+)\??/g, (_, paramName) => {
-          paramNames.push(paramName);
-          return "([^\\/]+)?";
-        })
-        .replace(/\*/g, "(.*)");
-
-      const regex = new RegExp(`^${regexPath.replace(/^\//, "")}$`);
-      const match = segment.match(regex);
-
-      if (match) {
-        paramNames.forEach((paramName, index) => {
-          params[paramName] = match[index + 1] || "";
-        });
-        return true;
-      }
-
-      return false;
-    };
-
-    const findRoute = (
-      currentRoutes: Routes,
-      segmentIndex: number
-    ): MatchedRoute => {
-      if (segmentIndex >= segments.length) {
-        if (currentRoutes["*"]) {
-          return {
-            action: currentRoutes["*"],
-            params,
-            queryString: queryParams,
-            hashString: hashFragment || "",
-          };
-        }
-        return null;
-      }
-
-      const segment = segments[segmentIndex];
-      for (const route in currentRoutes) {
-        if (checkMatch(route, segment)) {
-          if (typeof currentRoutes[route] === "function") {
-            return {
-              action: currentRoutes[route],
-              params,
-              queryString: queryParams,
-              hashString: hashFragment || "",
-            };
-          } else if (typeof currentRoutes[route] === "object") {
-            return findRoute(currentRoutes[route], segmentIndex + 1);
-          }
-        }
-      }
-
-      if (currentRoutes["*"]) {
-        return {
-          action: currentRoutes["*"],
-          params,
-          queryString: queryParams,
-          hashString: hashFragment || "",
-        };
-      }
-
-      return null;
-    };
-
-    matchedRoute = findRoute(routes, 0);
-
-    return matchedRoute;
-  }
-
-  function registerNestedRoutes(
-    basePath: string,
-    nestedRoutes: NestedRoute[]
-  ): void {
-    nestedRoutes.forEach(({ path, action, children }) => {
-      const fullPath = `${basePath}${path}`.replace(/\/+/g, "/");
-      routes[fullPath] = action;
-      if (children) {
-        registerNestedRoutes(fullPath, children);
-      }
-    });
+    return null;
   }
 
   function linkHandler(e: MouseEvent) {
     if (
       (e.ctrlKey || e.metaKey) &&
       e.target instanceof HTMLElement &&
-      e.target.tagName.toLowerCase() === "a"
+      e.target.tagName.toLowerCase() === 'a'
     ) {
       return false;
     }
 
-    let location =
-      e.target instanceof HTMLElement && e.target.getAttribute("href");
-    if (typeof location === "undefined" || location === null) {
+    let location = e.target instanceof HTMLElement && e.target.getAttribute('href');
+    if (typeof location === 'undefined' || location === null) {
       return false;
     }
 
     if (
-      typeof location === "string" &&
+      typeof location === 'string' &&
       location.match(/^(http|https)/) &&
-      typeof URL !== "undefined"
+      typeof URL !== 'undefined'
     ) {
       try {
         const u = new URL(location);
@@ -213,23 +135,23 @@ function createRouter(options?: RouterOptions) {
     e.preventDefault();
     e.stopPropagation();
 
-    if (typeof location === "string") {
+    if (typeof location === 'string') {
       navigate(location);
     }
   }
 
   function updateLinks() {
-    [...document.querySelectorAll("a")].forEach((link) => {
-      link.removeEventListener("click", linkHandler);
-      link.addEventListener("click", linkHandler);
+    [...document.querySelectorAll('a')].forEach(link => {
+      link.removeEventListener('click', linkHandler);
+      link.addEventListener('click', linkHandler);
     });
   }
 
   function updateContent(content: HTMLElement): void {
-    const main = document.getElementById("app");
+    const main = document.getElementById('app');
 
     if (main) {
-      main.innerHTML = "";
+      main.innerHTML = '';
 
       main.appendChild(content);
     }
@@ -240,29 +162,27 @@ function createRouter(options?: RouterOptions) {
     const path = url.pathname;
     const query = parseQuery(url.search);
 
-    const matchedRoute = matchRoute(path);
-
     const runMiddlewares = async (index: number): Promise<void> => {
       if (index < middlewares.length) {
         await middlewares[index]({
           next: async () => await runMiddlewares(index + 1),
           path,
-          query,
         });
+
         return;
       }
 
+      const matchedRoute = matchRoute(path);
+
       if (matchedRoute) {
-        const { skeleton, loadModule } = matchedRoute.action(
-          matchedRoute.params,
-          query
-        );
+        const { skeleton, loadModule } = matchedRoute.action(query);
 
         updateContent(stringToElement(skeleton));
 
         const content = await loadModule();
 
         updateContent(content);
+
         updateLinks();
 
         return;
@@ -272,30 +192,26 @@ function createRouter(options?: RouterOptions) {
     await runMiddlewares(0);
   }
 
-  window.addEventListener("popstate", () => {
-    router().catch((error) => {
-      console.log("Router error:", error);
+  window.addEventListener('popstate', () => {
+    router().catch(error => {
+      console.log('Router error:', error);
     });
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    updateLinks();
   });
 
   // Public APIs
   //----------------------------
-  function on(
-    path: string,
-    action: RouteAction,
-    nestedRoutes?: NestedRoute[]
-  ): void {
-    const routePath = path || "/";
+  function on(path: string, action: RouteAction): void {
+    const routePath = path || '/';
     routes[routePath] = action;
-
-    if (nestedRoutes) {
-      registerNestedRoutes(routePath, nestedRoutes);
-    }
   }
   function navigate(url: string): void {
-    history.pushState(null, "", url);
-    router().catch((error) => {
-      console.log("Router error:", error);
+    history.pushState(null, '', url);
+    router().catch(error => {
+      console.log('Router error:', error);
     });
   }
   function use(middleware: Middleware): void {
@@ -312,6 +228,7 @@ function createRouter(options?: RouterOptions) {
 export { createRouter };
 
 // USAGE EXAMPLE
+//-------------------------------------------------------
 // import { createRouter } from "./lib/router";
 //
 // const router = createRouter();
@@ -348,8 +265,8 @@ export { createRouter };
 //   };
 // });
 //
+// Other Route Types
+//-------------------------------------------------------
 // router.on("/user/:id", () => {})
 // router.on("/product/:category/:id", () => {})
-// router.on("/settings/:section?", () => {})
-// router.on("/blog/*", () => {})
-// router.on("*", () => {}) //// wildcard catch all must be last round added
+// router.on("*", () => {})
