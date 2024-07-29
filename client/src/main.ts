@@ -32,9 +32,7 @@ const store = createStore({
 });
 
 store.subscribe(
-  (state) => {
-    return state.age;
-  },
+  (state) => state.age,
   (selectedState) => {
     console.log(selectedState, "was updated");
   }

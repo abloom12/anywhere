@@ -3,45 +3,8 @@
 
 import { produce } from "immer";
 //import { createSelector } from "reselect";
+import { node, shallowCompareObjects } from "@/util";
 import { log } from "@/util/logger";
-
-function shallowEqual(obj1: any, obj2: any): boolean {
-  if (obj1 === obj2) return true;
-
-  if (
-    typeof obj1 !== "object" ||
-    obj1 === null ||
-    typeof obj2 !== "object" ||
-    obj2 === null
-  ) {
-    return false;
-  }
-
-  const keys1 = Object.keys(obj1);
-  const keys2 = Object.keys(obj2);
-
-  if (keys1.length !== keys2.length) return false;
-
-  for (let i = 0; i < keys1.length; i++) {
-    if (obj1[keys1[i]] !== obj2[keys1[i]]) return false;
-  }
-
-  return true;
-}
-
-type Node<T> = {
-  state: T;
-  prev: Node<T> | null;
-  next: Node<T> | null;
-};
-
-function node<T>(state: T): Node<T> {
-  return {
-    state,
-    prev: null,
-    next: null,
-  };
-}
 
 type State = Record<string, any>;
 type ListenerFunction<T> = (selectedState: T) => void;
@@ -130,7 +93,7 @@ function createStore(
     subscriptions.forEach(({ selector, listener, previousSelection }) => {
       log("setstate listener fired");
       const selectedState = selector(state);
-      if (!shallowEqual(previousSelection.current, selectedState)) {
+      if (!shallowCompareObjects(previousSelection.current, selectedState)) {
         listener(selectedState);
         previousSelection.current = selectedState;
       }

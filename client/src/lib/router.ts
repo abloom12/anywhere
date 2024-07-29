@@ -261,6 +261,7 @@ function createRouter(options?: RouterOptions) {
         updateContent(stringToElement(skeleton));
 
         const content = await loadModule();
+
         updateContent(content);
         updateLinks();
 

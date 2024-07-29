@@ -34,25 +34,87 @@ export async function fetchData(service: string, retrieveData: {}) {
   }
 }
 
-export function shallowEqual(obj1: any, obj2: any): boolean {
-  if (obj1 === obj2) return true;
+type Node<T> = {
+  state: T;
+  prev: Node<T> | null;
+  next: Node<T> | null;
+};
+
+export function node<T>(state: T): Node<T> {
+  return {
+    state,
+    prev: null,
+    next: null,
+  };
+}
+
+export function shallowCompareObjects<T>(objA: T, objB: T): boolean {
+  if (Object.is(objA, objB)) {
+    return true;
+  }
 
   if (
-    typeof obj1 !== "object" ||
-    obj1 === null ||
-    typeof obj2 !== "object" ||
-    obj2 === null
+    typeof objA !== "object" ||
+    objA === null ||
+    typeof objB !== "object" ||
+    objB === null
   ) {
     return false;
   }
 
-  const keys1 = Object.keys(obj1);
-  const keys2 = Object.keys(obj2);
+  const keysA = Object.keys(objA);
+  const keysB = Object.keys(objB);
 
-  if (keys1.length !== keys2.length) return false;
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
 
-  for (let i = 0; i < keys1.length; i++) {
-    if (obj1[keys1[i]] !== obj2[keys1[i]]) return false;
+  for (const keyA of keysA) {
+    if (
+      !Object.prototype.hasOwnProperty.call(objB, keyA as string) ||
+      !Object.is(objA[keyA as keyof T], objB[keyA as keyof T])
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function shallowCompareMaps<K, V>(
+  mapA: Map<K, V>,
+  mapB: Map<K, V>
+): boolean {
+  if (Object.is(mapA, mapB)) {
+    return true;
+  }
+
+  if (mapA.size !== mapB.size) {
+    return false;
+  }
+
+  for (const [key, value] of mapA) {
+    if (!Object.is(value, mapB.get(key))) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function shallowCompareSets<V>(setA: Set<V>, setB: Set<V>): boolean {
+  if (Object.is(setA, setB)) {
+    return true;
+  }
+
+  if (setA.size !== setB.size) {
+    return false;
+  }
+
+  for (const value of setA) {
+    if (!setB.has(value)) {
+      return false;
+    }
   }
 
   return true;
