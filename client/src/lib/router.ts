@@ -1,3 +1,5 @@
+// TODO: handle 404s '*'
+
 import chalk from 'chalk';
 import { log } from '@/util/logger';
 
@@ -161,6 +163,7 @@ function createRouter(options?: RouterOptions) {
     const url = new URL(window.location.href);
     const path = url.pathname;
     const query = parseQuery(url.search);
+    log(chalk.yellow(`Navigating to ${path}`));
 
     const runMiddlewares = async (index: number): Promise<void> => {
       if (index < middlewares.length) {
@@ -268,5 +271,5 @@ export { createRouter };
 // Other Route Types
 //-------------------------------------------------------
 // router.on("/user/:id", () => {})
-// router.on("/product/:category/:id", () => {})
-// router.on("*", () => {})
+// router.on("/user/:id/note/:id", () => {})
+// router.on("*", () => { 404 catch all })
