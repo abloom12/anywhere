@@ -1,4 +1,5 @@
 // TODO: handle 404s '*'
+// TODO: add try/catch in router
 
 import chalk from 'chalk';
 import { log } from '@/util/logger';
@@ -35,6 +36,7 @@ function stringToElement(htmlString: string): HTMLElement {
 function createRouter(options?: RouterOptions) {
   const routes: Routes = {};
   const middlewares: Array<Middleware> = [];
+  const appRoot: HTMLElement | null = document.getElementById('app');
 
   function parseQuery(queryString: string): ParsedQuery {
     if (!queryString) return {};
@@ -150,12 +152,10 @@ function createRouter(options?: RouterOptions) {
   }
 
   function updateContent(content: HTMLElement): void {
-    const main = document.getElementById('app');
+    if (appRoot) {
+      appRoot.innerHTML = '';
 
-    if (main) {
-      main.innerHTML = '';
-
-      main.appendChild(content);
+      appRoot.appendChild(content);
     }
   }
 
@@ -229,47 +229,3 @@ function createRouter(options?: RouterOptions) {
 }
 
 export { createRouter };
-
-// USAGE EXAMPLE
-//-------------------------------------------------------
-// import { createRouter } from "./lib/router";
-//
-// const router = createRouter();
-// let authToken: string | null = null;
-//
-// router.use(async ({ next, path }) => {
-//   if (!authToken && path !== "/login") {
-//     router.navigate("/login");
-//     return;
-//   }
-//   await next();
-// });
-//
-// router.on("/login", () => {
-//   return {
-//     skeleton: "<div>Loading...</div>",
-//     loadModule: async () => {
-//       await new Promise((resolve) => setTimeout(resolve, 5000));
-//       const element = document.createElement("div");
-//       element.innerHTML = `<h1>Login Page</h1>`;
-//       return element;
-//     },
-//   };
-// });
-//
-// router.on("/", () => {
-//   return {
-//     skeleton: "<div>Home Loading...</div>",
-//     loadModule: async () => {
-//       const element = document.createElement("div");
-//       element.innerHTML = `<h1>Home Page</h1>`;
-//       return element;
-//     },
-//   };
-// });
-//
-// Other Route Types
-//-------------------------------------------------------
-// router.on("/user/:id", () => {})
-// router.on("/user/:id/note/:id", () => {})
-// router.on("*", () => { 404 catch all })
