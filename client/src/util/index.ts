@@ -8,9 +8,9 @@ export async function fetchData(service: string, retrieveData: {}) {
 
   try {
     let response = await fetch(URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: "AUTH_TOKEN", ...retrieveData }),
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: 'AUTH_TOKEN', ...retrieveData }),
       signal: controller.signal,
     });
 
@@ -24,7 +24,7 @@ export async function fetchData(service: string, retrieveData: {}) {
 
     return data;
   } catch (error: any) {
-    if (error.name === "AbortError") {
+    if (error.name === 'AbortError') {
       console.log(`Request to ${service} timed out`);
     } else {
       console.log(`There was a problem with ${service}`, error.message);
@@ -53,12 +53,7 @@ export function shallowCompareObjects<T>(objA: T, objB: T): boolean {
     return true;
   }
 
-  if (
-    typeof objA !== "object" ||
-    objA === null ||
-    typeof objB !== "object" ||
-    objB === null
-  ) {
+  if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
     return false;
   }
 
@@ -81,10 +76,7 @@ export function shallowCompareObjects<T>(objA: T, objB: T): boolean {
   return true;
 }
 
-export function shallowCompareMaps<K, V>(
-  mapA: Map<K, V>,
-  mapB: Map<K, V>
-): boolean {
+export function shallowCompareMaps<K, V>(mapA: Map<K, V>, mapB: Map<K, V>): boolean {
   if (Object.is(mapA, mapB)) {
     return true;
   }
@@ -120,31 +112,8 @@ export function shallowCompareSets<V>(setA: Set<V>, setB: Set<V>): boolean {
   return true;
 }
 
-export function uniqueId() {
-  let idCounter = 0;
-
-  function isValidPrefix(prefix: string): boolean {
-    return typeof prefix === "string" && prefix.trim() !== "";
-  }
-
-  function get(prefix: string = "id", separator: string): string {
-    if (!isValidPrefix(prefix)) {
-      throw new Error("Invalid prefix. Prefix must be a non-empty string.");
-    }
-
-    if (separator) {
-      return prefix + separator + idCounter++;
-    }
-
-    return prefix + idCounter++;
-  }
-
-  function reset(): void {
-    idCounter = 0;
-  }
-
-  return {
-    get,
-    reset,
-  };
+export function uniqueId(): string {
+  return btoa(crypto.randomUUID())
+    .split('-')[4]
+    .replace(/[0-9]/g, num => String.fromCharCode(97 + parseInt(num)));
 }

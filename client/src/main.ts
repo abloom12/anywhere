@@ -1,7 +1,7 @@
 import './style.css';
 
-import { createStore } from './lib/store';
-import { createRouter } from './lib/router';
+import { createStore } from './store';
+import { createRouter } from './router';
 
 const router = createRouter();
 

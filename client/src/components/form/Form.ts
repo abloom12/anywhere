@@ -4,125 +4,66 @@
 //TODO: ensure aria attributes
 //TODO: ensure keybord navigation works
 //TODO: input sanitization
-//TODO: if form has input[type='file'] then switch enctype FROM application/x-www-form-urlencoded TO multipart/form-data
+//TODO: input[type='file'] then switch enctype FROM application/x-www-form-urlencoded TO multipart/form-data
 
-//TODO: need to figure a way to allow forms to be mutlipage forms
+import { FormField } from './_types';
+import { Input } from './Input';
+import { Select } from './Select';
+import { Textarea } from './Textarea';
 
-import { FormOptions } from "./_types";
-import { Input } from "./Input";
-import { Select } from "./Select";
-import { Textarea } from "./Textarea";
+type FieldGroup = {
+  legend: string;
+  fields: FormField[];
+};
+
+type FormControl = FormField | FieldGroup;
+
+type FormOptions = {
+  name: string;
+  schema: FormField[];
+};
 
 class Form {
   options: FormOptions;
-  form: HTMLFormElement;
+  formElement: HTMLFormElement;
   fields: Map<string, Input | Textarea | Select>;
 
   constructor(options: FormOptions) {
-    this.options = options;
-    this.form = document.createElement("form");
+    this.options = Object.assign({}, options);
+    this.formElement = document.createElement('form');
     this.fields = new Map();
 
     this.#initializeFields();
   }
 
   #initializeFields() {
-    this.options.fields.forEach((field, index) => {
-      const id = `${this.options.name}${field.name}${index}`;
-
+    this.options.schema.forEach(field => {
       switch (field.type) {
-        case "checkbox": {
+        case 'checkbox': {
           break;
         }
-        case "radio": {
+        case 'radio': {
           break;
         }
-        case "select": {
-          this.fields.set(field.name, new Select({ id, ...field }));
+        case 'select': {
+          this.fields.set(field.name, new Select(field));
           break;
         }
-        case "textarea": {
-          this.fields.set(field.name, new Textarea({ id, ...field }));
+        case 'textarea': {
+          this.fields.set(field.name, new Textarea(field));
           break;
         }
         default: {
-          this.fields.set(field.name, new Input({ id, ...field }));
+          this.fields.set(field.name, new Input(field));
         }
       }
     });
   }
 
-  #buildSkeleton() {
-    // loop through this.fields and build out skeleton
-    for (const [key, value] of this.fields) {
-    }
-  }
-
-  populate() {
-    // loop through this.fields replacing each skeleton field with control
-  }
-
-  reset() {
-    this.form.reset();
-  }
-
-  renderTo(element: HTMLElement) {
-    element.appendChild(this.form);
-  }
+  populate() {}
+  reset() {}
+  addField() {}
+  removeField() {}
 }
 
 export { Form };
-
-//* normal form
-// new Form({
-//   fields: [
-//     [
-//       field.input("text", "firstname", "First Name"),
-//       field.input("text", "lastname", "Last Name"),
-//     ],
-//     field.select("state", "State"),
-//     field.textarea("about", "About yourself"),
-//   ],
-// });
-
-//* multi step form idea 1
-// new Form({
-//   fields: [
-//     [
-//       field.input("text", "firstname", "First Name"),
-//       field.input("text", "lastname", "Last Name"),
-//     ],
-//     field.select("state", "State"),
-//     field.textarea("about", "About yourself"),
-//   ],
-//   steps: {
-//     0: {
-//       name: "step one",
-//       fields: ["firstname", "lastname", "state"],
-//     },
-//     1: {
-//       name: "step two",
-//       fields: ["about"],
-//     },
-//   },
-// });
-
-//* multi step form idea 2
-// new Form({
-//   fields: [
-//     {
-//       name: "step one",
-//       fields: [
-//         [
-//           field.input("text", "firstname", "First Name"),
-//           field.input("text", "lastname", "Last Name"),
-//         ],
-//         field.select("state", "State"),
-//       ],
-//     },
-//     {
-//       name: "step two",
-//       fields: [field.textarea("about", "About yourself")],
-//     },
-//   ],
-// });
