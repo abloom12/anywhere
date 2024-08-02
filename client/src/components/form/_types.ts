@@ -1,34 +1,49 @@
-type BaseProps = {
+export type InputProps = {
+  type: HTMLInputType;
   name: string;
   label: string;
-};
-
-export type InputProps = BaseProps & {
-  type: HTMLInputType;
   attributes?: Array<Partial<Record<keyof HTMLInputAttributes, any>>>;
 };
 
-export type SelectProps = BaseProps & {
+export type SelectProps = {
   type: 'select';
+  name: string;
+  label: string;
   attributes?: Array<Partial<Record<keyof HTMLSelectAttributes, any>>>;
 };
 
-export type TextareaProps = BaseProps & {
+export type TextareaProps = {
   type: 'textarea';
+  name: string;
+  label: string;
   attributes?: Array<Partial<Record<keyof HTMLTextAreaAttributes, any>>>;
 };
 
-export type CheckboxProps = BaseProps & {
+export type CheckboxProps = {
   type: 'checkbox';
+  name: string;
+  label: string;
   attributes?: Array<Partial<Record<keyof HTMLCheckboxAttributes, any>>>;
 };
 
-export type RadioProps = BaseProps & {
+export type RadioProps = {
   type: 'radio';
+  name: string;
+  label: string;
   attributes?: Array<Partial<Record<keyof HTMLRadioAttributes, any>>>;
 };
 
-export type FormField = InputProps | SelectProps | TextareaProps | CheckboxProps | RadioProps;
+export type Field = InputProps | SelectProps | TextareaProps | CheckboxProps | RadioProps;
+
+type FieldGroup = {
+  legend: string;
+  fields: Field[];
+};
+
+export type FormOptions = {
+  name: string;
+  fields: Field[];
+};
 
 export type HTMLInputType =
   | 'date'

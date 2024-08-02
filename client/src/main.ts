@@ -2,6 +2,7 @@ import './style.css';
 
 import { createStore } from './store';
 import { createRouter } from './router';
+import { Form } from './components/form/Form';
 
 const router = createRouter();
 
@@ -65,4 +66,15 @@ router.on('/user/:id', params => {
       return element;
     },
   };
+});
+
+const form = new Form({
+  name: 'test',
+  fields: [
+    {
+      type: 'text',
+      name: 'test',
+      label: 'test',
+    },
+  ],
 });

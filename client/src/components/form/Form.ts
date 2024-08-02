@@ -6,38 +6,27 @@
 //TODO: input sanitization
 //TODO: input[type='file'] then switch enctype FROM application/x-www-form-urlencoded TO multipart/form-data
 
-import { FormField } from './_types';
+import { FormOptions as Options } from './_types';
 import { Input } from './Input';
 import { Select } from './Select';
 import { Textarea } from './Textarea';
 
-type FieldGroup = {
-  legend: string;
-  fields: FormField[];
-};
-
-type FormControl = FormField | FieldGroup;
-
-type FormOptions = {
-  name: string;
-  schema: FormField[];
-};
-
 class Form {
-  options: FormOptions;
+  options: Options;
   formElement: HTMLFormElement;
   fields: Map<string, Input | Textarea | Select>;
 
-  constructor(options: FormOptions) {
+  constructor(options: Options) {
     this.options = Object.assign({}, options);
     this.formElement = document.createElement('form');
     this.fields = new Map();
 
     this.#initializeFields();
+    this.#build();
   }
 
   #initializeFields() {
-    this.options.schema.forEach(field => {
+    this.options.fields.forEach(field => {
       switch (field.type) {
         case 'checkbox': {
           break;
@@ -60,10 +49,57 @@ class Form {
     });
   }
 
+  #build() {
+    for (const [name, field] of this.fields) {
+      // append input to form
+    }
+  }
+
   populate() {}
   reset() {}
+
   addField() {}
   removeField() {}
+
+  #onSubmit() {}
+  #onDelete() {}
+  #onChange() {}
+
+  getValue(name: string) {
+    const field = this.fields.get(name);
+
+    if (field) {
+      return field.control.value;
+    }
+  }
+  setValue(name: string, value: string) {
+    const field = this.fields.get(name);
+
+    if (field) {
+      field.control.value = value;
+    }
+  }
+  setDisabledState(name: string, isDisabled: boolean) {
+    const field = this.fields.get(name);
+
+    if (field) {
+      field.control.disabled = isDisabled;
+    }
+  }
+  setReadonlyState(name: string, isReadOnly: boolean) {
+    const field = this.fields.get(name);
+
+    if (field) {
+      field.control.disabled = isReadOnly;
+    }
+  }
+  setRequiredState(name: string, isRequired: boolean) {
+    const field = this.fields.get(name);
+
+    if (field) {
+      field.control.disabled = isRequired;
+    }
+  }
 }
 
 export { Form };

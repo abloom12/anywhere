@@ -15,3 +15,12 @@
 - Typesaftey
 - Native desktop feel
 - Offline mode
+- Webworkers for background tasks
+- Tree shaking
+- Unit, Integration & End-to-end testing
+
+## Development Quality of Life Improvements
+
+- Typesafety allows for faster development with less bugs
+- SPA routing & vite allow for indivudal modual refresh, no more navigating back to module after code changes
+- No more writting CSS, layout/ui components come with everything baked in
