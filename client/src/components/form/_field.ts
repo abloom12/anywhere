@@ -1,43 +1,80 @@
-import {
-  CheckboxProps,
-  InputProps,
-  TextareaProps,
-  RadioProps,
-  SelectProps,
-  HTMLInputType,
-} from './_types';
+import { CheckboxProps, InputProps, TextareaProps, RadioProps, SelectProps } from './_types';
+
+type ConfigParams = [name: string, label: string];
 
 type ConfigCreators = {
-  checkbox: (type: 'checkbox', name: string, label: string) => CheckboxProps;
-  input: (type: HTMLInputType, name: string, label: string) => InputProps;
-  radio: (type: 'radio', name: string, label: string) => RadioProps;
-  select: (type: 'select', name: string, label: string) => SelectProps;
-  textarea: (type: 'textarea', name: string, label: string) => TextareaProps;
+  checkbox: (...args: ConfigParams) => CheckboxProps;
+  date: (name: string, label: string) => InputProps;
+  email: (name: string, label: string) => InputProps;
+  file: (name: string, label: string) => InputProps;
+  image: (name: string, label: string) => InputProps;
+  number: (name: string, label: string) => InputProps;
+  password: (name: string, label: string) => InputProps;
+  radio: (name: string, label: string) => RadioProps;
+  select: (name: string, label: string) => SelectProps;
+  telephone: (name: string, label: string) => InputProps;
+  text: (name: string, label: string) => InputProps;
+  textarea: (name: string, label: string) => TextareaProps;
 };
 
 const field: ConfigCreators = {
-  checkbox: (type, name, label) => ({
-    type,
+  checkbox: (name, label) => ({
+    type: 'checkbox',
     name,
     label,
   }),
-  input: (type, name, label) => ({
-    type,
+  date: (name, label) => ({
+    type: 'date',
     name,
     label,
   }),
-  radio: (type, name, label) => ({
-    type,
+  email: (name, label) => ({
+    type: 'email',
     name,
     label,
   }),
-  select: (type, name, label) => ({
-    type,
+  file: (name, label) => ({
+    type: 'file',
     name,
     label,
   }),
-  textarea: (type, name, label) => ({
-    type,
+  image: (name, label) => ({
+    type: 'image',
+    name,
+    label,
+  }),
+  number: (name, label) => ({
+    type: 'number',
+    name,
+    label,
+  }),
+  password: (name, label) => ({
+    type: 'password',
+    name,
+    label,
+  }),
+  radio: (name, label) => ({
+    type: 'radio',
+    name,
+    label,
+  }),
+  select: (name, label) => ({
+    type: 'select',
+    name,
+    label,
+  }),
+  telephone: (name, label) => ({
+    type: 'tel',
+    name,
+    label,
+  }),
+  text: (name, label) => ({
+    type: 'text',
+    name,
+    label,
+  }),
+  textarea: (name, label) => ({
+    type: 'textarea',
     name,
     label,
   }),

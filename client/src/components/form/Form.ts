@@ -66,11 +66,8 @@ class Form {
   #onChange() {}
 
   getValue(name: string) {
-    const field = this.fields.get(name);
-
-    if (field) {
-      return field.control.value;
-    }
+    const field = this.fields.get(name as string);
+    return field?.control.value;
   }
   setValue(name: string, value: string) {
     const field = this.fields.get(name);
@@ -79,21 +76,21 @@ class Form {
       field.control.value = value;
     }
   }
-  setDisabledState(name: string, isDisabled: boolean) {
+  setDisabled(name: string, isDisabled: boolean) {
     const field = this.fields.get(name);
 
     if (field) {
       field.control.disabled = isDisabled;
     }
   }
-  setReadonlyState(name: string, isReadOnly: boolean) {
+  setReadonly(name: string, isReadOnly: boolean) {
     const field = this.fields.get(name);
 
     if (field) {
       field.control.disabled = isReadOnly;
     }
   }
-  setRequiredState(name: string, isRequired: boolean) {
+  setRequired(name: string, isRequired: boolean) {
     const field = this.fields.get(name);
 
     if (field) {

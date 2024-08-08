@@ -22,7 +22,7 @@
     "reselect": "^5.1.1",
     "signature_pad": "^5.0.2",
     "tailwind-merge": "^2.4.0",
-    "yup": "^1.4.0"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@total-typescript/ts-reset": "^0.5.1",

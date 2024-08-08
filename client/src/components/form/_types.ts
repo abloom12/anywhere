@@ -1,39 +1,240 @@
-export type InputProps = {
-  type: HTMLInputType;
+type BaseProps = {
   name: string;
   label: string;
-  attributes?: Array<Partial<Record<keyof HTMLInputAttributes, any>>>;
 };
 
-export type SelectProps = {
+export type CheckboxProps = BaseProps & {
+  type: 'checkbox';
+  attributes?: Array<
+    Record<
+      keyof Partial<
+        Pick<HTMLInputElement, 'autofocus' | 'checked' | 'disabled' | 'name' | 'required' | 'value'>
+      >,
+      any
+    >
+  >;
+};
+
+type DateProps = BaseProps & {
+  type: 'date';
+  attributes?: Array<
+    Record<
+      keyof Partial<
+        Pick<HTMLInputElement, 'autofocus' | 'min' | 'max' | 'step' | 'readOnly' | 'required'>
+      >,
+      any
+    >
+  >;
+};
+
+type EmailProps = BaseProps & {
+  type: 'email';
+  attributes?: Array<
+    Record<
+      keyof Partial<
+        Pick<
+          HTMLInputElement,
+          | 'autofocus'
+          | 'maxLength'
+          | 'minLength'
+          | 'multiple'
+          | 'pattern'
+          | 'placeholder'
+          | 'readOnly'
+          | 'required'
+        >
+      >,
+      any
+    >
+  >;
+};
+
+type FileProps = BaseProps & {
+  type: 'file';
+  attributes?: Array<
+    Record<
+      keyof Partial<
+        Pick<
+          HTMLInputElement,
+          'accept' | 'autofocus' | 'multiple' | 'required' | 'capture' | 'list'
+        >
+      >,
+      any
+    >
+  >;
+};
+
+type ImageProps = BaseProps & {
+  type: 'image';
+  attributes?: Array<
+    Record<
+      keyof Partial<
+        Pick<
+          HTMLInputElement,
+          'autofocus' | 'src' | 'alt' | 'height' | 'width' | 'formAction' | 'name' | 'value'
+        >
+      >,
+      any
+    >
+  >;
+};
+
+type NumberProps = BaseProps & {
+  type: 'number';
+  attributes?: Array<
+    Record<
+      keyof Partial<
+        Pick<
+          HTMLInputElement,
+          'autofocus' | 'min' | 'max' | 'step' | 'readOnly' | 'required' | 'placeholder'
+        >
+      >,
+      any
+    >
+  >;
+};
+
+type PasswordProps = BaseProps & {
+  type: 'password';
+  attributes?: Array<
+    Record<
+      keyof Partial<
+        Pick<
+          HTMLInputElement,
+          | 'autofocus'
+          | 'maxLength'
+          | 'minLength'
+          | 'pattern'
+          | 'placeholder'
+          | 'readOnly'
+          | 'required'
+          | 'size'
+        >
+      >,
+      any
+    >
+  >;
+};
+
+export type RadioProps = BaseProps & {
+  type: 'radio';
+  attributes?: Array<
+    Record<
+      keyof Partial<
+        Pick<HTMLInputElement, 'autofocus' | 'checked' | 'disabled' | 'name' | 'required' | 'value'>
+      >,
+      any
+    >
+  >;
+};
+
+export type SelectProps = BaseProps & {
   type: 'select';
   name: string;
   label: string;
-  attributes?: Array<Partial<Record<keyof HTMLSelectAttributes, any>>>;
+  attributes?: Array<
+    Partial<
+      Record<
+        keyof Partial<
+          Pick<
+            HTMLSelectElement,
+            'autofocus' | 'disabled' | 'multiple' | 'name' | 'required' | 'size'
+          >
+        >,
+        any
+      >
+    >
+  >;
 };
 
-export type TextareaProps = {
+type TelProps = BaseProps & {
+  type: 'tel';
+  attributes?: Array<
+    Record<
+      keyof Partial<
+        Pick<
+          HTMLInputElement,
+          | 'autofocus'
+          | 'maxLength'
+          | 'minLength'
+          | 'pattern'
+          | 'placeholder'
+          | 'readOnly'
+          | 'required'
+        >
+      >,
+      any
+    >
+  >;
+};
+
+type TimeProps = BaseProps & {
+  type: 'time';
+  attributes?: Array<
+    Record<
+      keyof Partial<
+        Pick<HTMLInputElement, 'autofocus' | 'min' | 'max' | 'step' | 'readOnly' | 'required'>
+      >,
+      any
+    >
+  >;
+};
+
+type TextProps = BaseProps & {
+  type: 'text';
+  attributes?: Array<
+    Record<
+      keyof Partial<
+        Pick<
+          HTMLInputElement,
+          'maxLength' | 'minLength' | 'pattern' | 'placeholder' | 'readOnly' | 'required' | 'size'
+        >
+      >,
+      any
+    >
+  >;
+};
+
+export type TextareaProps = BaseProps & {
   type: 'textarea';
   name: string;
   label: string;
-  attributes?: Array<Partial<Record<keyof HTMLTextAreaAttributes, any>>>;
+  attributes?: Array<
+    Partial<
+      Record<
+        keyof Partial<
+          Pick<
+            HTMLTextAreaElement,
+            | 'autofocus'
+            | 'dirName'
+            | 'disabled'
+            | 'maxLength'
+            | 'minLength'
+            | 'name'
+            | 'placeholder'
+            | 'readOnly'
+            | 'required'
+            | 'wrap'
+          >
+        >,
+        any
+      >
+    >
+  >;
 };
 
-export type CheckboxProps = {
-  type: 'checkbox';
-  name: string;
-  label: string;
-  attributes?: Array<Partial<Record<keyof HTMLCheckboxAttributes, any>>>;
-};
+export type InputProps =
+  | DateProps
+  | EmailProps
+  | FileProps
+  | ImageProps
+  | NumberProps
+  | PasswordProps
+  | TelProps
+  | TimeProps
+  | TextProps;
 
-export type RadioProps = {
-  type: 'radio';
-  name: string;
-  label: string;
-  attributes?: Array<Partial<Record<keyof HTMLRadioAttributes, any>>>;
-};
-
-export type Field = InputProps | SelectProps | TextareaProps | CheckboxProps | RadioProps;
+export type Field = CheckboxProps | InputProps | RadioProps | SelectProps | TextareaProps;
 
 type FieldGroup = {
   legend: string;
@@ -44,75 +245,3 @@ export type FormOptions = {
   name: string;
   fields: Field[];
 };
-
-export type HTMLInputType =
-  | 'date'
-  | 'email'
-  | 'file'
-  | 'image'
-  | 'number'
-  | 'password'
-  | 'tel'
-  | 'text'
-  | 'time';
-
-type HTMLInputAttributes = Partial<
-  Pick<
-    HTMLInputElement,
-    | 'accept'
-    | 'alt'
-    | 'autocomplete'
-    | 'autofocus'
-    | 'dirName'
-    | 'disabled'
-    | 'list'
-    | 'max'
-    | 'maxLength'
-    | 'min'
-    | 'minLength'
-    | 'multiple'
-    | 'name'
-    | 'pattern'
-    | 'placeholder'
-    | 'readOnly'
-    | 'required'
-    | 'size'
-    | 'src'
-    | 'step'
-    | 'type'
-    | 'value'
-    | 'inputMode'
-  >
->;
-
-type HTMLSelectAttributes = Partial<
-  Pick<
-    HTMLSelectElement,
-    'autocomplete' | 'autofocus' | 'disabled' | 'multiple' | 'name' | 'required' | 'size'
-  >
->;
-
-type HTMLTextAreaAttributes = Partial<
-  Pick<
-    HTMLTextAreaElement,
-    | 'autocomplete'
-    | 'autofocus'
-    | 'dirName'
-    | 'disabled'
-    | 'maxLength'
-    | 'minLength'
-    | 'name'
-    | 'placeholder'
-    | 'readOnly'
-    | 'required'
-    | 'wrap'
-  >
->;
-
-type HTMLRadioAttributes = Partial<
-  Pick<HTMLInputElement, 'autofocus' | 'checked' | 'disabled' | 'name' | 'required' | 'value'>
->;
-
-type HTMLCheckboxAttributes = Partial<
-  Pick<HTMLInputElement, 'autofocus' | 'checked' | 'disabled' | 'name' | 'required' | 'value'>
->;
