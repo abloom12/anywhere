@@ -1,5 +1,7 @@
 import { TextareaProps } from './_types';
 
+//? wrap attribute?
+
 class Textarea {
   props: TextareaProps;
   control: HTMLTextAreaElement;

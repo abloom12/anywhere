@@ -1,226 +1,101 @@
+//TODO: check attributes against MDN
+//????: move config creator over
+//????: move field over
+
+//*===============================================
+//* MUST MATCH
 type BaseProps = {
   name: string;
   label: string;
+  message?: string;
 };
+type Params = [name: string, label: string, message?: string];
+//* MUST MATCH
+//*===============================================
 
 export type CheckboxProps = BaseProps & {
   type: 'checkbox';
-  attributes?: Array<
-    Record<
-      keyof Partial<
-        Pick<HTMLInputElement, 'autofocus' | 'checked' | 'disabled' | 'name' | 'required' | 'value'>
-      >,
-      any
-    >
-  >;
+  attributes?: HTMLCheckboxAttributes;
 };
 
 type DateProps = BaseProps & {
   type: 'date';
-  attributes?: Array<
-    Record<
-      keyof Partial<
-        Pick<HTMLInputElement, 'autofocus' | 'min' | 'max' | 'step' | 'readOnly' | 'required'>
-      >,
-      any
-    >
-  >;
+  attributes?: HTMLDateAttributes;
 };
 
 type EmailProps = BaseProps & {
   type: 'email';
-  attributes?: Array<
-    Record<
-      keyof Partial<
-        Pick<
-          HTMLInputElement,
-          | 'autofocus'
-          | 'maxLength'
-          | 'minLength'
-          | 'multiple'
-          | 'pattern'
-          | 'placeholder'
-          | 'readOnly'
-          | 'required'
-        >
-      >,
-      any
-    >
-  >;
+  attributes?: HTMLEmailAttributes;
 };
 
 type FileProps = BaseProps & {
   type: 'file';
-  attributes?: Array<
-    Record<
-      keyof Partial<
-        Pick<
-          HTMLInputElement,
-          'accept' | 'autofocus' | 'multiple' | 'required' | 'capture' | 'list'
-        >
-      >,
-      any
-    >
-  >;
+  attributes?: HTMLFileAttributes;
 };
 
 type ImageProps = BaseProps & {
   type: 'image';
-  attributes?: Array<
-    Record<
-      keyof Partial<
-        Pick<
-          HTMLInputElement,
-          'autofocus' | 'src' | 'alt' | 'height' | 'width' | 'formAction' | 'name' | 'value'
-        >
-      >,
-      any
-    >
-  >;
+  attributes?: HTMLImageAttributes;
 };
 
 type NumberProps = BaseProps & {
   type: 'number';
-  attributes?: Array<
-    Record<
-      keyof Partial<
-        Pick<
-          HTMLInputElement,
-          'autofocus' | 'min' | 'max' | 'step' | 'readOnly' | 'required' | 'placeholder'
-        >
-      >,
-      any
-    >
-  >;
+  attributes?: HTMLNumberAttributes;
 };
 
 type PasswordProps = BaseProps & {
   type: 'password';
-  attributes?: Array<
-    Record<
-      keyof Partial<
-        Pick<
-          HTMLInputElement,
-          | 'autofocus'
-          | 'maxLength'
-          | 'minLength'
-          | 'pattern'
-          | 'placeholder'
-          | 'readOnly'
-          | 'required'
-          | 'size'
-        >
-      >,
-      any
-    >
-  >;
+  attributes?: HTMLPasswordAttributes;
 };
 
 export type RadioProps = BaseProps & {
   type: 'radio';
-  attributes?: Array<
-    Record<
-      keyof Partial<
-        Pick<HTMLInputElement, 'autofocus' | 'checked' | 'disabled' | 'name' | 'required' | 'value'>
-      >,
-      any
-    >
-  >;
+  attributes?: HTMLRadioAttributes;
 };
 
 export type SelectProps = BaseProps & {
   type: 'select';
   name: string;
   label: string;
-  attributes?: Array<
-    Partial<
-      Record<
-        keyof Partial<
-          Pick<
-            HTMLSelectElement,
-            'autofocus' | 'disabled' | 'multiple' | 'name' | 'required' | 'size'
-          >
-        >,
-        any
-      >
-    >
-  >;
+  attributes?: HTMLSelectAttributes;
 };
 
 type TelProps = BaseProps & {
   type: 'tel';
-  attributes?: Array<
-    Record<
-      keyof Partial<
-        Pick<
-          HTMLInputElement,
-          | 'autofocus'
-          | 'maxLength'
-          | 'minLength'
-          | 'pattern'
-          | 'placeholder'
-          | 'readOnly'
-          | 'required'
-        >
-      >,
-      any
-    >
-  >;
+  attributes?: HTMLTelAttributes;
 };
 
 type TimeProps = BaseProps & {
   type: 'time';
-  attributes?: Array<
-    Record<
-      keyof Partial<
-        Pick<HTMLInputElement, 'autofocus' | 'min' | 'max' | 'step' | 'readOnly' | 'required'>
-      >,
-      any
-    >
-  >;
+  attributes?: HTMLTimeAttributes;
 };
 
 type TextProps = BaseProps & {
   type: 'text';
-  attributes?: Array<
-    Record<
-      keyof Partial<
-        Pick<
-          HTMLInputElement,
-          'maxLength' | 'minLength' | 'pattern' | 'placeholder' | 'readOnly' | 'required' | 'size'
-        >
-      >,
-      any
-    >
-  >;
+  attributes?: HTMLTextAttributes;
 };
 
 export type TextareaProps = BaseProps & {
   type: 'textarea';
   name: string;
   label: string;
-  attributes?: Array<
-    Partial<
-      Record<
-        keyof Partial<
-          Pick<
-            HTMLTextAreaElement,
-            | 'autofocus'
-            | 'dirName'
-            | 'disabled'
-            | 'maxLength'
-            | 'minLength'
-            | 'name'
-            | 'placeholder'
-            | 'readOnly'
-            | 'required'
-            | 'wrap'
-          >
-        >,
-        any
-      >
-    >
-  >;
+  attributes?: HTMLTextAreaAttributes;
+};
+
+export type PropConfig = {
+  checkbox: (...args: Params) => CheckboxProps;
+  date: (...args: Params) => DateProps;
+  email: (...args: Params) => EmailProps;
+  file: (...args: Params) => FileProps;
+  image: (...args: Params) => ImageProps;
+  number: (...args: Params) => NumberProps;
+  password: (...args: Params) => PasswordProps;
+  radio: (...args: Params) => RadioProps;
+  select: (...args: Params) => SelectProps;
+  time: (...args: Params) => TimeProps;
+  telephone: (...args: Params) => TelProps;
+  text: (...args: Params) => TextProps;
+  textarea: (...args: Params) => TextareaProps;
 };
 
 export type InputProps =
@@ -244,4 +119,124 @@ type FieldGroup = {
 export type FormOptions = {
   name: string;
   fields: Field[];
+  autofocus?: string; // name of input to auto focus
 };
+
+type HTMLCheckboxAttributes = Partial<Pick<HTMLInputElement, 'disabled' | 'required'>>;
+type HTMLDateAttributes = Partial<
+  Pick<HTMLInputElement, 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step'>
+>;
+type HTMLEmailAttributes = Partial<
+  Pick<
+    HTMLInputElement,
+    'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'
+  >
+>;
+type HTMLFileAttributes = Partial<
+  Pick<HTMLInputElement, 'accept' | 'disabled' | 'capture' | 'readOnly' | 'required'>
+>;
+type HTMLImageAttributes = Partial<
+  Pick<HTMLInputElement, 'alt' | 'disabled' | 'src' | 'formAction' | 'readOnly' | 'value'>
+>;
+type HTMLNumberAttributes = Partial<
+  Pick<HTMLInputElement, 'disabled' | 'max' | 'min' | 'step' | 'readOnly' | 'required'>
+>;
+type HTMLPasswordAttributes = Partial<
+  Pick<
+    HTMLInputElement,
+    'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'
+  >
+>;
+type HTMLRadioAttributes = Partial<Pick<HTMLInputElement, 'disabled' | 'required' | 'value'>>;
+type HTMLSelectAttributes = Partial<Pick<HTMLSelectElement, 'disabled' | 'multiple' | 'required'>>;
+type HTMLTelAttributes = Partial<
+  Pick<
+    HTMLInputElement,
+    'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'
+  >
+>;
+type HTMLTimeAttributes = Partial<
+  Pick<HTMLInputElement, 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step'>
+>;
+type HTMLTextAttributes = Partial<
+  Pick<
+    HTMLInputElement,
+    'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'
+  >
+>;
+type HTMLTextAreaAttributes = Partial<
+  Pick<
+    HTMLTextAreaElement,
+    | 'autocapitalize'
+    | 'disabled'
+    | 'maxLength'
+    | 'minLength'
+    | 'readOnly'
+    | 'required'
+    | 'spellcheck'
+  >
+>;
+
+type TypeAttributesMap = {
+  checkbox: HTMLCheckboxAttributes;
+  date: HTMLDateAttributes;
+  email: HTMLEmailAttributes;
+  file: HTMLFileAttributes;
+  image: HTMLImageAttributes;
+  number: HTMLNumberAttributes;
+  password: HTMLPasswordAttributes;
+  radio: HTMLRadioAttributes;
+  select: HTMLSelectAttributes;
+  tel: HTMLTelAttributes;
+  text: HTMLTextAttributes;
+  time: HTMLTimeAttributes;
+  textarea: HTMLTextAreaAttributes;
+};
+
+type Type =
+  | 'checkbox'
+  | 'date'
+  | 'email'
+  | 'file'
+  | 'image'
+  | 'number'
+  | 'password'
+  | 'radio'
+  | 'select'
+  | 'tel'
+  | 'text'
+  | 'time'
+  | 'textarea';
+
+class Configurator<T extends Type> {
+  #props: {
+    type: T;
+    name: string;
+    label: string;
+    attributes: TypeAttributesMap[T];
+  };
+
+  constructor(type: T, name: string, label: string) {
+    this.#props = { type, name, label, attributes: {} as TypeAttributesMap[T] };
+  }
+
+  get $() {
+    return this.#props;
+  }
+
+  readonly(condition?: boolean) {
+    if ('readOnly' in this.#props.attributes) {
+      this.#props.attributes.readOnly = condition ?? true;
+    }
+
+    return this;
+  }
+
+  required(condition?: boolean) {
+    if ('required' in this.#props.attributes) {
+      this.#props.attributes.required = condition ?? true;
+    }
+
+    return this;
+  }
+}

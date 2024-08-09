@@ -2,8 +2,7 @@ import './style.css';
 
 import { createStore } from './store';
 import { createRouter } from './router';
-import { Form } from './components/form/Form';
-import { field } from './components/form/_field';
+import { Form, field } from './components/form/Form';
 
 const router = createRouter();
 
@@ -69,13 +68,13 @@ router.on('/user/:id', params => {
   };
 });
 
-// const form = new Form({
-//   name: 'test',
-//   fields: [
-//     field.text('firstname', 'First Name'),
-//     field.text('lastname', 'Last Name'),
-//     field.number('age', 'Age'),
-//     field.tel('phone', 'Phone #'),
-//     field.textarea('about', 'About You'),
-//   ],
-// });
+const form = new Form({
+  name: 'test',
+  fields: [
+    field.text('firstname', 'First Name'),
+    field.text('lastname', 'Last Name'),
+    field.number('age', 'Age'),
+    field.telephone('phone', 'Phone #'),
+    field.textarea('about', 'About You'),
+  ],
+});

@@ -6,7 +6,7 @@
 //TODO: input sanitization
 //TODO: input[type='file'] then switch enctype FROM application/x-www-form-urlencoded TO multipart/form-data
 
-import { FormOptions as Options } from './_types';
+import { FormOptions as Options, PropConfig } from './_types';
 import { Input } from './Input';
 import { Select } from './Select';
 import { Textarea } from './Textarea';
@@ -99,4 +99,82 @@ class Form {
   }
 }
 
-export { Form };
+class Configurator {
+  props: {};
+
+  constructor(type: string, name: string, label: string) {
+    this.props = {};
+  }
+
+  readonly(condition?: boolean) {}
+}
+
+const field: PropConfig = {
+  checkbox: (name, label) => ({
+    type: 'checkbox',
+    name,
+    label,
+  }),
+  date: (name, label) => ({
+    type: 'date',
+    name,
+    label,
+  }),
+  email: (name, label) => ({
+    type: 'email',
+    name,
+    label,
+  }),
+  file: (name, label) => ({
+    type: 'file',
+    name,
+    label,
+  }),
+  image: (name, label) => ({
+    type: 'image',
+    name,
+    label,
+  }),
+  number: (name, label) => ({
+    type: 'number',
+    name,
+    label,
+  }),
+  password: (name, label) => ({
+    type: 'password',
+    name,
+    label,
+  }),
+  radio: (name, label) => ({
+    type: 'radio',
+    name,
+    label,
+  }),
+  select: (name, label) => ({
+    type: 'select',
+    name,
+    label,
+  }),
+  telephone: (name, label) => ({
+    type: 'tel',
+    name,
+    label,
+  }),
+  time: (name, label) => ({
+    type: 'time',
+    name,
+    label,
+  }),
+  text: (name, label) => ({
+    type: 'text',
+    name,
+    label,
+  }),
+  textarea: (name, label) => ({
+    type: 'textarea',
+    name,
+    label,
+  }),
+};
+
+export { Form, field };
