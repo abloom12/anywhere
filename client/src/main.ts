@@ -68,13 +68,13 @@ router.on('/user/:id', params => {
   };
 });
 
-const form = new Form({
-  name: 'test',
-  fields: [
-    field.text('firstname', 'First Name'),
-    field.text('lastname', 'Last Name'),
-    field.number('age', 'Age'),
-    field.telephone('phone', 'Phone #'),
-    field.textarea('about', 'About You'),
-  ],
-});
+// const form = new Form({
+//   name: 'test',
+//   fields: [
+//     field.text('firstname', 'First Name').required()._,
+//     field.text('lastname', 'Last Name').required().$,
+//     field.number('age', 'Age').min(18).cfg,
+//     field.telephone('phone', 'Phone #').required().c,
+//     field.textarea('about', 'About You').max(10000).,
+//   ],
+// });

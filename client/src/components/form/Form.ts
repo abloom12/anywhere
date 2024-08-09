@@ -99,16 +99,6 @@ class Form {
   }
 }
 
-class Configurator {
-  props: {};
-
-  constructor(type: string, name: string, label: string) {
-    this.props = {};
-  }
-
-  readonly(condition?: boolean) {}
-}
-
 const field: PropConfig = {
   checkbox: (name, label) => ({
     type: 'checkbox',
