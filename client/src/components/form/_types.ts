@@ -2,7 +2,6 @@
 //????: move config creator over
 //????: move field over
 
-//*===============================================
 //* MUST MATCH
 type BaseProps = {
   name: string;
@@ -11,7 +10,6 @@ type BaseProps = {
 };
 type Params = [name: string, label: string, message?: string];
 //* MUST MATCH
-//*===============================================
 
 export type CheckboxProps = BaseProps & {
   type: 'checkbox';
@@ -31,11 +29,6 @@ type EmailProps = BaseProps & {
 type FileProps = BaseProps & {
   type: 'file';
   attributes?: HTMLFileAttributes;
-};
-
-type ImageProps = BaseProps & {
-  type: 'image';
-  attributes?: HTMLImageAttributes;
 };
 
 type NumberProps = BaseProps & {
@@ -82,27 +75,11 @@ export type TextareaProps = BaseProps & {
   attributes?: HTMLTextAreaAttributes;
 };
 
-export type PropConfig = {
-  checkbox: (...args: Params) => CheckboxProps;
-  date: (...args: Params) => DateProps;
-  email: (...args: Params) => EmailProps;
-  file: (...args: Params) => FileProps;
-  image: (...args: Params) => ImageProps;
-  number: (...args: Params) => NumberProps;
-  password: (...args: Params) => PasswordProps;
-  radio: (...args: Params) => RadioProps;
-  select: (...args: Params) => SelectProps;
-  time: (...args: Params) => TimeProps;
-  telephone: (...args: Params) => TelProps;
-  text: (...args: Params) => TextProps;
-  textarea: (...args: Params) => TextareaProps;
-};
-
+//* FORM
 export type InputProps =
   | DateProps
   | EmailProps
   | FileProps
-  | ImageProps
   | NumberProps
   | PasswordProps
   | TelProps
@@ -122,6 +99,7 @@ export type FormOptions = {
   autofocus?: string; // name of input to auto focus
 };
 
+//* ATTRIBUTE TYPES
 type HTMLCheckboxAttributes = Partial<Pick<HTMLInputElement, 'disabled' | 'required'>>;
 type HTMLDateAttributes = Partial<
   Pick<HTMLInputElement, 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step'>
@@ -135,9 +113,6 @@ type HTMLEmailAttributes = Partial<
 type HTMLFileAttributes = Partial<
   Pick<HTMLInputElement, 'accept' | 'disabled' | 'capture' | 'readOnly' | 'required'>
 >;
-type HTMLImageAttributes = Partial<
-  Pick<HTMLInputElement, 'alt' | 'disabled' | 'src' | 'formAction' | 'readOnly' | 'value'>
->;
 type HTMLNumberAttributes = Partial<
   Pick<HTMLInputElement, 'disabled' | 'max' | 'min' | 'step' | 'readOnly' | 'required'>
 >;
@@ -147,7 +122,7 @@ type HTMLPasswordAttributes = Partial<
     'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'
   >
 >;
-type HTMLRadioAttributes = Partial<Pick<HTMLInputElement, 'disabled' | 'required' | 'value'>>;
+type HTMLRadioAttributes = Partial<Pick<HTMLInputElement, 'disabled' | 'required'>>;
 type HTMLSelectAttributes = Partial<Pick<HTMLSelectElement, 'disabled' | 'multiple' | 'required'>>;
 type HTMLTelAttributes = Partial<
   Pick<
@@ -177,12 +152,12 @@ type HTMLTextAreaAttributes = Partial<
   >
 >;
 
-type TypeAttributesMap = {
+//* CONFIGURATOR
+export type TypeAttributesMap = {
   checkbox: HTMLCheckboxAttributes;
   date: HTMLDateAttributes;
   email: HTMLEmailAttributes;
   file: HTMLFileAttributes;
-  image: HTMLImageAttributes;
   number: HTMLNumberAttributes;
   password: HTMLPasswordAttributes;
   radio: HTMLRadioAttributes;
@@ -193,12 +168,11 @@ type TypeAttributesMap = {
   textarea: HTMLTextAreaAttributes;
 };
 
-type Type =
+export type Type =
   | 'checkbox'
   | 'date'
   | 'email'
   | 'file'
-  | 'image'
   | 'number'
   | 'password'
   | 'radio'
@@ -209,34 +183,227 @@ type Type =
   | 'textarea';
 
 class Configurator<T extends Type> {
-  #props: {
-    type: T;
+  props: {
     name: string;
     label: string;
     attributes: TypeAttributesMap[T];
   };
 
-  constructor(type: T, name: string, label: string) {
-    this.#props = { type, name, label, attributes: {} as TypeAttributesMap[T] };
+  constructor(name: string, label: string) {
+    this.props = { name, label, attributes: {} as TypeAttributesMap[T] };
   }
 
   get $() {
-    return this.#props;
+    return this.props;
+  }
+
+  disabled(condition?: boolean) {
+    if ('disabled' in this.props.attributes) {
+      this.props.attributes.disabled = condition ?? true;
+    }
+
+    return this;
   }
 
   readonly(condition?: boolean) {
-    if ('readOnly' in this.#props.attributes) {
-      this.#props.attributes.readOnly = condition ?? true;
+    if ('readOnly' in this.props.attributes) {
+      this.props.attributes.readOnly = condition ?? true;
     }
 
     return this;
   }
 
   required(condition?: boolean) {
-    if ('required' in this.#props.attributes) {
-      this.#props.attributes.required = condition ?? true;
+    if ('required' in this.props.attributes) {
+      this.props.attributes.required = condition ?? true;
     }
 
     return this;
   }
 }
+
+// Utility type for a mixin constructor
+type Constructor<T = {}> = new (...args: any[]) => T;
+
+function LengthMixin<TBase extends Constructor<Configurator<keyof TypeAttributesMap>>>(
+  Base: TBase,
+) {
+  return class extends Base {
+    minlength(length: number) {
+      if ('minLength' in this.props.attributes) {
+        this.props.attributes.minLength = length;
+      }
+      return this;
+    }
+
+    maxlength(length: number) {
+      if ('maxLength' in this.props.attributes) {
+        this.props.attributes.maxLength = length;
+      }
+      return this;
+    }
+  };
+}
+
+function MinMaxStepMixin<TBase extends Constructor<Configurator<keyof TypeAttributesMap>>>(
+  Base: TBase,
+) {
+  return class extends Base {
+    min(value: string) {
+      if ('min' in this.props.attributes) {
+        this.props.attributes.min = value;
+      }
+      return this;
+    }
+
+    max(value: string) {
+      if ('max' in this.props.attributes) {
+        this.props.attributes.max = value;
+      }
+      return this;
+    }
+
+    step(value: string) {
+      if ('step' in this.props.attributes) {
+        this.props.attributes.step = value;
+      }
+      return this;
+    }
+  };
+}
+
+class CheckboxConfigurator extends Configurator<'checkbox'> {}
+class DateInputConfigurator extends MinMaxStepMixin(Configurator<'date'>) {}
+class EmailInputConfigurator extends LengthMixin(Configurator<'email'>) {
+  pattern(value: string) {
+    this.props.attributes.pattern = value;
+    return this;
+  }
+}
+class FileInputConfigurator extends Configurator<'file'> {
+  accept(value: string) {
+    this.props.attributes.accept = value;
+    return this;
+  }
+
+  capture(value: string) {
+    this.props.attributes.capture = value;
+    return this;
+  }
+}
+class NumberInputConfigurator extends MinMaxStepMixin(Configurator<'number'>) {}
+class PasswordInputConfigurator extends LengthMixin(Configurator<'password'>) {
+  pattern(value: string) {
+    this.props.attributes.pattern = value;
+    return this;
+  }
+}
+class RadioConfigurator extends Configurator<'radio'> {}
+class SelectConfigurator extends Configurator<'select'> {
+  multiple(value: boolean) {
+    this.props.attributes.multiple = value;
+    return this;
+  }
+}
+class TimeInputConfigurator extends MinMaxStepMixin(Configurator<'time'>) {}
+class TelConfigurator extends LengthMixin(Configurator<'tel'>) {
+  pattern(value: string) {
+    this.props.attributes.pattern = value;
+    return this;
+  }
+}
+class TextConfigurator extends LengthMixin(Configurator<'text'>) {
+  pattern(value: string) {
+    this.props.attributes.pattern = value;
+    return this;
+  }
+}
+class TextareaInputConfigurator extends LengthMixin(Configurator<'textarea'>) {
+  autocapitalize(value: string) {
+    this.props.attributes.autocapitalize = value;
+    return this;
+  }
+
+  spellcheck(value: boolean) {
+    this.props.attributes.spellcheck = value;
+    return this;
+  }
+}
+
+export type PropConfig = {
+  checkbox: (...args: Params) => CheckboxProps;
+  date: (...args: Params) => DateProps;
+  email: (...args: Params) => EmailProps;
+  file: (...args: Params) => FileProps;
+  number: (...args: Params) => NumberProps;
+  password: (...args: Params) => PasswordProps;
+  radio: (...args: Params) => RadioProps;
+  select: (...args: Params) => SelectProps;
+  time: (...args: Params) => TimeProps;
+  telephone: (...args: Params) => TelProps;
+  text: (...args: Params) => TextProps;
+  textarea: (...args: Params) => TextareaProps;
+};
+
+const field: PropConfig = {
+  checkbox: (name, label) => ({
+    type: 'checkbox',
+    name,
+    label,
+  }),
+  date: (name, label) => ({
+    type: 'date',
+    name,
+    label,
+  }),
+  email: (name, label) => ({
+    type: 'email',
+    name,
+    label,
+  }),
+  file: (name, label) => ({
+    type: 'file',
+    name,
+    label,
+  }),
+  number: (name, label) => ({
+    type: 'number',
+    name,
+    label,
+  }),
+  password: (name, label) => ({
+    type: 'password',
+    name,
+    label,
+  }),
+  radio: (name, label) => ({
+    type: 'radio',
+    name,
+    label,
+  }),
+  select: (name, label) => ({
+    type: 'select',
+    name,
+    label,
+  }),
+  telephone: (name, label) => ({
+    type: 'tel',
+    name,
+    label,
+  }),
+  time: (name, label) => ({
+    type: 'time',
+    name,
+    label,
+  }),
+  text: (name, label) => ({
+    type: 'text',
+    name,
+    label,
+  }),
+  textarea: (name, label) => ({
+    type: 'textarea',
+    name,
+    label,
+  }),
+};

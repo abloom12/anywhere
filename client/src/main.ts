@@ -2,7 +2,7 @@ import './style.css';
 
 import { createStore } from './store';
 import { createRouter } from './router';
-import { Form, field } from './components/form/Form';
+import { Form } from './components/form/Form';
 
 const router = createRouter();
 

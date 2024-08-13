@@ -1,14 +1,14 @@
 class FormController {
-  constructor(type, name, label) {
-    this.type = type;
-    this.name = name;
-    this.label = label;
+  constructor(props) {
+    this.type = props.type;
+    this.name = props.name;
+    this.label = props.label;
   }
 }
 
 class TextInput extends FormController {
   constructor(props) {
-    super(props.type, props.name, props.label);
+    super(props);
   }
 }
 
