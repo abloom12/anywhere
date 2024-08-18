@@ -1,103 +1,40 @@
-//TODO: check attributes against MDN
-//????: move config creator over
-//????: move field over
-
-//* MUST MATCH
 type BaseProps = {
   name: string;
   label: string;
   message?: string;
 };
-type Params = [name: string, label: string, message?: string];
-//* MUST MATCH
 
-export type CheckboxProps = BaseProps & {
-  type: 'checkbox';
-  attributes?: HTMLCheckboxAttributes;
+type InputType =
+  | 'checkbox'
+  | 'date'
+  | 'email'
+  | 'file'
+  | 'number'
+  | 'password'
+  | 'radio'
+  | 'select'
+  | 'tel'
+  | 'text'
+  | 'time'
+  | 'textarea';
+
+type BaseInputProps<T extends InputType, A> = BaseProps & {
+  type: T;
+  attributes?: A;
 };
 
-type DateProps = BaseProps & {
-  type: 'date';
-  attributes?: HTMLDateAttributes;
-};
-
-type EmailProps = BaseProps & {
-  type: 'email';
-  attributes?: HTMLEmailAttributes;
-};
-
-type FileProps = BaseProps & {
-  type: 'file';
-  attributes?: HTMLFileAttributes;
-};
-
-type NumberProps = BaseProps & {
-  type: 'number';
-  attributes?: HTMLNumberAttributes;
-};
-
-type PasswordProps = BaseProps & {
-  type: 'password';
-  attributes?: HTMLPasswordAttributes;
-};
-
-export type RadioProps = BaseProps & {
-  type: 'radio';
-  attributes?: HTMLRadioAttributes;
-};
-
-export type SelectProps = BaseProps & {
-  type: 'select';
-  name: string;
-  label: string;
-  attributes?: HTMLSelectAttributes;
-};
-
-type TelProps = BaseProps & {
-  type: 'tel';
-  attributes?: HTMLTelAttributes;
-};
-
-type TimeProps = BaseProps & {
-  type: 'time';
-  attributes?: HTMLTimeAttributes;
-};
-
-type TextProps = BaseProps & {
-  type: 'text';
-  attributes?: HTMLTextAttributes;
-};
-
-export type TextareaProps = BaseProps & {
-  type: 'textarea';
-  name: string;
-  label: string;
-  attributes?: HTMLTextAreaAttributes;
-};
-
-//* FORM
-export type InputProps =
-  | DateProps
-  | EmailProps
-  | FileProps
-  | NumberProps
-  | PasswordProps
-  | TelProps
-  | TimeProps
-  | TextProps;
-
-export type Field = CheckboxProps | InputProps | RadioProps | SelectProps | TextareaProps;
-
-type FieldGroup = {
-  legend: string;
-  fields: Field[];
-};
-
-export type FormOptions = {
-  name: string;
-  fields: Field[];
-  autofocus?: string; // name of input to auto focus
-};
+export type CheckboxProps = BaseInputProps<'checkbox', HTMLCheckboxAttributes>;
+type DateProps = BaseInputProps<'date', HTMLDateAttributes>;
+type EmailProps = BaseInputProps<'email', HTMLEmailAttributes>;
+type FileProps = BaseInputProps<'file', HTMLFileAttributes>;
+type NumberProps = BaseInputProps<'number', HTMLNumberAttributes>;
+type PasswordProps = BaseInputProps<'password', HTMLPasswordAttributes>;
+export type RadioProps = BaseInputProps<'radio', HTMLRadioAttributes>;
+export type SelectProps = BaseInputProps<'select', HTMLSelectAttributes>;
+type TelProps = BaseInputProps<'tel', HTMLTelAttributes>;
+type TimeProps = BaseInputProps<'time', HTMLTimeAttributes>;
+type TextProps = BaseInputProps<'text', HTMLTextAttributes>;
+export type TextareaProps = BaseInputProps<'textarea', HTMLTextAreaAttributes>;
 
 //* ATTRIBUTE TYPES
 type HTMLCheckboxAttributes = Partial<Pick<HTMLInputElement, 'disabled' | 'required'>>;
@@ -105,55 +42,35 @@ type HTMLDateAttributes = Partial<
   Pick<HTMLInputElement, 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step'>
 >;
 type HTMLEmailAttributes = Partial<
-  Pick<
-    HTMLInputElement,
-    'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'
-  >
+  Pick<HTMLInputElement, 'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'>
 >;
-type HTMLFileAttributes = Partial<
-  Pick<HTMLInputElement, 'accept' | 'disabled' | 'capture' | 'readOnly' | 'required'>
->;
+type HTMLFileAttributes = Partial<Pick<HTMLInputElement, 'accept' | 'disabled' | 'capture' | 'readOnly' | 'required'>>;
 type HTMLNumberAttributes = Partial<
   Pick<HTMLInputElement, 'disabled' | 'max' | 'min' | 'step' | 'readOnly' | 'required'>
 >;
 type HTMLPasswordAttributes = Partial<
-  Pick<
-    HTMLInputElement,
-    'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'
-  >
+  Pick<HTMLInputElement, 'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'>
 >;
 type HTMLRadioAttributes = Partial<Pick<HTMLInputElement, 'disabled' | 'required'>>;
 type HTMLSelectAttributes = Partial<Pick<HTMLSelectElement, 'disabled' | 'multiple' | 'required'>>;
 type HTMLTelAttributes = Partial<
-  Pick<
-    HTMLInputElement,
-    'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'
-  >
+  Pick<HTMLInputElement, 'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'>
 >;
 type HTMLTimeAttributes = Partial<
   Pick<HTMLInputElement, 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step'>
 >;
 type HTMLTextAttributes = Partial<
-  Pick<
-    HTMLInputElement,
-    'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'
-  >
+  Pick<HTMLInputElement, 'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required'>
 >;
 type HTMLTextAreaAttributes = Partial<
   Pick<
     HTMLTextAreaElement,
-    | 'autocapitalize'
-    | 'disabled'
-    | 'maxLength'
-    | 'minLength'
-    | 'readOnly'
-    | 'required'
-    | 'spellcheck'
+    'autocapitalize' | 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required' | 'spellcheck'
   >
 >;
 
 //* CONFIGURATOR
-export type TypeAttributesMap = {
+type TypeAttributesMap = {
   checkbox: HTMLCheckboxAttributes;
   date: HTMLDateAttributes;
   email: HTMLEmailAttributes;
@@ -168,29 +85,19 @@ export type TypeAttributesMap = {
   textarea: HTMLTextAreaAttributes;
 };
 
-export type Type =
-  | 'checkbox'
-  | 'date'
-  | 'email'
-  | 'file'
-  | 'number'
-  | 'password'
-  | 'radio'
-  | 'select'
-  | 'tel'
-  | 'text'
-  | 'time'
-  | 'textarea';
+type Params = [name: BaseProps['name'], label: BaseProps['label'], message?: BaseProps['message']];
 
-class Configurator<T extends Type> {
-  props: {
-    name: string;
-    label: string;
+class Configurator<T extends InputType> {
+  props: BaseProps & {
     attributes: TypeAttributesMap[T];
   };
 
-  constructor(name: string, label: string) {
-    this.props = { name, label, attributes: {} as TypeAttributesMap[T] };
+  constructor(...[name, label, message]: Params) {
+    this.props = {
+      name,
+      label,
+      attributes: {} as TypeAttributesMap[T],
+    };
   }
 
   get $() {
@@ -225,9 +132,7 @@ class Configurator<T extends Type> {
 // Utility type for a mixin constructor
 type Constructor<T = {}> = new (...args: any[]) => T;
 
-function LengthMixin<TBase extends Constructor<Configurator<keyof TypeAttributesMap>>>(
-  Base: TBase,
-) {
+function LengthMixin<TBase extends Constructor<Configurator<keyof TypeAttributesMap>>>(Base: TBase) {
   return class extends Base {
     minlength(length: number) {
       if ('minLength' in this.props.attributes) {
@@ -245,9 +150,7 @@ function LengthMixin<TBase extends Constructor<Configurator<keyof TypeAttributes
   };
 }
 
-function MinMaxStepMixin<TBase extends Constructor<Configurator<keyof TypeAttributesMap>>>(
-  Base: TBase,
-) {
+function MinMaxStepMixin<TBase extends Constructor<Configurator<keyof TypeAttributesMap>>>(Base: TBase) {
   return class extends Base {
     min(value: string) {
       if ('min' in this.props.attributes) {
@@ -330,80 +233,60 @@ class TextareaInputConfigurator extends LengthMixin(Configurator<'textarea'>) {
   }
 }
 
-export type PropConfig = {
-  checkbox: (...args: Params) => CheckboxProps;
-  date: (...args: Params) => DateProps;
-  email: (...args: Params) => EmailProps;
-  file: (...args: Params) => FileProps;
-  number: (...args: Params) => NumberProps;
-  password: (...args: Params) => PasswordProps;
-  radio: (...args: Params) => RadioProps;
-  select: (...args: Params) => SelectProps;
-  time: (...args: Params) => TimeProps;
-  telephone: (...args: Params) => TelProps;
-  text: (...args: Params) => TextProps;
-  textarea: (...args: Params) => TextareaProps;
+type PropConfig = {
+  checkbox: (...args: Params) => CheckboxConfigurator;
+  date: (...args: Params) => DateInputConfigurator;
+  email: (...args: Params) => EmailInputConfigurator;
+  file: (...args: Params) => FileInputConfigurator;
+  number: (...args: Params) => NumberInputConfigurator;
+  password: (...args: Params) => PasswordInputConfigurator;
+  radio: (...args: Params) => RadioConfigurator;
+  select: (...args: Params) => SelectConfigurator;
+  time: (...args: Params) => TimeInputConfigurator;
+  telephone: (...args: Params) => TelConfigurator;
+  text: (...args: Params) => TextConfigurator;
+  textarea: (...args: Params) => TextareaInputConfigurator;
 };
 
-const field: PropConfig = {
-  checkbox: (name, label) => ({
-    type: 'checkbox',
-    name,
-    label,
-  }),
-  date: (name, label) => ({
-    type: 'date',
-    name,
-    label,
-  }),
-  email: (name, label) => ({
-    type: 'email',
-    name,
-    label,
-  }),
-  file: (name, label) => ({
-    type: 'file',
-    name,
-    label,
-  }),
-  number: (name, label) => ({
-    type: 'number',
-    name,
-    label,
-  }),
-  password: (name, label) => ({
-    type: 'password',
-    name,
-    label,
-  }),
-  radio: (name, label) => ({
-    type: 'radio',
-    name,
-    label,
-  }),
-  select: (name, label) => ({
-    type: 'select',
-    name,
-    label,
-  }),
-  telephone: (name, label) => ({
-    type: 'tel',
-    name,
-    label,
-  }),
-  time: (name, label) => ({
-    type: 'time',
-    name,
-    label,
-  }),
-  text: (name, label) => ({
-    type: 'text',
-    name,
-    label,
-  }),
-  textarea: (name, label) => ({
-    type: 'textarea',
-    name,
-    label,
-  }),
+type PropConfig2 = {
+  [K in keyof TypeAttributesMap]: (...args: Params) => InstanceType<Constructor<Configurator<K>>>;
+};
+
+const field: PropConfig2 = {
+  checkbox: (...args) => new CheckboxConfigurator(...args),
+  date: (...args) => new DateInputConfigurator(...args),
+  email: (...args) => new EmailInputConfigurator(...args),
+  file: (...args) => new FileInputConfigurator(...args),
+  number: (...args) => new NumberInputConfigurator(...args),
+  password: (...args) => new PasswordInputConfigurator(...args),
+  radio: (...args) => new RadioConfigurator(...args),
+  select: (...args) => new SelectConfigurator(...args),
+  time: (...args) => new TimeInputConfigurator(...args),
+  tel: (...args) => new TelConfigurator(...args),
+  text: (...args) => new TextConfigurator(...args),
+  textarea: (...args) => new TextareaInputConfigurator(...args),
+};
+
+//* FORM
+export type InputProps =
+  | DateProps
+  | EmailProps
+  | FileProps
+  | NumberProps
+  | PasswordProps
+  | TelProps
+  | TimeProps
+  | TextProps;
+
+type Field = CheckboxProps | InputProps | RadioProps | SelectProps | TextareaProps;
+
+type FieldGroup = {
+  legend: string;
+  fields: Field[];
+};
+
+export type FormOptions = {
+  name: string;
+  fields: Field[];
+  autofocus?: string;
 };

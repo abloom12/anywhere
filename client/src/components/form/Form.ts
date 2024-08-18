@@ -12,21 +12,20 @@ import { Select } from './Select';
 import { Textarea } from './Textarea';
 
 class Form {
-  options: Options;
-  formElement: HTMLFormElement;
-  fields: Map<string, Input | Textarea | Select>;
+  #options: Options;
+  #form: HTMLFormElement;
+  #fields: Map<string, Input | Textarea | Select>;
 
   constructor(options: Options) {
-    this.options = Object.assign({}, options);
-    this.formElement = document.createElement('form');
-    this.fields = new Map();
+    this.#options = Object.assign({}, options);
+    this.#form = document.createElement('form');
+    this.#fields = new Map();
 
     this.#initializeFields();
-    this.#build();
   }
 
   #initializeFields() {
-    this.options.fields.forEach(field => {
+    this.#options.fields.forEach(field => {
       switch (field.type) {
         case 'checkbox': {
           break;
@@ -35,24 +34,18 @@ class Form {
           break;
         }
         case 'select': {
-          this.fields.set(field.name, new Select(field));
+          this.#fields.set(field.name, new Select(field));
           break;
         }
         case 'textarea': {
-          this.fields.set(field.name, new Textarea(field));
+          this.#fields.set(field.name, new Textarea(field));
           break;
         }
         default: {
-          this.fields.set(field.name, new Input(field));
+          this.#fields.set(field.name, new Input(field));
         }
       }
     });
-  }
-
-  #build() {
-    for (const [name, field] of this.fields) {
-      // append input to form
-    }
   }
 
   populate() {}
@@ -66,32 +59,32 @@ class Form {
   #onChange() {}
 
   getValue(name: string) {
-    const field = this.fields.get(name as string);
+    const field = this.#fields.get(name as string);
     return field?.control.value;
   }
   setValue(name: string, value: string) {
-    const field = this.fields.get(name);
+    const field = this.#fields.get(name);
 
     if (field) {
       field.control.value = value;
     }
   }
   setDisabled(name: string, isDisabled: boolean) {
-    const field = this.fields.get(name);
+    const field = this.#fields.get(name);
 
     if (field) {
       field.control.disabled = isDisabled;
     }
   }
   setReadonly(name: string, isReadOnly: boolean) {
-    const field = this.fields.get(name);
+    const field = this.#fields.get(name);
 
     if (field) {
       field.control.disabled = isReadOnly;
     }
   }
   setRequired(name: string, isRequired: boolean) {
-    const field = this.fields.get(name);
+    const field = this.#fields.get(name);
 
     if (field) {
       field.control.disabled = isRequired;

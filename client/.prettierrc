@@ -2,10 +2,11 @@
   "arrowParens": "avoid",
   "bracketSpacing": true,
   "experimentalTernaries": true,
-  "printWidth": 100,
+  "printWidth": 120,
   "quoteProps": "consistent",
   "semi": true,
   "singleQuote": true,
+  "singleAttributePerLine": true,
   "trailingComma": "all",
   "tabWidth": 2,
   "useTabs": false
