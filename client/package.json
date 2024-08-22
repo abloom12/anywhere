@@ -15,11 +15,8 @@
     "chalk": "^5.3.0",
     "chart.js": "^4.4.3",
     "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "filepond": "^4.31.1",
-    "immer": "^10.1.1",
-    "reselect": "^5.1.1",
     "signature_pad": "^5.0.2",
     "tailwind-merge": "^2.4.0",
     "zod": "^3.23.8"
