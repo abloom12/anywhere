@@ -1,6 +1,5 @@
 import './style.css';
 
-import { createRouter } from './router';
 import { Form } from './components/form/Form';
 
 import { cva } from 'class-variance-authority';
