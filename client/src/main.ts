@@ -15,3 +15,9 @@ import { Router } from './router';
 // });
 
 const router = new Router();
+
+router.createRoute({ path: '/users' });
+router.createRoute({ path: '/users/:id' });
+router.createRoute({ path: '/users/:id/posts/:postid' });
+
+router.visualizeTrie();
