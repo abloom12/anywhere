@@ -117,35 +117,3 @@
 //   document.addEventListener('DOMContentLoaded', () => {
 //     router.navigate('/'); // Navigate to root on load
 //   });
-
-// print(node: TrieNode = this.head, prefix: string = '', isLast: boolean = true): void {
-//     // Get all children (static segments)
-//     const children = Array.from(node.children.keys());
-
-//     // Track if dynamicChild exists, treat it as another child
-//     const hasDynamicChild = !!node.dynamicChild;
-//     const totalChildrenCount = children.length + (hasDynamicChild ? 1 : 0);
-
-//     // Iterate over static children
-//     children.forEach((segment, index) => {
-//       const childNode = node.children.get(segment)!;
-//       const isLastChild = index === totalChildrenCount - 1 && !hasDynamicChild;
-//       const marker = childNode.isComplete ? '[Complete]' : '';
-
-//       // Print the tree-like structure with connectors
-//       console.log(`${prefix}${isLast ? '└── ' : '├── '}${segment} ${marker}`);
-
-//       // Call recursively with adjusted prefix
-//       const newPrefix = prefix + (isLast ? '    ' : '│   ');
-//       this.print(childNode, newPrefix, isLastChild);
-//     });
-
-//     // Handle dynamic child if present
-//     if (hasDynamicChild) {
-//       const marker = node.dynamicChild!.isComplete ? '[Complete]' : '';
-//       const dynamicKey = node.dynamicChild!.dynamicKey || ':dynamic';
-//       console.log(`${prefix}${isLast ? '└── ' : '├── '}:${dynamicKey} ${marker}`);
-//       this.print(node.dynamicChild!, prefix + (isLast ? '    ' : '│   '), true);
-//     }
-//   }
-// }
