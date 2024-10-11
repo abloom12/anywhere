@@ -10,3 +10,8 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }
+
+body {
+  background: #202020;
+  color: #fff;
+}

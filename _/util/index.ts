@@ -1,5 +1,5 @@
 export async function fetchData(service: string, retrieveData: {}) {
-  const URL_BASE = `"https"://gk-unit-test.primarysolutions.net:443/./service/Anywhere.svc`;
+  const URL_BASE = `https://gk-unit-test.primarysolutions.net:443/./service/Anywhere.svc`;
   const URL = `${URL_BASE}/${service}/`;
 
   const controller = new AbortController();
@@ -8,13 +8,11 @@ export async function fetchData(service: string, retrieveData: {}) {
 
   try {
     let response = await fetch(URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: 'AUTH_TOKEN', ...retrieveData }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: "AUTH_TOKEN", ...retrieveData }),
       signal: controller.signal,
     });
-
-    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -24,13 +22,15 @@ export async function fetchData(service: string, retrieveData: {}) {
 
     return data;
   } catch (error: any) {
-    if (error.name === 'AbortError') {
+    if (error.name === "AbortError") {
       console.log(`Request to ${service} timed out`);
     } else {
       console.log(`There was a problem with ${service}`, error.message);
     }
 
     throw error;
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
@@ -53,7 +53,12 @@ export function shallowCompareObjects<T>(objA: T, objB: T): boolean {
     return true;
   }
 
-  if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
+  if (
+    typeof objA !== "object" ||
+    objA === null ||
+    typeof objB !== "object" ||
+    objB === null
+  ) {
     return false;
   }
 
@@ -76,7 +81,10 @@ export function shallowCompareObjects<T>(objA: T, objB: T): boolean {
   return true;
 }
 
-export function shallowCompareMaps<K, V>(mapA: Map<K, V>, mapB: Map<K, V>): boolean {
+export function shallowCompareMaps<K, V>(
+  mapA: Map<K, V>,
+  mapB: Map<K, V>
+): boolean {
   if (Object.is(mapA, mapB)) {
     return true;
   }
@@ -113,7 +121,7 @@ export function shallowCompareSets<V>(setA: Set<V>, setB: Set<V>): boolean {
 }
 
 export function uniqueId(): string {
-  return btoa(crypto.randomUUID().split('-')[4]).replace(/[0-9]/g, num =>
-    String.fromCharCode(97 + parseInt(num)),
+  return btoa(crypto.randomUUID().split("-")[4]).replace(/[0-9]/g, (num) =>
+    String.fromCharCode(97 + parseInt(num))
   );
 }

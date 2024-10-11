@@ -1,29 +1,21 @@
 import './style.css';
 
-import { Form } from './components/form/Form';
-import { Router } from './router';
-
-// const form = new Form({
-//   name: 'test',
-//   fields: [
-//     field.text('firstname', 'First Name').required()._,
-//     field.text('lastname', 'Last Name').required().$,
-//     field.number('age', 'Age').min(18).cfg,
-//     field.telephone('phone', 'Phone #').required().c,
-//     field.textarea('about', 'About You').max(10000).,
-//   ],
-// });
+import { Router } from './lib/router';
 
 const router = new Router();
 
-router.createRoute({ path: '/users' });
-router.createRoute({ path: '/users/:id' });
-router.createRoute({ path: '/users/:id/details' });
-router.createRoute({ path: '/users/:id/posts' });
-router.createRoute({ path: '/users/:id/posts/:postid' });
+// router.createRoute({ path: '/users' });
+// router.createRoute({ path: '/users/:id' });
+// router.createRoute({ path: '/users/:id/details' });
+// router.createRoute({ path: '/users/:id/posts' });
+// router.createRoute({ path: '/users/:id/posts/:postid' });
 
-router.createRoute({ path: '/foo/:bar/:baz' });
+// router.createRoute({ path: '/foo/:bar/:baz' });
 
-router.visualizeTrie();
+// router.visualizeTrie();
 
-router.navigate('/users');
+// router.navigate('/users');
+
+router.createRoute({
+  path: '/home',
+});

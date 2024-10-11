@@ -1,10 +1,10 @@
-import { node, shallowCompareObjects } from '@/util/index';
+import { node, shallowCompareObjects } from "@/util/index";
 
 type State = Record<string, any>;
 type ListenerFunction<T> = (selectedState: T) => void;
 type SelectorFunction<T> = (state: State) => T;
 
-class CreateStore {
+class Store {
   #state: State = {};
   #head: {} = {};
   #current: {} = {};
@@ -17,4 +17,4 @@ class CreateStore {
   }
 }
 
-export { CreateStore };
+export { Store };

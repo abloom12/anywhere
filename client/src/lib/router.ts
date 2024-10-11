@@ -1,28 +1,26 @@
 class TrieNode {
   children: Map<string, TrieNode>;
   isComplete: boolean;
-  segment: string;
-  dynamicChild?: TrieNode;
+  dynamicChild?: [string, TrieNode];
 
-  constructor(segment: string) {
+  constructor() {
     this.children = new Map();
     this.isComplete = false;
-    this.segment = segment;
   }
 
   addChild(segment: string, isCompleted: boolean = false): TrieNode {
     if (segment.startsWith(':')) {
       if (!this.dynamicChild) {
-        this.dynamicChild = new TrieNode(segment);
+        this.dynamicChild = [segment, new TrieNode()];
       }
 
-      this.dynamicChild.isComplete = this.dynamicChild.isComplete || isCompleted;
+      this.dynamicChild[1].isComplete = this.dynamicChild[1].isComplete || isCompleted;
 
-      return this.dynamicChild;
+      return this.dynamicChild[1];
     }
 
     if (!this.children.has(segment)) {
-      this.children.set(segment, new TrieNode(segment));
+      this.children.set(segment, new TrieNode());
     }
 
     const childNode = this.children.get(segment)!;
@@ -38,7 +36,7 @@ class TrieNode {
     }
 
     if (this.dynamicChild) {
-      return this.dynamicChild;
+      return this.dynamicChild[1];
     }
 
     return undefined;
@@ -49,7 +47,7 @@ class Trie {
   head: TrieNode;
 
   constructor() {
-    this.head = new TrieNode('root');
+    this.head = new TrieNode();
   }
 
   add({ path }: { path: string }) {
@@ -84,7 +82,7 @@ class Trie {
     let index = 0;
 
     if (node === this.head) {
-      console.log(`${this.head.segment}`);
+      console.log(`/`);
     }
 
     for (const [segment, childNode] of node.children) {
@@ -100,10 +98,9 @@ class Trie {
     }
 
     if (hasDynamicChild) {
-      const marker = node.dynamicChild!.isComplete ? '[Complete]' : '';
-      // const dynamicKey = node.dynamicChild!.dynamicKey || ':dynamic';
-      console.log(`${prefix}${isLast ? '└── ' : '├── '}${node.dynamicChild?.segment} ${marker}`);
-      this.print(node.dynamicChild!, prefix + (isLast ? '    ' : '│   '), true);
+      const marker = node.dynamicChild![1].isComplete ? '[Complete]' : '';
+      console.log(`${prefix}${isLast ? '└── ' : '├── '}${node.dynamicChild![0]} ${marker}`);
+      this.print(node.dynamicChild![1], prefix + (isLast ? '    ' : '│   '), true);
     }
   }
 }
@@ -116,11 +113,7 @@ class Router {
   }
 
   #links() {
-    //TODO: need to decide how I want to do this
-    //? if we build nav manually in index.html then we should:
-    //- query select nav container, add event listener to that
-    //? if we build nav via JS as apart of the root view then we should
-    //- just do same as above minus the query select need
+    //TODO: prevent default on link clink events, then call this.naviagte()
   }
   #transitionRoute() {
     const url = new URL(window.location.href);
@@ -135,6 +128,11 @@ class Router {
   // Public
   createRoute(route: { path: string }) {
     this.routeTrie.add(route);
+
+    // children.forEach((childRoute) => {
+    //   const childPath = `${path}${childRoute.path}`;
+    //   this.createRoute({ ...childRoute, path: childPath });
+    // });
   }
   navigate(url: string) {
     history.pushState(null, '', url);
