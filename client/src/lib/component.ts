@@ -1,14 +1,9 @@
-abstract class Component<P> {
+abstract class Component {
   protected rootEle: DocumentFragment;
-  protected props: P;
 
-  constructor(dirtyProps: P) {
+  constructor() {
     this.rootEle = document.createDocumentFragment();
-    this.props = this.handleProps(dirtyProps);
-    this.render();
   }
-
-  protected abstract handleProps(dirtyProps: P): P;
 
   protected abstract render(): void;
 
