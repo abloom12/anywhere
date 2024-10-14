@@ -105,34 +105,83 @@ class Trie {
   }
 }
 
+type Middleware = (params: { next: Function; path: string }) => Promise<void> | void;
+
 class Router {
-  routeTrie: Trie;
+  routeTrie: Trie = new Trie();
+  middlewares: Array<Middleware> = [];
 
   constructor() {
-    this.routeTrie = new Trie();
+    this.#init();
   }
 
-  #links() {
-    //TODO: prevent default on link clink events, then call this.naviagte()
+  #init() {
+    window.addEventListener('popstate', () => {
+      this.#transitionRoute();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      [...document.querySelectorAll('a')].forEach(link => {
+        link.removeEventListener('click', this.#linkHandler);
+        link.addEventListener('click', this.#linkHandler);
+      });
+    });
   }
-  #transitionRoute() {
+  #linkHandler(e: MouseEvent) {
+    if ((e.ctrlKey || e.metaKey) && e.target instanceof HTMLElement && e.target.tagName.toLowerCase() === 'a') {
+      return false;
+    }
+
+    let location = e.target instanceof HTMLElement && e.target.getAttribute('href');
+    if (typeof location === 'undefined' || location === null) {
+      return false;
+    }
+
+    if (typeof location === 'string' && location.match(/^(http|https)/) && typeof URL !== 'undefined') {
+      try {
+        const u = new URL(location);
+        location = u.pathname + u.search;
+      } catch (err) {}
+    }
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (typeof location === 'string') {
+      this.navigate(location);
+    }
+  }
+
+  async #transitionRoute(): Promise<void> {
     const url = new URL(window.location.href);
     const path = url.pathname;
     const query = url.search;
-    console.log(url);
 
     const match = this.routeTrie.get(path);
-    console.log(match);
+
+    const runMiddlewares = async (index: number): Promise<void> => {
+      if (index < this.middlewares.length) {
+        await this.middlewares[index]({
+          next: async () => await runMiddlewares(index + 1),
+          path,
+        });
+      }
+    };
+
+    await runMiddlewares(0);
   }
 
   // Public
-  createRoute(route: { path: string }) {
+  on(route: { path: string }) {
     this.routeTrie.add(route);
 
     // children.forEach((childRoute) => {
     //   const childPath = `${path}${childRoute.path}`;
     //   this.createRoute({ ...childRoute, path: childPath });
     // });
+  }
+  use(middleware: Middleware) {
+    this.middlewares.push(middleware);
   }
   navigate(url: string) {
     history.pushState(null, '', url);

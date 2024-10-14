@@ -1,32 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-//import { mergeClasses } from '@/util/cn';
-
-// states: normal, focus, hover, active, progress/loading, disabled
-// variants: contained, outlined/ghost, text
-// emphasis: high: default/contained, med: outlined/ghost, low: text
-
-//! Rules
-//! use capitlization
-//! don't wrap text
-
-const buttonVariants = cva(['disabled:pointer-events-none', 'disabled:opacity-50'], {
-  variants: {
-    variant: {
-      contained: '',
-      ghost: '',
-      text: '',
-    },
-    size: {
-      sm: '',
-      md: 'px-2',
-      lg: '',
-    },
-  },
-  defaultVariants: {
-    variant: 'contained',
-    size: 'md',
-  },
-});
+import { Component } from '@/lib/component';
 
 type Props = {
   text: string;
@@ -36,15 +9,54 @@ type Props = {
   icon?: string;
 };
 
-class Button {
+const buttonVariants = cva(
+  ['disabled:pointer-events-none', 'disabled:opacity-50'],
+  {
+    variants: {
+      variant: {
+        contained: '',
+        ghost: '',
+        text: '',
+      },
+      size: {
+        sm: '',
+        md: 'px-2',
+        lg: '',
+      },
+    },
+    defaultVariants: {
+      variant: 'contained',
+      size: 'md',
+    },
+  },
+);
+
+class Button extends Component {
   #props: Props;
-  #element: HTMLButtonElement;
+  #element: HTMLButtonElement = document.createElement('button');
 
   constructor(props: Props) {
-    this.#props = { ...props };
-    this.#element = document.createElement('button');
+    super();
+
+    this.#props = {
+      type: 'button',
+      size: 'md',
+      variant: 'contained',
+      ...props,
+    };
+  }
+
+  onClick(e: MouseEvent) {}
+
+  render() {
     this.#element.textContent = this.#props.text;
-    this.#element.classList.add(buttonVariants({ variant: this.#props.variant, size: this.#props.size }));
+    this.#element.classList.add(
+      buttonVariants({ variant: this.#props.variant, size: this.#props.size }),
+    );
+
+    this.#element.addEventListener('click', this.onClick);
+
+    this.rootEle.appendChild(this.#element);
   }
 }
 

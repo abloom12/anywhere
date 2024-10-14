@@ -2,7 +2,7 @@
   "arrowParens": "avoid",
   "bracketSpacing": true,
   "experimentalTernaries": true,
-  "printWidth": 120,
+  "printWidth": 80,
   "quoteProps": "consistent",
   "semi": true,
   "singleQuote": true,

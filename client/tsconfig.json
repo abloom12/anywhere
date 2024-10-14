@@ -24,5 +24,5 @@
     "target": "ES2020",
     "useDefineForClassFields": true
   },
-  "include": ["src", "../_/store.ts", "../_/util"]
+  "include": ["src"]
 }
