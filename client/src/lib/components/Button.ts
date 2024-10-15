@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Component } from '@/lib/component';
+import { Component } from '@/lib/core/component';
 
 type Props = {
   text: string;
@@ -47,6 +47,7 @@ class Button extends Component {
   }
 
   onClick(e: MouseEvent) {}
+  onKeyDown(e: KeyboardEvent) {}
 
   render() {
     this.#element.textContent = this.#props.text;
@@ -55,8 +56,9 @@ class Button extends Component {
     );
 
     this.#element.addEventListener('click', this.onClick);
+    this.#element.addEventListener('keydown', this.onKeyDown);
 
-    this.rootEle.appendChild(this.#element);
+    this.rootElement.appendChild(this.#element);
   }
 }
 

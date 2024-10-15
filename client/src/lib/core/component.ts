@@ -1,14 +1,14 @@
 abstract class Component {
-  protected rootEle: DocumentFragment;
+  protected rootElement: DocumentFragment;
 
   constructor() {
-    this.rootEle = document.createDocumentFragment();
+    this.rootElement = document.createDocumentFragment();
   }
 
   protected abstract render(): void;
 
   appendTo(node: HTMLElement): void {
-    node.appendChild(this.rootEle);
+    node.appendChild(this.rootElement);
   }
 }
 

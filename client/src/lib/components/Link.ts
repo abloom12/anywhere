@@ -1,4 +1,4 @@
-import { Component } from '@/lib/component';
+import { Component } from '@/lib/core/component';
 
 type Props = {
   text: string;
@@ -13,6 +13,9 @@ class Link extends Component {
 
     this.#props = { ...props };
   }
+
+  onClick(e: MouseEvent) {}
+  onKeyDown(e: KeyboardEvent) {}
 
   render() {
     this.#element.textContent = this.#props.text;

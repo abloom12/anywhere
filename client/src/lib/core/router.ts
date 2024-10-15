@@ -112,10 +112,6 @@ class Router {
   middlewares: Array<Middleware> = [];
 
   constructor() {
-    this.#init();
-  }
-
-  #init() {
     window.addEventListener('popstate', () => {
       this.#transitionRoute();
     });
@@ -127,6 +123,7 @@ class Router {
       });
     });
   }
+
   #linkHandler(e: MouseEvent) {
     if ((e.ctrlKey || e.metaKey) && e.target instanceof HTMLElement && e.target.tagName.toLowerCase() === 'a') {
       return false;
