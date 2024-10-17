@@ -41,4 +41,3 @@ store.subscribe(() => {
 document.addEventListener("click", () => {
   store.dispatch({ type: "INCREMENT" });
 });
-o;

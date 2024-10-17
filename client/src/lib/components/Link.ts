@@ -6,7 +6,6 @@ type Props = {
 
 class Link extends Component {
   #props: Props;
-  #element: HTMLAnchorElement = document.createElement('a');
 
   constructor(props: Props) {
     super();
@@ -18,7 +17,8 @@ class Link extends Component {
   onKeyDown(e: KeyboardEvent) {}
 
   render() {
-    this.#element.textContent = this.#props.text;
+    const link: HTMLAnchorElement = document.createElement('a');
+    link.textContent = this.#props.text;
   }
 }
 

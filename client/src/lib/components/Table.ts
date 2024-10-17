@@ -29,7 +29,6 @@ import { Component } from '@/lib/core/component';
 
 //? THOUGHTS
 //?------------------------
-//? Do I even need this.#element? user shouldn't have to do anything to the dom element of any component.
 
 type Props = {
   headings: string[];
@@ -37,7 +36,6 @@ type Props = {
 
 class Table extends Component {
   #props: Props;
-  #element: HTMLTableElement = document.createElement('table');
 
   constructor(props: Props) {
     super();
@@ -48,27 +46,29 @@ class Table extends Component {
   }
 
   render() {
-    const twrap = document.createElement('div');
+    const table: HTMLTableElement = document.createElement('table');
 
-    const tcontrol = document.createElement('div');
+    const twrap: HTMLDivElement = document.createElement('div');
 
-    const thead = document.createElement('thead');
+    const tcontrol: HTMLDivElement = document.createElement('div');
+
+    const thead: HTMLTableSectionElement = document.createElement('thead');
     this.#props.headings.forEach(heading => {
-      const th = document.createElement('th');
-      //const headingNode = document.createTextNode(heading);
-      th.textContent = heading;
+      const th: HTMLTableCellElement = document.createElement('th');
+      const headingNode = document.createTextNode(heading);
+      th.appendChild(headingNode);
       thead.appendChild(th);
     });
 
-    const tbody = document.createElement('tbody');
+    const tbody: HTMLTableSectionElement = document.createElement('tbody');
 
-    this.#element.appendChild(thead);
-    this.#element.appendChild(tbody);
+    table.appendChild(thead);
+    table.appendChild(tbody);
 
     twrap.appendChild(tcontrol);
-    twrap.appendChild(this.#element);
+    twrap.appendChild(table);
 
-    this.rootElement.appendChild(this.#element);
+    this.rootElement.appendChild(table);
   }
 }
 

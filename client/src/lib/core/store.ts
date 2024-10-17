@@ -1,4 +1,16 @@
-import { node, shallowCompareObjects } from "@/util/index";
+type Node<T> = {
+  state: T;
+  prev: Node<T> | null;
+  next: Node<T> | null;
+};
+
+function node<T>(state: T): Node<T> {
+  return {
+    state,
+    prev: null,
+    next: null,
+  };
+}
 
 type State = Record<string, any>;
 type ListenerFunction<T> = (selectedState: T) => void;

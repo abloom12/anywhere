@@ -33,7 +33,6 @@ const buttonVariants = cva(
 
 class Button extends Component {
   #props: Props;
-  #element: HTMLButtonElement = document.createElement('button');
 
   constructor(props: Props) {
     super();
@@ -50,15 +49,17 @@ class Button extends Component {
   onKeyDown(e: KeyboardEvent) {}
 
   render() {
-    this.#element.textContent = this.#props.text;
-    this.#element.classList.add(
+    const button: HTMLButtonElement = document.createElement('button');
+    button.textContent = this.#props.text;
+
+    button.classList.add(
       buttonVariants({ variant: this.#props.variant, size: this.#props.size }),
     );
 
-    this.#element.addEventListener('click', this.onClick);
-    this.#element.addEventListener('keydown', this.onKeyDown);
+    button.addEventListener('click', this.onClick);
+    button.addEventListener('keydown', this.onKeyDown);
 
-    this.rootElement.appendChild(this.#element);
+    this.rootElement.appendChild(button);
   }
 }
 
