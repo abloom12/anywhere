@@ -1,4 +1,4 @@
-import { Component } from '@/lib/core/component';
+import { Component } from '@/components/component';
 
 // table, thead, tbody, tfoot, tr, th, td, colgroup, col
 

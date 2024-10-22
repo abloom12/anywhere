@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Component } from '@/lib/core/component';
+import { Component } from '@/components/component';
 
 type Props = {
   text: string;

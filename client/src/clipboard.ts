@@ -30,5 +30,3 @@
 //     field.textarea('about', 'About You').max(10000).,
 //   ],
 // });
-
-//! CHAT GPT ROUTER 1

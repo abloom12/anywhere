@@ -9,18 +9,23 @@
 //TODO: State Validation | yup
 //TODO: Error Handling
 
-import { produce } from 'immer';
+import { produce } from "immer";
 //import { createSelector } from "reselect";
-import { node, shallowCompareObjects } from '@/util/index';
-import { log } from '@/util/logger';
+import { node, shallowCompareObjects } from "@/util/index";
+import { log } from "@/util/logger";
 
 type State = Record<string, any>;
 type ListenerFunction<T> = (selectedState: T) => void;
 type SelectorFunction<T> = (state: State) => T;
 
 type StoreMethods = {
-  setState: (producer: (draft: State) => void | Array<(draft: State) => void>) => void;
-  subscribe: <T>(selector: SelectorFunction<T>, listener: ListenerFunction<T>) => () => void;
+  setState: (
+    producer: (draft: State) => void | Array<(draft: State) => void>
+  ) => void;
+  subscribe: <T>(
+    selector: SelectorFunction<T>,
+    listener: ListenerFunction<T>
+  ) => () => void;
   undo: () => void;
   redo: () => void;
   resetState: (defaultState?: State) => void;
@@ -38,7 +43,10 @@ type Subscription<T> = {
 //   query: { [key: string]: string };
 // }) => Promise<void> | void;
 
-function createStore(initialState: State, historyLimit: number = 100): StoreMethods {
+function createStore(
+  initialState: State,
+  historyLimit: number = 100
+): StoreMethods {
   let state = initialState;
   const subscriptions: Array<Subscription<any>> = [];
   //const middlewares: Array<Middleware> = [];
@@ -50,8 +58,11 @@ function createStore(initialState: State, historyLimit: number = 100): StoreMeth
 
   // Public APIs
   //----------------------------
-  function subscribe<T>(selector: (state: State) => T, listener: (selectedState: T) => void) {
-    log('subscribe fired');
+  function subscribe<T>(
+    selector: (state: State) => T,
+    listener: (selectedState: T) => void
+  ) {
+    log("subscribe fired");
     const selectedState = selector(state);
     const previousSelection = { current: selectedState };
 
@@ -62,18 +73,19 @@ function createStore(initialState: State, historyLimit: number = 100): StoreMeth
     });
 
     return () => {
-      const index = subscriptions.findIndex(s => s.listener === listener);
+      const index = subscriptions.findIndex((s) => s.listener === listener);
       if (index > -1) {
         subscriptions.splice(index, 1);
       }
     };
   }
 
-  function setState(producer: (draft: State) => void | Array<(draft: State) => void>): void {
-    log('setstate fired');
-    const newState = produce(state, draft => {
+  function setState(
+    producer: (draft: State) => void | Array<(draft: State) => void>
+  ): void {
+    const newState = produce(state, (draft) => {
       if (Array.isArray(producer)) {
-        producer.forEach(fn => fn(draft));
+        producer.forEach((fn) => fn(draft));
       } else {
         producer(draft);
       }
@@ -96,7 +108,6 @@ function createStore(initialState: State, historyLimit: number = 100): StoreMeth
     }
 
     subscriptions.forEach(({ selector, listener, previousSelection }) => {
-      log('setstate listener fired');
       const selectedState = selector(state);
       if (!shallowCompareObjects(previousSelection.current, selectedState)) {
         listener(selectedState);
