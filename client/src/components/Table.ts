@@ -1,6 +1,4 @@
-import { Component } from '@/components/component';
-
-// table, thead, tbody, tfoot, tr, th, td, colgroup, col
+import { Component } from '@/components/ComponentBase';
 
 // table = table ref
 // table.tHead = table header
@@ -10,25 +8,29 @@ import { Component } from '@/components/component';
 // table[rowID] = row ref
 // table.caption = table caption
 
-//* FEATURES
 //*------------------------
-//* bulk actions & multi select
-//* group by (groups rows in collapsable container)
-//* column sort
-//* pagination
-//* show/hide columns
-//* row density control (row height)
-//* sticky table header
-//* fullscreen mode
-//* table search (highlight words? or filter out rows? or both?)
-//* inline edit
+//* Elements
+//*------------------------
+//*| column sort
+//*| show/hide columns
+//*| table search (highlight words or filter out rows)
+//*-------------------------
+//* Top Bar
+//*------------------------
+//*| bulk actions - dropdown?
+//*| multi select - button icon
+//*|
+//*| row density (sm, md, lg) - toggle btns
+//*|
+//*| fullscreen - button icon
+//*| table refresh - button icon
+//*-------------------------
+//? pagination
+//? tabed table
+//? inline edit
+//*-------------------------
 //* onRowClick => expand row, tooltip, popup, sidebar
 //* if we don't do inline edit allow edit in onRowClick view
-//* table data refresh button
-//* tabed table?
-
-//? THOUGHTS
-//?------------------------
 
 type Props = {
   headings: string[];
@@ -43,9 +45,11 @@ class Table extends Component {
     this.#props = {
       ...props,
     };
+
+    this.render();
   }
 
-  render() {
+  protected render(): void {
     const table: HTMLTableElement = document.createElement('table');
 
     const twrap: HTMLDivElement = document.createElement('div');
@@ -69,6 +73,10 @@ class Table extends Component {
     twrap.appendChild(table);
 
     this.rootElement.appendChild(table);
+  }
+
+  protected updateWithState(state: Record<string, any>): void {
+    // upadte componet with new data
   }
 }
 

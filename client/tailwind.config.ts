@@ -9,7 +9,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {},
+        primary: {
+          DEFAULT: 'rgb(var(--primary))',
+        },
+        secondary: {
+          DEFAULT: 'rgb(var(--secondary))',
+        },
       },
     },
   },
@@ -19,8 +24,8 @@ export default {
     plugin(({ addBase }) => {
       addBase({
         ':root': {
-          '--primary': '54, 106, 152', // 208, 48, 40 || #366a98
-          '--secondary': '129, 185, 65', // 88, 48, 49 || #81b941
+          '--primary': '54, 106, 152', // 208, 48, 40 || #366A98
+          '--secondary': '129, 185, 65', // 88, 48, 49 || #81B941
         },
       });
     }),

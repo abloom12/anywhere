@@ -13,7 +13,8 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@ui/*": ["./src/components/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,

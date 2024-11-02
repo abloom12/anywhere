@@ -1,35 +1,46 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Component } from '@/components/component';
-
-type Props = {
-  text: string;
-  type?: 'submit' | 'button';
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'contained' | 'ghost' | 'text';
-  icon?: string;
-};
+import { Component } from '@/components/ComponentBase';
 
 const buttonVariants = cva(
-  ['disabled:pointer-events-none', 'disabled:opacity-50'],
+  [
+    'font-medium',
+    'text-sm',
+    'uppercase',
+    'inline-flex',
+    'items-center',
+    'justify-center',
+    'text-nowrap',
+    'whitespace-nowrap',
+    'disabled:pointer-events-none',
+    'disabled:opacity-50',
+  ],
   {
     variants: {
       variant: {
-        contained: '',
-        ghost: '',
-        text: '',
+        contained: ['bg-primary', 'rounded'],
+        ghost: ['rounded', 'border-2', 'border-primary', 'border-solid'],
+        text: [],
       },
       size: {
-        sm: '',
-        md: 'px-2',
-        lg: '',
+        small: ['h-9', 'px-2'],
+        medium: ['h-10', 'px-3'],
+        large: ['h-11', 'px-8'],
+        icon: ['h-10', 'w-10'],
       },
     },
+    compoundVariants: [],
     defaultVariants: {
       variant: 'contained',
-      size: 'md',
+      size: 'medium',
     },
   },
 );
+
+type Props = VariantProps<typeof buttonVariants> & {
+  text: string;
+  type?: 'submit' | 'button';
+  icon?: string;
+};
 
 class Button extends Component {
   #props: Props;
@@ -39,25 +50,22 @@ class Button extends Component {
 
     this.#props = {
       type: 'button',
-      size: 'md',
+      size: 'medium',
       variant: 'contained',
       ...props,
     };
-  }
 
-  onClick(e: MouseEvent) {}
-  onKeyDown(e: KeyboardEvent) {}
+    this.render();
+  }
 
   render() {
     const button: HTMLButtonElement = document.createElement('button');
     button.textContent = this.#props.text;
 
-    button.classList.add(
-      buttonVariants({ variant: this.#props.variant, size: this.#props.size }),
-    );
-
-    button.addEventListener('click', this.onClick);
-    button.addEventListener('keydown', this.onKeyDown);
+    button.className = buttonVariants({
+      variant: this.#props.variant,
+      size: this.#props.size,
+    });
 
     this.rootElement.appendChild(button);
   }

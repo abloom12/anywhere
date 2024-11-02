@@ -1,7 +1,15 @@
-import { Component } from '@/components/component';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { Component } from '@/components/ComponentBase';
 
-type Props = {
+const linkVariants = cva([], {
+  variants: {},
+  compoundVariants: [],
+  defaultVariants: {},
+});
+
+type Props = VariantProps<typeof linkVariants> & {
   text: string;
+  href: string;
 };
 
 class Link extends Component {
@@ -13,12 +21,13 @@ class Link extends Component {
     this.#props = { ...props };
   }
 
-  onClick(e: MouseEvent) {}
-  onKeyDown(e: KeyboardEvent) {}
-
   render() {
     const link: HTMLAnchorElement = document.createElement('a');
+
     link.textContent = this.#props.text;
+    link.href = this.#props.href;
+
+    this.rootElement.appendChild(link);
   }
 }
 

@@ -1,5 +1,7 @@
 import './style.css';
 
-import { Store } from '@/lib/store';
+import { Button } from '@/components/Button';
 
-const globalStore = new Store({});
+const app = document.getElementById('app');
+if (app) {
+}
