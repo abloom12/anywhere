@@ -119,9 +119,3 @@ export function shallowCompareSets<V>(setA: Set<V>, setB: Set<V>): boolean {
 
   return true;
 }
-
-export function uniqueId(): string {
-  return btoa(crypto.randomUUID().split("-")[4]).replace(/[0-9]/g, (num) =>
-    String.fromCharCode(97 + parseInt(num))
-  );
-}
