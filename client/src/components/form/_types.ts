@@ -1,23 +1,58 @@
 type AttributeConfig = {
   checkbox: 'disabled' | 'required';
   date: 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step';
-  email: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
+  email:
+    | 'disabled'
+    | 'maxLength'
+    | 'minLength'
+    | 'readOnly'
+    | 'required';
   file: 'accept' | 'disabled' | 'capture' | 'readOnly' | 'required';
-  number: 'disabled' | 'max' | 'min' | 'step' | 'readOnly' | 'required';
-  password: 'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required';
+  number:
+    | 'disabled'
+    | 'max'
+    | 'min'
+    | 'step'
+    | 'readOnly'
+    | 'required';
+  password:
+    | 'disabled'
+    | 'maxLength'
+    | 'minLength'
+    | 'readOnly'
+    | 'required';
   radio: 'disabled' | 'required';
   select: 'disabled' | 'multiple' | 'required';
-  tel: 'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required';
+  tel:
+    | 'disabled'
+    | 'maxLength'
+    | 'minLength'
+    | 'readOnly'
+    | 'required';
   time: 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step';
-  text: 'disabled' | 'maxLength' | 'minLength' | 'pattern' | 'readOnly' | 'required';
-  textArea: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
+  text:
+    | 'disabled'
+    | 'maxLength'
+    | 'minLength'
+    | 'readOnly'
+    | 'required';
+  textarea:
+    | 'disabled'
+    | 'maxLength'
+    | 'minLength'
+    | 'readOnly'
+    | 'required';
 };
 
 type HTMLAttributeTypes = {
-  [K in keyof AttributeConfig]: Partial<Pick<HTMLInputElement, AttributeConfig[K]>>;
+  [K in keyof AttributeConfig]: Partial<
+    Pick<HTMLInputElement, AttributeConfig[K]>
+  >;
 } & {
   select: Partial<Pick<HTMLSelectElement, AttributeConfig['select']>>;
-  textArea: Partial<Pick<HTMLTextAreaElement, AttributeConfig['textArea']>>;
+  textarea: Partial<
+    Pick<HTMLTextAreaElement, AttributeConfig['textarea']>
+  >;
 };
 
 type CheckboxAttributes = HTMLAttributeTypes['checkbox'];
@@ -31,9 +66,7 @@ type SelectAttributes = HTMLAttributeTypes['select'];
 type TelAttributes = HTMLAttributeTypes['tel'];
 type TimeAttributes = HTMLAttributeTypes['time'];
 type TextAttributes = HTMLAttributeTypes['text'];
-type TextAreaAttributes = Partial<
-  Pick<HTMLInputElement, 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required'>
->;
+type TextAreaAttributes = HTMLAttributeTypes['textarea'];
 
 export type TypeAttributesMap = {
   checkbox: CheckboxAttributes;
@@ -65,11 +98,10 @@ export type InputType =
   | 'textarea';
 
 export type FieldProps<T extends InputType> = {
+  type: T;
   name: string;
   label: string;
-  type: T;
-  attributes?: TypeAttributesMap[T];
-  message?: string;
+  attributes: Partial<TypeAttributesMap[T]>;
 };
 
 export type Field =
@@ -85,3 +117,8 @@ export type Field =
   | FieldProps<'time'>
   | FieldProps<'text'>
   | FieldProps<'textarea'>;
+
+export type FieldGroup = {
+  legend: string;
+  fields: Field[];
+};

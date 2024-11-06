@@ -1,13 +1,15 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Component } from '@/components/ComponentBase';
-import { Field } from './_types';
+import { Field, FieldGroup, FieldProps, InputType } from './_types';
 
 import { Checkbox } from './Checkbox';
 import { Input } from './Input';
 import { Radio } from './Radio';
 import { Select } from './Select';
 import { Textarea } from './Textarea';
-import { Button } from '@/components/Button';
+import { Button } from '../Button';
+
+// form.checkValidity(), form.reportValidity(), form.reset()
 
 const formVariants = cva([], {
   variants: {},
@@ -15,21 +17,32 @@ const formVariants = cva([], {
   defaultVariants: {},
 });
 
-type FieldGroup = {
-  legend: string;
-  fields: Field[];
-};
-
-type FormOptions = {
+type Props = VariantProps<typeof formVariants> & {
   name: string;
-  fields: Field[];
+  fields: (Field | FieldGroup)[];
   autofocus?: string;
 };
 
-type Props = VariantProps<typeof formVariants> & {};
+function getFieldByType(field: Field) {
+  if (field.type === 'checkbox') {
+    return new Checkbox(field);
+  }
+  if (field.type === 'radio') {
+    return new Radio(field);
+  }
+  if (field.type === 'select') {
+    return new Select(field);
+  }
+  if (field.type === 'textarea') {
+    return new Textarea(field);
+  }
+
+  return new Input(field);
+}
 
 class Form extends Component {
   #props: Props;
+  #form: HTMLFormElement = document.createElement('form');
 
   constructor(props: Props) {
     super();
@@ -40,23 +53,40 @@ class Form extends Component {
   }
 
   render() {
-    const form: HTMLFormElement = document.createElement('form');
+    this.#form.name = this.#props.name;
 
-    // this.rootElement.appendChild();
+    for (const field of this.#props.fields) {
+      if ('legend' in field) {
+        const fieldset: HTMLFieldSetElement = document.createElement('fieldset');
+        const legend: HTMLLegendElement = document.createElement('legend');
+
+        fieldset.appendChild(legend);
+
+        for (const groupedField of field.fields) {
+          const fieldComponent = getFieldByType(groupedField as Field);
+          fieldComponent.appendTo(fieldset);
+        }
+
+        this.#form.appendChild(fieldset);
+      }
+
+      const fieldComponent = getFieldByType(field as Field);
+      fieldComponent.appendTo(this.#form);
+    }
+
+    this.rootElement.appendChild(this.#form);
   }
-}
 
-class StepForm extends Component {
-  #props: Props;
-
-  constructor(props: Props) {
-    super();
-
-    this.#props = { ...props };
+  populate() {
+    // this.#form.elements[name | id]
   }
 
-  render() {
-    // this.rootElement.appendChild();
+  onSubmit(e: SubmitEvent) {
+    e.preventDefault();
+
+    const formData = new FormData(this.#form);
+    const entries = formData.entries();
+    const data = Object.fromEntries(entries);
   }
 }
 

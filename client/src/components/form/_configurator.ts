@@ -1,16 +1,11 @@
-import { InputType, TypeAttributesMap } from './_types';
-
-type Params = [name: string, label: string, message?: string];
+import { FieldProps, InputType, TypeAttributesMap } from './_types';
 
 class Configurator<T extends InputType> {
-  props: {
-    name: string;
-    label: string;
-    attributes: TypeAttributesMap[T];
-  };
+  props: FieldProps<T>;
 
-  constructor(...[name, label, message]: Params) {
+  constructor(name: string, label: string, type: T) {
     this.props = {
+      type,
       name,
       label,
       attributes: {} as TypeAttributesMap[T],
@@ -47,19 +42,23 @@ class MixinBuilder<TBase> {
     this.superclass = superclass;
   }
 
-  with<M extends Array<(Base: Constructor<TBase>) => Constructor<any>>>(
+  with<
+    M extends Array<(Base: Constructor<TBase>) => Constructor<any>>,
+  >(
     ...mixins: M
   ): Constructor<TBase & InstanceType<ReturnType<M[number]>>> {
-    return mixins.reduce((c, mixin) => mixin(c), this.superclass) as Constructor<
-      TBase & InstanceType<ReturnType<M[number]>>
-    >;
+    return mixins.reduce(
+      (c, mixin) => mixin(c),
+      this.superclass,
+    ) as Constructor<TBase & InstanceType<ReturnType<M[number]>>>;
   }
 }
-const mix = <T>(superclass: Constructor<T>) => new MixinBuilder(superclass);
+const mix = <T>(superclass: Constructor<T>) =>
+  new MixinBuilder(superclass);
 
-function LengthMixin<TBase extends Constructor<Configurator<keyof TypeAttributesMap>>>(
-  Base: TBase,
-) {
+function LengthMixin<
+  TBase extends Constructor<Configurator<keyof TypeAttributesMap>>,
+>(Base: TBase) {
   return class extends Base {
     minlength(length: number) {
       if ('minLength' in this.props.attributes) {
@@ -104,8 +103,12 @@ function MinMaxStepMixin<
 }
 
 class CheckboxConfigurator extends Configurator<'checkbox'> {}
-class DateConfigurator extends mix(Configurator<'date'>).with(MinMaxStepMixin) {}
-class EmailConfigurator extends mix(Configurator<'email'>).with(LengthMixin) {}
+class DateConfigurator extends mix(Configurator<'date'>).with(
+  MinMaxStepMixin,
+) {}
+class EmailConfigurator extends mix(Configurator<'email'>).with(
+  LengthMixin,
+) {}
 class FileConfigurator extends Configurator<'file'> {
   accept(value: string) {
     this.props.attributes.accept = value;
@@ -117,13 +120,12 @@ class FileConfigurator extends Configurator<'file'> {
     return this;
   }
 }
-class NumberConfigurator extends mix(Configurator<'number'>).with(MinMaxStepMixin) {}
-class PasswordConfigurator extends mix(Configurator<'password'>).with(LengthMixin) {
-  pattern(value: string) {
-    this.props.attributes.pattern = value;
-    return this;
-  }
-}
+class NumberConfigurator extends mix(Configurator<'number'>).with(
+  MinMaxStepMixin,
+) {}
+class PasswordConfigurator extends mix(Configurator<'password'>).with(
+  LengthMixin,
+) {}
 class RadioConfigurator extends Configurator<'radio'> {}
 class SelectConfigurator extends Configurator<'select'> {
   multiple(value: boolean) {
@@ -131,22 +133,42 @@ class SelectConfigurator extends Configurator<'select'> {
     return this;
   }
 }
-class TimeConfigurator extends mix(Configurator<'time'>).with(MinMaxStepMixin) {}
-class TelConfigurator extends mix(Configurator<'tel'>).with(LengthMixin) {}
-class TextConfigurator extends mix(Configurator<'text'>).with(LengthMixin) {}
-class TextareaConfigurator extends mix(Configurator<'textarea'>).with(LengthMixin) {}
+class TimeConfigurator extends mix(Configurator<'time'>).with(
+  MinMaxStepMixin,
+) {}
+class TelConfigurator extends mix(Configurator<'tel'>).with(
+  LengthMixin,
+) {}
+class TextConfigurator extends mix(Configurator<'text'>).with(
+  LengthMixin,
+) {}
+class TextareaConfigurator extends mix(Configurator<'textarea'>).with(
+  LengthMixin,
+) {}
 
 export const field = {
-  checkbox: (...args: Params) => new CheckboxConfigurator(...args),
-  date: (...args: Params) => new DateConfigurator(...args),
-  email: (...args: Params) => new EmailConfigurator(...args),
-  file: (...args: Params) => new FileConfigurator(...args),
-  number: (...args: Params) => new NumberConfigurator(...args),
-  password: (...args: Params) => new PasswordConfigurator(...args),
-  radio: (...args: Params) => new RadioConfigurator(...args),
-  select: (...args: Params) => new SelectConfigurator(...args),
-  time: (...args: Params) => new TimeConfigurator(...args),
-  tel: (...args: Params) => new TelConfigurator(...args),
-  text: (...args: Params) => new TextConfigurator(...args),
-  textarea: (...args: Params) => new TextareaConfigurator(...args),
+  checkbox: (name: string, label: string) =>
+    new CheckboxConfigurator(name, label, 'checkbox'),
+  date: (name: string, label: string) =>
+    new DateConfigurator(name, label, 'date'),
+  email: (name: string, label: string) =>
+    new EmailConfigurator(name, label, 'email'),
+  file: (name: string, label: string) =>
+    new FileConfigurator(name, label, 'file'),
+  number: (name: string, label: string) =>
+    new NumberConfigurator(name, label, 'number'),
+  password: (name: string, label: string) =>
+    new PasswordConfigurator(name, label, 'password'),
+  radio: (name: string, label: string) =>
+    new RadioConfigurator(name, label, 'radio'),
+  select: (name: string, label: string) =>
+    new SelectConfigurator(name, label, 'select'),
+  time: (name: string, label: string) =>
+    new TimeConfigurator(name, label, 'time'),
+  tel: (name: string, label: string) =>
+    new TelConfigurator(name, label, 'tel'),
+  text: (name: string, label: string) =>
+    new TextConfigurator(name, label, 'text'),
+  textarea: (name: string, label: string) =>
+    new TextareaConfigurator(name, label, 'textarea'),
 };

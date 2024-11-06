@@ -9,7 +9,7 @@ const radioVariants = cva([], {
   defaultVariants: {},
 });
 
-type Props = FieldProps<'checkbox'> & VariantProps<typeof radioVariants>;
+type Props = FieldProps<'radio'> & VariantProps<typeof radioVariants>;
 
 class Radio extends Component {
   #props: Props;

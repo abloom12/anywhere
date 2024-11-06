@@ -40,6 +40,9 @@ class Select extends Component {
 
     this.rootElement.appendChild(field);
   }
+
+  populate(data: []) {}
+  setValue(value: string) {}
 }
 
 export { Select };
