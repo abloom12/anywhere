@@ -19,7 +19,7 @@ const buttonVariants = cva(
       variant: {
         contained: ['bg-primary', 'rounded'],
         ghost: ['rounded', 'border-2', 'border-primary', 'border-solid'],
-        text: [],
+        text: ['h'],
       },
       size: {
         small: ['h-9', 'px-2'],

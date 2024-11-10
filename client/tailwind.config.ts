@@ -21,7 +21,7 @@ export default {
   plugins: [
     animatePlugin,
     queryPlugin,
-    plugin(({ addBase }) => {
+    plugin(({ addBase, addComponents }) => {
       addBase({
         ':root': {
           '--primary': '54, 106, 152', // 208, 48, 40 || #366A98

@@ -1,21 +1,12 @@
-import { cva, type VariantProps } from 'class-variance-authority';
 import { Component } from '@/components/ComponentBase';
 import { FieldProps } from './_types';
 import { uniqueId } from '@/util/uniqueId';
 
-const radioVariants = cva([], {
-  variants: {},
-  compoundVariants: [],
-  defaultVariants: {},
-});
-
-type Props = FieldProps<'radio'> & VariantProps<typeof radioVariants>;
-
 class Radio extends Component {
-  #props: Props;
+  #props: FieldProps<'radio'>;
   #id: string;
 
-  constructor(props: Props) {
+  constructor(props: FieldProps<'radio'>) {
     super();
 
     this.#props = { ...props };

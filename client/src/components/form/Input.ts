@@ -1,23 +1,15 @@
-import { cva, type VariantProps } from 'class-variance-authority';
 import { Component } from '@/components/ComponentBase';
-import { FieldProps, InputType as DirtyType } from './_types';
 import { uniqueId } from '@/util/uniqueId';
-
-const inputVariants = cva([], {
-  variants: {},
-  compoundVariants: [],
-  defaultVariants: {},
-});
+import { FieldProps, InputType as DirtyType } from './_types';
+import { cn } from '@/util/cn';
 
 type InputType = Exclude<DirtyType, 'checkbox' | 'radio' | 'select' | 'textarea'>;
 
-type Props<T extends InputType> = FieldProps<T> & VariantProps<typeof inputVariants>;
-
 class Input<T extends InputType> extends Component {
-  #props: Props<T>;
+  #props: FieldProps<T>;
   #id: string;
 
-  constructor(props: Props<T>) {
+  constructor(props: FieldProps<T>) {
     super();
 
     this.#props = { ...props };
@@ -28,13 +20,17 @@ class Input<T extends InputType> extends Component {
 
   render() {
     const field: HTMLDivElement = document.createElement('div');
+    field.className = cn('grid items-center w-full max-w-xs');
 
     const input: HTMLInputElement = document.createElement('input');
+    input.className = cn('rounded');
+
     input.type = this.#props.type;
     input.name = this.#props.name;
     input.id = this.#id;
 
     const label: HTMLLabelElement = document.createElement('label');
+    label.className = cn('text-sm');
     label.textContent = this.#props.label;
     label.htmlFor = this.#id;
 

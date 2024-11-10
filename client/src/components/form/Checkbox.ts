@@ -1,21 +1,12 @@
-import { cva, type VariantProps } from 'class-variance-authority';
 import { Component } from '@/components/ComponentBase';
 import { FieldProps } from './_types';
 import { uniqueId } from '@/util/uniqueId';
 
-const checkboxVariants = cva([], {
-  variants: {},
-  compoundVariants: [],
-  defaultVariants: {},
-});
-
-type Props = FieldProps<'checkbox'> & VariantProps<typeof checkboxVariants>;
-
 class Checkbox extends Component {
-  #props: Props;
+  #props: FieldProps<'checkbox'>;
   #id: string;
 
-  constructor(props: Props) {
+  constructor(props: FieldProps<'checkbox'>) {
     super();
 
     this.#props = { ...props };

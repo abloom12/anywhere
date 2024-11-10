@@ -1,21 +1,12 @@
-import { cva, type VariantProps } from 'class-variance-authority';
 import { Component } from '@/components/ComponentBase';
 import { FieldProps } from './_types';
 import { uniqueId } from '@/util/uniqueId';
 
-const selectVariants = cva([], {
-  variants: {},
-  compoundVariants: [],
-  defaultVariants: {},
-});
-
-type Props = FieldProps<'select'> & VariantProps<typeof selectVariants>;
-
 class Select extends Component {
-  #props: Props;
+  #props: FieldProps<'select'>;
   #id: string;
 
-  constructor(props: Props) {
+  constructor(props: FieldProps<'select'>) {
     super();
 
     this.#props = { ...props };
