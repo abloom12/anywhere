@@ -1,6 +1,6 @@
-import { cva, type VariantProps } from 'class-variance-authority';
 import { Component } from '@/components/ComponentBase';
-import { Field, FieldGroup, FieldProps, InputType } from './_types';
+import { cn } from '@/util/cn';
+import { Field, FieldGroup } from './_types';
 
 import { Checkbox } from './Checkbox';
 import { Input } from './Input';
@@ -8,16 +8,11 @@ import { Radio } from './Radio';
 import { Select } from './Select';
 import { Textarea } from './Textarea';
 import { Button } from '../Button';
+import { Legend } from 'chart.js';
 
 // form.checkValidity(), form.reportValidity(), form.reset()
 
-const formVariants = cva([], {
-  variants: {},
-  compoundVariants: [],
-  defaultVariants: {},
-});
-
-type Props = VariantProps<typeof formVariants> & {
+type Props = {
   name: string;
   fields: (Field | FieldGroup)[];
   autofocus?: string;
@@ -40,6 +35,13 @@ function getFieldByType(field: Field) {
   return new Input(field);
 }
 
+const classname = {
+  form: 'text-black',
+  fieldset: 'border px-2',
+  legend: 'capitalize',
+  thing: '',
+};
+
 class Form extends Component {
   #props: Props;
   #form: HTMLFormElement = document.createElement('form');
@@ -54,11 +56,17 @@ class Form extends Component {
 
   render() {
     this.#form.name = this.#props.name;
+    this.#form.className = 'text-black';
+    this.#form.className = cn(classname.form);
 
     for (const field of this.#props.fields) {
       if ('legend' in field) {
         const fieldset: HTMLFieldSetElement = document.createElement('fieldset');
+        fieldset.className = cn(classname.fieldset);
+
         const legend: HTMLLegendElement = document.createElement('legend');
+        legend.className = cn(classname.legend);
+        legend.textContent = field.legend;
 
         fieldset.appendChild(legend);
 
@@ -68,10 +76,10 @@ class Form extends Component {
         }
 
         this.#form.appendChild(fieldset);
+      } else {
+        const fieldComponent = getFieldByType(field as Field);
+        fieldComponent.appendTo(this.#form);
       }
-
-      const fieldComponent = getFieldByType(field as Field);
-      fieldComponent.appendTo(this.#form);
     }
 
     this.rootElement.appendChild(this.#form);

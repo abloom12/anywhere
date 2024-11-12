@@ -1,9 +1,6 @@
-// Update tsconfig.json to include webworker library
-// Define a cache name
 const CACHE_NAME: string = 'my-site-cache-v1';
 
-// List of URLs to pre-cache
-const URLS_TO_CACHE: string[] = ['/', '/index.html'];
+const URLS_TO_CACHE: string[] = ['/', '/index.html', '/webroot/dist/images'];
 
 // Install event - caching initial assets
 self.addEventListener('install', event => {
@@ -38,10 +35,14 @@ self.addEventListener('fetch', event => {
   const swEvent = event as FetchEvent;
   swEvent.respondWith(
     caches.match(swEvent.request).then(response => {
+      // if no network
+      // save formdata to indexDB
+
       // If a cached response is found, return it
       if (response) {
         return response;
       }
+
       // Otherwise, fetch the resource from the network
       return fetch(swEvent.request)
         .then(networkResponse => {
@@ -62,33 +63,13 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Optional: Listen for 'push' events for notifications
-self.addEventListener('push', event => {
-  const swEvent = event as PushEvent;
-  const title = 'Push Notification';
-  const options: NotificationOptions = {
-    body: swEvent.data ? swEvent.data.text() : 'Default body',
-    icon: '/images/icon.png',
-    badge: '/images/badge.png',
-  };
+// declare var self: ServiceWorkerGlobalScope;
 
-  swEvent.waitUntil(
-    (self as ServiceWorkerGlobalScope).registration.showNotification(title, options),
-  );
-});
+// declare type ExtendableEvent = Event & {
+//   waitUntil(fn: Promise<any>): void;
+// };
 
-// Declare global self variable for service worker scope
-declare var self: ServiceWorkerGlobalScope;
-
-declare type ExtendableEvent = Event & {
-  waitUntil(fn: Promise<any>): void;
-};
-
-declare type FetchEvent = ExtendableEvent & {
-  request: Request;
-  respondWith(response: Response | Promise<Response>): void;
-};
-
-declare type PushEvent = ExtendableEvent & {
-  data: any;
-};
+// declare type FetchEvent = ExtendableEvent & {
+//   request: Request;
+//   respondWith(response: Response | Promise<Response>): void;
+// };

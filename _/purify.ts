@@ -1,3 +1,5 @@
+// DOMPurify??
+
 function sanitizeInput(input: any): any {
   const escapeMap: { [key: string]: string } = {
     "&": "&amp;",
@@ -13,69 +15,11 @@ function sanitizeInput(input: any): any {
   const escapeHTML = (str: string): string =>
     str.replace(/[&<>"'`]/g, escapeChar);
 
-  const sanitizeURL = (url: string): string => {
-    try {
-      const parsedURL = new URL(url);
-      const allowedSchemes = ["http:", "https:", "mailto:"];
-      if (!allowedSchemes.includes(parsedURL.protocol)) {
-        return "about:blank";
-      }
-      return parsedURL.href;
-    } catch (e) {
-      return "about:blank";
-    }
-  };
-
-  const sanitizeJSON = (jsonStr: string): string => {
-    try {
-      const parsed = JSON.parse(jsonStr);
-      const sanitized = sanitizeInput(parsed);
-      return JSON.stringify(sanitized);
-    } catch (e) {
-      return escapeHTML(jsonStr); // fallback to escaping if not a valid JSON
-    }
-  };
-
-  if (typeof input === "string") {
-    try {
-      new URL(input);
-      return sanitizeURL(input);
-    } catch {
-      if (input.trim().startsWith("{") && input.trim().endsWith("}")) {
-        return sanitizeJSON(input);
-      } else {
-        return escapeHTML(input);
-      }
-    }
-  } else if (input instanceof URL) {
-    // Sanitize URL
-    return sanitizeURL(input.toString());
-  } else if (typeof input === "object" && input !== null) {
-    // Sanitize each property if it's an object
-    Object.keys(input).forEach((key) => {
-      input[key] = sanitizeInput(input[key]);
+  const escapeHTML_NEW = (str: string): string => {
+    return str.replace(/[&<>"'/]/g, (char) => {
+      return `&#${char.charCodeAt(0)};`;
     });
-    return input;
-  } else {
-    // Return input as is for other types
-    return input;
-  }
-}
-
-function sanitizeInput2(input: any): any {
-  const escapeMap: { [key: string]: string } = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#x27;",
-    "`": "&#x60;",
   };
-
-  const escapeChar = (char: string): string => escapeMap[char] || char;
-
-  const escapeHTML = (str: string): string =>
-    str.replace(/[&<>"'`]/g, escapeChar);
 
   const sanitizeURL = (url: string): string => {
     try {
@@ -92,7 +36,7 @@ function sanitizeInput2(input: any): any {
   const sanitizeJSON = (jsonStr: string): string => {
     try {
       const parsed = JSON.parse(jsonStr);
-      const sanitized = sanitizeInput2(parsed);
+      const sanitized = sanitizeInput(parsed);
       return JSON.stringify(sanitized);
     } catch {
       return escapeHTML(jsonStr);
@@ -111,6 +55,14 @@ function sanitizeInput2(input: any): any {
   const isJSONString = (str: string): boolean => {
     return str.trim().startsWith("{") && str.trim().endsWith("}");
   };
+  const isJSONString_NEW = (str: string): boolean => {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   if (typeof input === "string") {
     if (isURL(input)) {
@@ -123,10 +75,10 @@ function sanitizeInput2(input: any): any {
   } else if (input instanceof URL) {
     return sanitizeURL(input.toString());
   } else if (Array.isArray(input)) {
-    return input.map((item) => sanitizeInput2(item));
+    return input.map((item) => sanitizeInput(item));
   } else if (typeof input === "object" && input !== null) {
     Object.keys(input).forEach((key) => {
-      input[key] = sanitizeInput2(input[key]);
+      input[key] = sanitizeInput(input[key]);
     });
     return input;
   } else {
@@ -134,4 +86,4 @@ function sanitizeInput2(input: any): any {
   }
 }
 
-export { sanitizeInput, sanitizeInput2 };
+export { sanitizeInput };

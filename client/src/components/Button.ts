@@ -17,9 +17,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        contained: ['bg-primary', 'rounded'],
+        contained: ['bg-primary', 'rounded', 'text-black'],
         ghost: ['rounded', 'border-2', 'border-primary', 'border-solid'],
-        text: ['h'],
+        text: 'text-black',
       },
       size: {
         small: ['h-9', 'px-2'],
@@ -28,7 +28,6 @@ const buttonVariants = cva(
         icon: ['h-10', 'w-10'],
       },
     },
-    compoundVariants: [],
     defaultVariants: {
       variant: 'contained',
       size: 'medium',

@@ -7,6 +7,7 @@
 // See http://pajhome.org.uk/crypt/md5 for more info.
 
 export function md5(source: string) {
+  //TODO: trim empty space from source
   return binl2hex(core_md5(str2binl(source), source.length * 8));
 }
 
@@ -103,19 +104,58 @@ function core_md5(x: number[], len: number) {
 }
 
 // These functions implement the four basic operations the algorithm uses.
-function md5_cmn(q: number, a: number, b: number, x: number, s: number, t: number): number {
+function md5_cmn(
+  q: number,
+  a: number,
+  b: number,
+  x: number,
+  s: number,
+  t: number,
+): number {
   return safe_add(bit_rol(safe_add(safe_add(a, q), safe_add(x, t)), s), b);
 }
-function md5_ff(a: number, b: number, c: number, d: number, x: number, s: number, t: number): number {
+function md5_ff(
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+  x: number,
+  s: number,
+  t: number,
+): number {
   return md5_cmn((b & c) | (~b & d), a, b, x, s, t);
 }
-function md5_gg(a: number, b: number, c: number, d: number, x: number, s: number, t: number): number {
+function md5_gg(
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+  x: number,
+  s: number,
+  t: number,
+): number {
   return md5_cmn((b & d) | (c & ~d), a, b, x, s, t);
 }
-function md5_hh(a: number, b: number, c: number, d: number, x: number, s: number, t: number): number {
+function md5_hh(
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+  x: number,
+  s: number,
+  t: number,
+): number {
   return md5_cmn(b ^ c ^ d, a, b, x, s, t);
 }
-function md5_ii(a: number, b: number, c: number, d: number, x: number, s: number, t: number): number {
+function md5_ii(
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+  x: number,
+  s: number,
+  t: number,
+): number {
   return md5_cmn(c ^ (b | ~d), a, b, x, s, t);
 }
 

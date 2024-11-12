@@ -18,6 +18,7 @@ const form = new Form({
   fields: [
     field.text('userId', 'Login Name').$,
     field.password('password', 'Password').$,
+    field.textarea('aboutYou', 'About You...').$,
   ],
 });
 

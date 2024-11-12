@@ -15,7 +15,15 @@ const form = new Form({
     field.number('age', 'Age').$,
     field.tel('cell', 'Cell Number').$,
     field.time('startTime', 'Start Time').$,
-    //field.textarea('aboutYou', 'About You').$,
+    field.textarea('aboutYou', 'About You').$,
+    {
+      legend: 'testing',
+      fields: [
+        field.text('nickname', 'Nickname').$,
+        field.text('favcolor', 'favorite Color').$,
+        field.text('favband', 'favorite Band').$,
+      ],
+    },
   ],
 });
 
@@ -23,3 +31,7 @@ const app = document.getElementById('app');
 if (app) {
   form.appendTo(app);
 }
+
+type classname = string;
+
+const a: classname = 'h-2 rounded';

@@ -1,6 +1,8 @@
 import { Component } from '@/components/ComponentBase';
-import { FieldProps } from './_types';
 import { uniqueId } from '@/util/uniqueId';
+import { cn } from '@/util/cn';
+import { FieldProps } from './_types';
+import { styles } from './_styles';
 
 class Select extends Component {
   #props: FieldProps<'select'>;
@@ -17,12 +19,15 @@ class Select extends Component {
 
   render() {
     const field: HTMLDivElement = document.createElement('div');
+    field.className = cn(styles.field);
 
     const select: HTMLSelectElement = document.createElement('select');
+    select.className = cn(styles.input);
     select.name = this.#props.name;
     select.id = this.#id;
 
     const label: HTMLLabelElement = document.createElement('label');
+    label.className = cn(styles.label);
     label.textContent = this.#props.label;
     label.htmlFor = this.#id;
 
