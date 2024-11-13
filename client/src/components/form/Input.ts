@@ -22,7 +22,7 @@ class Input<T extends InputType> extends Component {
   protected render() {
     const test = /*html*/ `
       <div class="text-black">
-        <label for="${this.#props.id}"></label>
+        <label for="${this.#props.id}">${this.#props.label}</label>
         <input type="${this.#props.type}" name="${this.#props.name}" id="${this.#props.id}">
       </div>
     `;
