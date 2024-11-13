@@ -1,1 +1,0 @@
-//  These messages need immediate attention. The window/container is usually locked, meaning you can't dismiss the box or continue with what you want to do until you explicitly acknowledge the content, this usually done by clicking a button inside the container.
