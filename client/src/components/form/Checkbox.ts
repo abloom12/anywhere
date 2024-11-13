@@ -2,8 +2,6 @@ import { Component } from '@/components/ComponentBase';
 import { FieldProps } from './_types';
 import { uniqueId } from '@/util/uniqueId';
 
-type classname = string;
-
 class Checkbox extends Component {
   #props: FieldProps<'checkbox'>;
   #id: string;
@@ -19,8 +17,6 @@ class Checkbox extends Component {
 
   render() {
     const field: HTMLDivElement = document.createElement('div');
-    const fieldStyle: classname = '';
-    field.className = fieldStyle;
 
     const input: HTMLInputElement = document.createElement('input');
     input.type = 'checkbox';

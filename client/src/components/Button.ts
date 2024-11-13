@@ -61,6 +61,7 @@ class Button extends Component {
     const button: HTMLButtonElement = document.createElement('button');
     button.textContent = this.#props.text;
 
+    button.className = 'text-black';
     button.className = buttonVariants({
       variant: this.#props.variant,
       size: this.#props.size,

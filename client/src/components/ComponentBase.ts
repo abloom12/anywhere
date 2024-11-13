@@ -5,6 +5,8 @@ abstract class Component {
     this.rootElement = document.createDocumentFragment();
   }
 
+  protected abstract render(): void;
+
   protected useState<T extends object>(initialState: T): T {
     const state = new Proxy(initialState, {
       set(target: T, prop: PropertyKey, value: any): boolean {
@@ -15,8 +17,6 @@ abstract class Component {
 
     return state;
   }
-
-  protected abstract render(): void;
 
   appendTo(node: HTMLElement): void {
     node.appendChild(this.rootElement);

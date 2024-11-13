@@ -8,9 +8,6 @@ import { Radio } from './Radio';
 import { Select } from './Select';
 import { Textarea } from './Textarea';
 import { Button } from '../Button';
-import { Legend } from 'chart.js';
-
-// form.checkValidity(), form.reportValidity(), form.reset()
 
 type Props = {
   name: string;
@@ -36,10 +33,9 @@ function getFieldByType(field: Field) {
 }
 
 const classname = {
-  form: 'text-black',
+  form: '',
   fieldset: 'border px-2',
   legend: 'capitalize',
-  thing: '',
 };
 
 class Form extends Component {
@@ -56,7 +52,6 @@ class Form extends Component {
 
   render() {
     this.#form.name = this.#props.name;
-    this.#form.className = 'text-black';
     this.#form.className = cn(classname.form);
 
     for (const field of this.#props.fields) {

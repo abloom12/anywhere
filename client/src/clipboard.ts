@@ -18,3 +18,24 @@
 // pre fetch data, only the most important, use fetchData worker
 //? a way for module to tie into router, do we let module create route or do we do this in separate file
 //? a way for module to render a widget, or a way for widget to easily tie into module class code
+
+// playing with classes
+abstract class Tom {
+  constructor(value: string) {}
+  protected abstract render(): void;
+}
+
+abstract class Ash extends Tom {
+  protected abstract load(): void;
+}
+
+class Carly extends Ash {
+  constructor() {
+    super('hey');
+
+    this.render();
+  }
+
+  render() {}
+  load() {}
+}

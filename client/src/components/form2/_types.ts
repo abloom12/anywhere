@@ -13,39 +13,17 @@ type AttributeConfig = {
   textarea: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
 };
 
+export type AttributeConfigKeys = keyof AttributeConfig;
+
 type HTMLAttributeTypes = {
-  [K in keyof AttributeConfig]: Partial<Pick<HTMLInputElement, AttributeConfig[K]>>;
+  [K in AttributeConfigKeys]: Partial<Pick<HTMLInputElement, AttributeConfig[K]>>;
 } & {
   select: Partial<Pick<HTMLSelectElement, AttributeConfig['select']>>;
   textarea: Partial<Pick<HTMLTextAreaElement, AttributeConfig['textarea']>>;
 };
 
-type CheckboxAttributes = HTMLAttributeTypes['checkbox'];
-type DateAttributes = HTMLAttributeTypes['date'];
-type EmailAttributes = HTMLAttributeTypes['email'];
-type FileAttributes = HTMLAttributeTypes['file'];
-type NumberAttributes = HTMLAttributeTypes['number'];
-type PasswordAttributes = HTMLAttributeTypes['password'];
-type RadioAttributes = HTMLAttributeTypes['radio'];
-type SelectAttributes = HTMLAttributeTypes['select'];
-type TelAttributes = HTMLAttributeTypes['tel'];
-type TimeAttributes = HTMLAttributeTypes['time'];
-type TextAttributes = HTMLAttributeTypes['text'];
-type TextAreaAttributes = HTMLAttributeTypes['textarea'];
-
-export type TypeAttributesMap = {
-  checkbox: CheckboxAttributes;
-  date: DateAttributes;
-  email: EmailAttributes;
-  file: FileAttributes;
-  number: NumberAttributes;
-  password: PasswordAttributes;
-  radio: RadioAttributes;
-  select: SelectAttributes;
-  tel: TelAttributes;
-  text: TextAttributes;
-  time: TimeAttributes;
-  textarea: TextAreaAttributes;
+export type HTMLAttributeTypesMap = {
+  [K in AttributeConfigKeys]: HTMLAttributeTypes[K];
 };
 
 export type InputType =
@@ -67,7 +45,15 @@ export type FieldProps<T extends InputType> = {
   id: string;
   name: string;
   label: string;
-  attributes: Partial<TypeAttributesMap[T]>;
+  attributes: Partial<HTMLAttributeTypesMap[T]>;
+};
+
+export type SelectFieldProps = FieldProps<'select'> & {
+  data?: [];
+};
+
+export type TextareaFieldProps = FieldProps<'textarea'> & {
+  autosize?: boolean;
 };
 
 export type Field =
@@ -78,13 +64,8 @@ export type Field =
   | FieldProps<'number'>
   | FieldProps<'password'>
   | FieldProps<'radio'>
-  | FieldProps<'select'>
   | FieldProps<'tel'>
   | FieldProps<'time'>
   | FieldProps<'text'>
-  | FieldProps<'textarea'>;
-
-export type FieldGroup = {
-  legend: string;
-  fields: Field[];
-};
+  | SelectFieldProps
+  | TextareaFieldProps;

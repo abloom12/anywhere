@@ -5,7 +5,6 @@ import queryPlugin from '@tailwindcss/container-queries';
 
 export default {
   content: ['./index.html', './src/**/*.{js,ts}'],
-  darkMode: ['class'],
   theme: {
     extend: {
       colors: {

@@ -1,4 +1,5 @@
 import { FieldProps, InputType, TypeAttributesMap } from './_types';
+import { uniqueId } from '@/util/uniqueId';
 
 class Configurator<T extends InputType> {
   props: FieldProps<T>;
@@ -6,13 +7,14 @@ class Configurator<T extends InputType> {
   constructor(name: string, label: string, type: T) {
     this.props = {
       type,
+      id: uniqueId(),
       name,
       label,
       attributes: {} as TypeAttributesMap[T],
     };
   }
 
-  get $() {
+  get $(): FieldProps<T> {
     return this.props;
   }
 
@@ -35,7 +37,9 @@ class Configurator<T extends InputType> {
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
-function LengthMixin<TBase extends Constructor<Configurator<keyof TypeAttributesMap>>>(Base: TBase) {
+function LengthMixin<TBase extends Constructor<Configurator<keyof TypeAttributesMap>>>(
+  Base: TBase,
+) {
   return class extends Base {
     minlength(length: number) {
       if ('minLength' in this.props.attributes) {
@@ -52,7 +56,9 @@ function LengthMixin<TBase extends Constructor<Configurator<keyof TypeAttributes
     }
   };
 }
-function MinMaxStepMixin<TBase extends Constructor<Configurator<keyof TypeAttributesMap>>>(Base: TBase) {
+function MinMaxStepMixin<
+  TBase extends Constructor<Configurator<keyof TypeAttributesMap>>,
+>(Base: TBase) {
   return class extends Base {
     min(value: string) {
       if ('min' in this.props.attributes) {
@@ -106,16 +112,19 @@ class TextConfigurator extends LengthMixin(Configurator<'text'>) {}
 class TextareaConfigurator extends LengthMixin(Configurator<'textarea'>) {}
 
 export const field = {
-  checkbox: (name: string, label: string) => new CheckboxConfigurator(name, label, 'checkbox'),
+  checkbox: (name: string, label: string) =>
+    new CheckboxConfigurator(name, label, 'checkbox'),
   date: (name: string, label: string) => new DateConfigurator(name, label, 'date'),
   email: (name: string, label: string) => new EmailConfigurator(name, label, 'email'),
   file: (name: string, label: string) => new FileConfigurator(name, label, 'file'),
   number: (name: string, label: string) => new NumberConfigurator(name, label, 'number'),
-  password: (name: string, label: string) => new PasswordConfigurator(name, label, 'password'),
+  password: (name: string, label: string) =>
+    new PasswordConfigurator(name, label, 'password'),
   radio: (name: string, label: string) => new RadioConfigurator(name, label, 'radio'),
   select: (name: string, label: string) => new SelectConfigurator(name, label, 'select'),
   time: (name: string, label: string) => new TimeConfigurator(name, label, 'time'),
   tel: (name: string, label: string) => new TelConfigurator(name, label, 'tel'),
   text: (name: string, label: string) => new TextConfigurator(name, label, 'text'),
-  textarea: (name: string, label: string) => new TextareaConfigurator(name, label, 'textarea'),
+  textarea: (name: string, label: string) =>
+    new TextareaConfigurator(name, label, 'textarea'),
 };

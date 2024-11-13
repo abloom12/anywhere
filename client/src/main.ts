@@ -15,13 +15,17 @@ const form = new Form({
     field.number('age', 'Age').$,
     field.tel('cell', 'Cell Number').$,
     field.time('startTime', 'Start Time').$,
+    field.select('chooseOne', 'Choose One').$,
     field.textarea('aboutYou', 'About You').$,
+    field.checkbox('checkone', 'One').$,
+    field.checkbox('checktwo', 'Two').$,
+    field.checkbox('checkthree', 'Three').$,
     {
-      legend: 'testing',
+      legend: 'Radios',
       fields: [
-        field.text('nickname', 'Nickname').$,
-        field.text('favcolor', 'favorite Color').$,
-        field.text('favband', 'favorite Band').$,
+        field.radio('radioGroup', 'One').$,
+        field.radio('radioGroup', 'Two').$,
+        field.radio('radioGroup', 'Three').$,
       ],
     },
   ],
@@ -31,7 +35,3 @@ const app = document.getElementById('app');
 if (app) {
   form.appendTo(app);
 }
-
-type classname = string;
-
-const a: classname = 'h-2 rounded';
