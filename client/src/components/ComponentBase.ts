@@ -24,3 +24,20 @@ abstract class Component {
 }
 
 export { Component };
+
+function html(strings: TemplateStringsArray, ...values: any[]): HTMLElement {
+  // Combine the strings and values into a single HTML string
+  let htmlString = strings.reduce((result, str, i) => {
+    const value = values[i] !== undefined ? values[i] : '';
+    return result + str + value;
+  }, '');
+
+  // Use the stringToElement function to convert the HTML string into an HTMLElement
+  return stringToElement(htmlString);
+}
+
+function stringToElement(htmlString: string): HTMLElement {
+  const template = document.createElement('template');
+  template.innerHTML = htmlString.trim();
+  return template.content.firstElementChild as HTMLElement;
+}

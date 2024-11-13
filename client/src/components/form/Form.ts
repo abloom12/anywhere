@@ -41,6 +41,7 @@ function createField(field: Field): Component {
 
 class Form extends Component {
   #props: FormProps;
+  #form: HTMLFormElement = document.createElement('form');
 
   constructor(props: FormProps) {
     super();
@@ -48,15 +49,46 @@ class Form extends Component {
     this.#props = {
       ...props,
     };
+
+    this.render();
   }
 
-  render() {}
-}
+  render() {
+    this.#form.name = this.#props.name;
 
-//TODO: Dynamic form updates: allow addition and removal of form fields
-//TODO: Field grouping
-//TODO: custom error message for each field
-//TODO: ensure aria attributes
-//TODO: ensure keybord navigation works
-//TODO: input sanitization
-//TODO: input[type='file'] then switch enctype FROM application/x-www-form-urlencoded TO multipart/form-data
+    for (const field of this.#props.fields) {
+      if ('legend' in field) {
+        const fieldset: HTMLFieldSetElement = document.createElement('fieldset');
+
+        const legend: HTMLLegendElement = document.createElement('legend');
+        legend.textContent = field.legend;
+
+        fieldset.appendChild(legend);
+
+        for (const groupedField of field.fields) {
+          const fieldComponent = createField(groupedField);
+          fieldComponent.appendTo(fieldset);
+        }
+
+        this.#form.appendChild(fieldset);
+      } else {
+        const fieldComponent = createField(field);
+        fieldComponent.appendTo(this.#form);
+      }
+    }
+
+    this.rootElement.appendChild(this.#form);
+  }
+
+  populate() {
+    // this.#form.elements[name | id]
+  }
+
+  onSubmit(e: SubmitEvent) {
+    e.preventDefault();
+
+    const formData = new FormData(this.#form);
+    const entries = formData.entries();
+    const data = Object.fromEntries(entries);
+  }
+}

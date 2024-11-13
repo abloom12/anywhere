@@ -1,5 +1,10 @@
 import { Component } from '@/components/ComponentBase';
 import { FieldProps, InputType as DirtyType } from './_types';
+import { cn } from '@/util/cn';
+
+function html(b: string) {
+  return b;
+}
 
 type InputType = Exclude<DirtyType, 'checkbox' | 'radio' | 'select' | 'textarea'>;
 
@@ -15,6 +20,13 @@ class Input<T extends InputType> extends Component {
   }
 
   protected render() {
+    const test = /*html*/ `
+      <div class="text-black">
+        <label for="${this.#props.id}"></label>
+        <input type="${this.#props.type}" name="${this.#props.name}" id="${this.#props.id}">
+      </div>
+    `;
+
     const field: HTMLDivElement = document.createElement('div');
 
     const input: HTMLInputElement = document.createElement('input');
