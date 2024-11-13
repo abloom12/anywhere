@@ -1,14 +1,14 @@
-import { Component } from '@/components/ComponentBase';
-import { uniqueId } from '@/util/uniqueId';
-import { cn } from '@/util/cn';
-import { FieldProps } from './_types';
-import { styles } from './_styles';
+import { Component } from "@/components/ComponentBase";
+import { uniqueId } from "@/util/uniqueId";
+import { cn } from "@/util/cn";
+import { FieldProps } from "./_types";
+import { styles } from "../../../client/src/components/form2/_styles";
 
 class Select extends Component {
-  #props: FieldProps<'select'>;
+  #props: FieldProps<"select">;
   #id: string;
 
-  constructor(props: FieldProps<'select'>) {
+  constructor(props: FieldProps<"select">) {
     super();
 
     this.#props = { ...props };
@@ -18,15 +18,15 @@ class Select extends Component {
   }
 
   render() {
-    const field: HTMLDivElement = document.createElement('div');
+    const field: HTMLDivElement = document.createElement("div");
     field.className = cn(styles.field);
 
-    const select: HTMLSelectElement = document.createElement('select');
+    const select: HTMLSelectElement = document.createElement("select");
     select.className = cn(styles.input);
     select.name = this.#props.name;
     select.id = this.#id;
 
-    const label: HTMLLabelElement = document.createElement('label');
+    const label: HTMLLabelElement = document.createElement("label");
     label.className = cn(styles.label);
     label.textContent = this.#props.label;
     label.htmlFor = this.#id;

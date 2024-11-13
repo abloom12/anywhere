@@ -1,4 +1,4 @@
-import { Form } from '@/components/form/Form';
+import { Form } from '../../../_/Components/form/Form';
 import { field } from '@/components/form/_configurator';
 import { md5 } from '@/util/crypto';
 import { fetchData } from '@/util/fetch';

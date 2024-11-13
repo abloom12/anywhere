@@ -56,7 +56,7 @@ export type TextareaFieldProps = FieldProps<'textarea'> & {
   autosize?: boolean;
 };
 
-type Field =
+export type Field =
   | FieldProps<'checkbox'>
   | FieldProps<'date'>
   | FieldProps<'email'>
