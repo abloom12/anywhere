@@ -1,3 +1,17 @@
+export type InputType =
+  | 'checkbox'
+  | 'date'
+  | 'email'
+  | 'file'
+  | 'number'
+  | 'password'
+  | 'radio'
+  | 'select'
+  | 'tel'
+  | 'text'
+  | 'time'
+  | 'textarea';
+
 type AttributeConfig = {
   checkbox: 'disabled' | 'required';
   date: 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step';
@@ -13,7 +27,7 @@ type AttributeConfig = {
   textarea: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
 };
 
-export type AttributeConfigKeys = keyof AttributeConfig;
+type AttributeConfigKeys = keyof AttributeConfig;
 
 type HTMLAttributeTypes = {
   [K in AttributeConfigKeys]: Partial<Pick<HTMLInputElement, AttributeConfig[K]>>;
@@ -22,23 +36,9 @@ type HTMLAttributeTypes = {
   textarea: Partial<Pick<HTMLTextAreaElement, AttributeConfig['textarea']>>;
 };
 
-export type HTMLAttributeTypesMap = {
+type HTMLAttributeTypesMap = {
   [K in AttributeConfigKeys]: HTMLAttributeTypes[K];
 };
-
-export type InputType =
-  | 'checkbox'
-  | 'date'
-  | 'email'
-  | 'file'
-  | 'number'
-  | 'password'
-  | 'radio'
-  | 'select'
-  | 'tel'
-  | 'text'
-  | 'time'
-  | 'textarea';
 
 export type FieldProps<T extends InputType> = {
   type: T;
@@ -56,7 +56,7 @@ export type TextareaFieldProps = FieldProps<'textarea'> & {
   autosize?: boolean;
 };
 
-export type Field =
+type Field =
   | FieldProps<'checkbox'>
   | FieldProps<'date'>
   | FieldProps<'email'>
