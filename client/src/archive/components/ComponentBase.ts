@@ -23,6 +23,4 @@ abstract class Component {
   }
 }
 
-type FC<P = {}> = (props: P) => DocumentFragment;
-
 export { Component };

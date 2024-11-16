@@ -36,16 +36,12 @@ type HTMLAttributeTypes = {
   textarea: Partial<Pick<HTMLTextAreaElement, AttributeConfig['textarea']>>;
 };
 
-type HTMLAttributeTypesMap = {
-  [K in AttributeConfigKeys]: HTMLAttributeTypes[K];
-};
-
 export type FieldProps<T extends InputType> = {
   type: T;
   id: string;
   name: string;
   label: string;
-  attributes: Partial<HTMLAttributeTypesMap[T]>;
+  attributes: Partial<HTMLAttributeTypes[T]>;
 };
 
 export type SelectFieldProps = FieldProps<'select'> & {

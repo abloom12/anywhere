@@ -1,6 +1,7 @@
 import { Component } from '@/core/component';
-import { FieldProps, InputType as DirtyType } from './_types';
 import { cn } from '@/core/cn';
+import { html } from '@/core/html';
+import { FieldProps, InputType as DirtyType } from './_types';
 
 type InputType = Exclude<DirtyType, 'checkbox' | 'radio' | 'select' | 'textarea'>;
 
@@ -8,6 +9,36 @@ type InputType = Exclude<DirtyType, 'checkbox' | 'radio' | 'select' | 'textarea'
 // so if we do someting like setValue() that updates the proxy value it can auto update html
 
 class Input<T extends InputType> extends Component {
+  #props: FieldProps<T>;
+  #value: string = '';
+
+  constructor(props: FieldProps<T>) {
+    super();
+
+    this.#props = { ...props };
+
+    this.render();
+  }
+
+  protected render() {
+    this.rootElement.appendChild(html`
+      <div class="${cn('text-black')}">
+        <label
+          ref="mything"
+          for="${this.#props.id}"
+          >${this.#props.label}</label
+        >
+        <input
+          type="${this.#props.type}"
+          name="${this.#props.name}"
+          id="${this.#props.id}"
+        />
+      </div>
+    `);
+  }
+}
+
+class Input2<T extends InputType> extends Component {
   #props: FieldProps<T>;
 
   constructor(props: FieldProps<T>) {
@@ -19,17 +50,6 @@ class Input<T extends InputType> extends Component {
   }
 
   protected render() {
-    const test = /*html*/ `
-      <div class="${cn('text-black')}">
-        <label ref="mything" for="${this.#props.id}">${this.#props.label}</label>
-        <input 
-          type="${this.#props.type}" 
-          name="${this.#props.name}" 
-          id="${this.#props.id}"
-        >
-      </div>
-    `;
-
     const field: HTMLDivElement = document.createElement('div');
 
     const input: HTMLInputElement = document.createElement('input');
@@ -48,4 +68,4 @@ class Input<T extends InputType> extends Component {
   }
 }
 
-export { Input };
+export { Input, Input2 };

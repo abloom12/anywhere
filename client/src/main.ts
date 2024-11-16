@@ -1,32 +1,23 @@
 import './style.css';
 
-import { cn } from './core/cn';
-import { html, withRefs } from './core/html';
+import { Input, Input2 } from './components/Form/Input';
 
-const type = 'text';
-const name = 'username';
-const label = 'User Name';
-const id = '1234';
+function benchmark(func: () => {}, iterations: number): string {
+  const t0 = performance.now();
 
-const div = document.createElement('div');
+  for (let i = 0; i < iterations; i++) {
+    func();
+  }
 
-const { ele, refs } = withRefs(
-  html` <div class="${cn('text-black')}">
-    <label
-      ref="mylabel"
-      for="${id}"
-      >${label}</label
-    >
-    <input
-      ref="myinput"
-      type="${type}"
-      name="${name}"
-      id="${id}"
-    />
-    ${div}
-  </div>`,
-);
+  const t1 = performance.now();
 
-refs.mydiv;
+  return `${(t1 - t0).toFixed(2)}ms`;
+}
 
-document.body.appendChild(ele);
+// document.addEventListener('click', () => {
+//   console.log(
+//     benchmark(() => {
+//       return true;
+//     }, 1000),
+//   );
+// });

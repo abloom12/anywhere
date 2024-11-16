@@ -1,5 +1,5 @@
 import { Component } from '@/core/component';
-import { TextareaFieldProps } from './_types';
+import { TextareaFieldProps } from './form/_types';
 
 class Textarea extends Component {
   #props: TextareaFieldProps;

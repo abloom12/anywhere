@@ -1,5 +1,5 @@
 import { uniqueId } from '@/core/uniqueId';
-import { FieldProps, InputType, SelectFieldProps, TextareaFieldProps } from './_types';
+import { InputType, FieldProps, SelectFieldProps, TextareaFieldProps } from './_types';
 
 type params = [name: string, label: string];
 
