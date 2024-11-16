@@ -1,4 +1,4 @@
-import { Component } from '@/components/ComponentBase';
+import { Component } from '@/core/component';
 import { FieldProps } from './_types';
 
 class Checkbox extends Component {

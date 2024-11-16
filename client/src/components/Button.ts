@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Component } from '@/components/ComponentBase';
+import { Component } from '@/core/component';
 
 const buttonVariants = cva(
   [

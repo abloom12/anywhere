@@ -34,10 +34,7 @@ class Store {
     });
   }
 
-  subscribe(
-    selector: Subscription['selector'],
-    listener: Subscription['listener'],
-  ) {
+  subscribe(selector: Subscription['selector'], listener: Subscription['listener']) {
     const subscription = {
       selector,
       listener,
@@ -46,9 +43,7 @@ class Store {
     this.#subscriptions.push(subscription);
 
     return () => {
-      this.#subscriptions = this.#subscriptions.filter(
-        sub => sub !== subscription,
-      );
+      this.#subscriptions = this.#subscriptions.filter(sub => sub !== subscription);
     };
   }
 

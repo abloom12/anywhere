@@ -1,4 +1,4 @@
-import { Component } from '@/components/ComponentBase';
+import { Component } from '@/core/component';
 import {
   Field,
   FieldProps,
@@ -92,3 +92,5 @@ class Form extends Component {
     const data = Object.fromEntries(entries);
   }
 }
+
+export { Form };

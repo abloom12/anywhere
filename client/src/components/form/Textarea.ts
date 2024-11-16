@@ -1,4 +1,4 @@
-import { Component } from '@/components/ComponentBase';
+import { Component } from '@/core/component';
 import { TextareaFieldProps } from './_types';
 
 class Textarea extends Component {

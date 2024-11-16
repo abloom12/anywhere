@@ -51,7 +51,9 @@ class Trie {
   }
 
   add({ path }: { path: string }) {
-    const segments: string[] = path.split('/').filter((segment: string) => segment.length > 0);
+    const segments: string[] = path
+      .split('/')
+      .filter((segment: string) => segment.length > 0);
     const segmentsLength = segments.length;
     let currentNode = this.head;
 
@@ -62,7 +64,9 @@ class Trie {
   }
 
   get(path: string): TrieNode | null {
-    const segments: string[] = path.split('/').filter((segment: string) => segment.length > 0);
+    const segments: string[] = path
+      .split('/')
+      .filter((segment: string) => segment.length > 0);
     let currentNode: TrieNode | undefined = this.head;
 
     for (const segment of segments) {
@@ -99,7 +103,9 @@ class Trie {
 
     if (hasDynamicChild) {
       const marker = node.dynamicChild![1].isComplete ? '[Complete]' : '';
-      console.log(`${prefix}${isLast ? '└── ' : '├── '}${node.dynamicChild![0]} ${marker}`);
+      console.log(
+        `${prefix}${isLast ? '└── ' : '├── '}${node.dynamicChild![0]} ${marker}`,
+      );
       this.print(node.dynamicChild![1], prefix + (isLast ? '    ' : '│   '), true);
     }
   }
@@ -125,7 +131,11 @@ class Router {
   }
 
   #linkHandler(e: MouseEvent) {
-    if ((e.ctrlKey || e.metaKey) && e.target instanceof HTMLElement && e.target.tagName.toLowerCase() === 'a') {
+    if (
+      (e.ctrlKey || e.metaKey) &&
+      e.target instanceof HTMLElement &&
+      e.target.tagName.toLowerCase() === 'a'
+    ) {
       return false;
     }
 
@@ -134,7 +144,11 @@ class Router {
       return false;
     }
 
-    if (typeof location === 'string' && location.match(/^(http|https)/) && typeof URL !== 'undefined') {
+    if (
+      typeof location === 'string' &&
+      location.match(/^(http|https)/) &&
+      typeof URL !== 'undefined'
+    ) {
       try {
         const u = new URL(location);
         location = u.pathname + u.search;

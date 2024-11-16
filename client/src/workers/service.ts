@@ -1,6 +1,10 @@
 const CACHE_NAME: string = 'my-site-cache-v1';
 
-const URLS_TO_CACHE: string[] = ['/', '/index.html', '/webroot/dist/images'];
+const URLS_TO_CACHE: string[] = [
+  '/webbroot/imain.ju',
+  '/index.html',
+  '/webroot/dist/images',
+];
 
 // Install event - caching initial assets
 self.addEventListener('install', event => {
@@ -62,14 +66,3 @@ self.addEventListener('fetch', event => {
     }) as Promise<Response>,
   );
 });
-
-// declare var self: ServiceWorkerGlobalScope;
-
-// declare type ExtendableEvent = Event & {
-//   waitUntil(fn: Promise<any>): void;
-// };
-
-// declare type FetchEvent = ExtendableEvent & {
-//   request: Request;
-//   respondWith(response: Response | Promise<Response>): void;
-// };

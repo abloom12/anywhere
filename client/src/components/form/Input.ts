@@ -1,12 +1,11 @@
-import { Component } from '@/components/ComponentBase';
+import { Component } from '@/core/component';
 import { FieldProps, InputType as DirtyType } from './_types';
-import { cn } from '@/util/cn';
-
-function html(b: string) {
-  return b;
-}
+import { cn } from '@/core/cn';
 
 type InputType = Exclude<DirtyType, 'checkbox' | 'radio' | 'select' | 'textarea'>;
+
+// Controlled Input/Component, keep stuff like input.value etc on class, make it reactive with proxy
+// so if we do someting like setValue() that updates the proxy value it can auto update html
 
 class Input<T extends InputType> extends Component {
   #props: FieldProps<T>;
@@ -21,9 +20,13 @@ class Input<T extends InputType> extends Component {
 
   protected render() {
     const test = /*html*/ `
-      <div class="text-black">
-        <label for="${this.#props.id}">${this.#props.label}</label>
-        <input type="${this.#props.type}" name="${this.#props.name}" id="${this.#props.id}">
+      <div class="${cn('text-black')}">
+        <label ref="mything" for="${this.#props.id}">${this.#props.label}</label>
+        <input 
+          type="${this.#props.type}" 
+          name="${this.#props.name}" 
+          id="${this.#props.id}"
+        >
       </div>
     `;
 

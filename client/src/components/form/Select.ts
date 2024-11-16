@@ -1,4 +1,4 @@
-import { Component } from '@/components/ComponentBase';
+import { Component } from '@/core/component';
 import { SelectFieldProps } from './_types';
 
 class Select extends Component {

@@ -13,8 +13,8 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "@ui/*": ["./src/components/*"]
+      "@/*": ["./src/*"]
+      //"@ui/*": ["./src/components/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
@@ -25,5 +25,5 @@
     "target": "ES2020",
     "useDefineForClassFields": true
   },
-  "include": ["src", "../_/Components/form"]
+  "include": ["src", "../_/components/ComponentBase.ts"]
 }

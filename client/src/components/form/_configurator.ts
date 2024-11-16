@@ -1,4 +1,4 @@
-import { uniqueId } from '@/util/uniqueId';
+import { uniqueId } from '@/core/uniqueId';
 import { FieldProps, InputType, SelectFieldProps, TextareaFieldProps } from './_types';
 
 type params = [name: string, label: string];
@@ -82,6 +82,7 @@ class SelectConfigurator extends Configurator<'select', SelectFieldProps> {
 
   data(data: []) {
     this.props.data = data;
+    return this;
   }
 
   multiple(value: boolean) {
@@ -119,7 +120,7 @@ class TextareaConfigurator extends Configurator<'textarea', TextareaFieldProps> 
   }
 }
 
-const field = {
+export const field = {
   checkbox: (...args: params) => new CheckboxConfigurator(args),
   date: (...args: params) => new DateConfigurator(args),
   email: (...args: params) => new EmailConfigurator(args),
