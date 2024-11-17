@@ -1,10 +1,17 @@
 import { Component } from '@/core/component';
-import { SelectFieldProps } from './_types';
+
+export type Props = {
+  id: string;
+  name: string;
+  label: string;
+  attributes: Partial<Pick<HTMLSelectElement, 'disabled' | 'multiple' | 'required'>>;
+  data?: [];
+};
 
 class Select extends Component {
-  #props: SelectFieldProps;
+  #props: Props;
 
-  constructor(props: SelectFieldProps) {
+  constructor(props: Props) {
     super();
 
     this.#props = { ...props };

@@ -1,10 +1,22 @@
 import { Component } from '@/core/component';
-import { TextareaFieldProps } from './form/_types';
+
+export type Props = {
+  id: string;
+  name: string;
+  label: string;
+  attributes: Partial<
+    Pick<
+      HTMLTextAreaElement,
+      'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required'
+    >
+  >;
+  autosize?: boolean;
+};
 
 class Textarea extends Component {
-  #props: TextareaFieldProps;
+  #props: Props;
 
-  constructor(props: TextareaFieldProps) {
+  constructor(props: Props) {
     super();
 
     this.#props = { ...props };

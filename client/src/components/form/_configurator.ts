@@ -1,9 +1,30 @@
 import { uniqueId } from '@/core/uniqueId';
-import { InputType, FieldProps, SelectFieldProps, TextareaFieldProps } from './_types';
+import { Props as InputProps, InputType } from './Input';
+import { Props as CheckboxProps } from './Checkbox';
+import { Props as RadioProps } from './Radio';
+import { Props as SelectProps } from './Select';
+import { Props as TextareaProps } from './Textarea';
+
+type FieldType = InputType | 'checkbox' | 'radio' | 'select' | 'textarea';
 
 type params = [name: string, label: string];
 
-abstract class Configurator<T extends InputType, K extends FieldProps<T>> {
+type FieldProps = {
+  checkbox: CheckboxProps;
+  radio: RadioProps;
+  select: SelectProps;
+  textarea: TextareaProps;
+  date: InputProps<'date'>;
+  email: InputProps<'email'>;
+  file: InputProps<'file'>;
+  number: InputProps<'number'>;
+  password: InputProps<'password'>;
+  tel: InputProps<'tel'>;
+  text: InputProps<'text'>;
+  time: InputProps<'time'>;
+};
+
+abstract class Configurator<T extends FieldType, K extends FieldProps[T]> {
   props: K;
 
   constructor(type: T, [name, label]: params) {
@@ -30,22 +51,22 @@ abstract class Configurator<T extends InputType, K extends FieldProps<T>> {
   }
 }
 
-class CheckboxConfigurator extends Configurator<'checkbox', FieldProps<'checkbox'>> {
+class CheckboxConfigurator extends Configurator<'checkbox', CheckboxProps> {
   constructor(args: params) {
     super('checkbox', args);
   }
 }
-class DateConfigurator extends Configurator<'date', FieldProps<'date'>> {
+class DateConfigurator extends Configurator<'date', InputProps<'date'>> {
   constructor(args: params) {
     super('date', args);
   }
 }
-class EmailConfigurator extends Configurator<'email', FieldProps<'email'>> {
+class EmailConfigurator extends Configurator<'email', InputProps<'email'>> {
   constructor(args: params) {
     super('email', args);
   }
 }
-class FileConfigurator extends Configurator<'file', FieldProps<'file'>> {
+class FileConfigurator extends Configurator<'file', InputProps<'file'>> {
   constructor(args: params) {
     super('file', args);
   }
@@ -60,22 +81,22 @@ class FileConfigurator extends Configurator<'file', FieldProps<'file'>> {
     return this;
   }
 }
-class NumberConfigurator extends Configurator<'number', FieldProps<'number'>> {
+class NumberConfigurator extends Configurator<'number', InputProps<'number'>> {
   constructor(args: params) {
     super('number', args);
   }
 }
-class PasswordConfigurator extends Configurator<'password', FieldProps<'password'>> {
+class PasswordConfigurator extends Configurator<'password', InputProps<'password'>> {
   constructor(args: params) {
     super('password', args);
   }
 }
-class RadioConfigurator extends Configurator<'radio', FieldProps<'radio'>> {
+class RadioConfigurator extends Configurator<'radio', RadioProps> {
   constructor(args: params) {
     super('radio', args);
   }
 }
-class SelectConfigurator extends Configurator<'select', SelectFieldProps> {
+class SelectConfigurator extends Configurator<'select', SelectProps> {
   constructor(args: params) {
     super('select', args);
   }
@@ -90,22 +111,22 @@ class SelectConfigurator extends Configurator<'select', SelectFieldProps> {
     return this;
   }
 }
-class TimeConfigurator extends Configurator<'time', FieldProps<'time'>> {
+class TimeConfigurator extends Configurator<'time', InputProps<'time'>> {
   constructor(args: params) {
     super('time', args);
   }
 }
-class TelConfigurator extends Configurator<'tel', FieldProps<'tel'>> {
+class TelConfigurator extends Configurator<'tel', InputProps<'tel'>> {
   constructor(args: params) {
     super('tel', args);
   }
 }
-class TextConfigurator extends Configurator<'text', FieldProps<'text'>> {
+class TextConfigurator extends Configurator<'text', InputProps<'text'>> {
   constructor(args: params) {
     super('text', args);
   }
 }
-class TextareaConfigurator extends Configurator<'textarea', TextareaFieldProps> {
+class TextareaConfigurator extends Configurator<'textarea', TextareaProps> {
   constructor(args: params) {
     super('textarea', args);
   }

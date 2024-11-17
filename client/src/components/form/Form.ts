@@ -1,17 +1,23 @@
 import { Component } from '@/core/component';
-import {
-  Field,
-  FieldProps,
-  InputType,
-  SelectFieldProps,
-  TextareaFieldProps,
-} from './_types';
+import { Checkbox, Props as CheckboxProps } from './Checkbox';
+import { Input, Props as InputProps } from './Input';
+import { Radio, Props as RadioProps } from './Radio';
+import { Select, Props as SelectProps } from './Select';
+import { Textarea, Props as TextareaProps } from './Textarea';
 
-import { Checkbox } from './Checkbox';
-import { Input } from './Input';
-import { Radio } from './Radio';
-import { Select } from './Select';
-import { Textarea } from './Textarea';
+type Field =
+  | (CheckboxProps & { type: 'checkbox' })
+  | (RadioProps & { type: 'radio' })
+  | (SelectProps & { type: 'select' })
+  | (TextareaProps & { type: 'textarea' })
+  | InputProps<'date'>
+  | InputProps<'email'>
+  | InputProps<'file'>
+  | InputProps<'number'>
+  | InputProps<'password'>
+  | InputProps<'tel'>
+  | InputProps<'text'>
+  | InputProps<'time'>;
 
 type FieldGroup = {
   legend: string;

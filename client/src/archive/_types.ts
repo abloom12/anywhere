@@ -30,7 +30,9 @@ type AttributeConfig = {
 type AttributeConfigKeys = keyof AttributeConfig;
 
 type HTMLAttributeTypes = {
-  [K in AttributeConfigKeys]: Partial<Pick<HTMLInputElement, AttributeConfig[K]>>;
+  [K in Exclude<AttributeConfigKeys, 'select' | 'textarea'>]: Partial<
+    Pick<HTMLInputElement, AttributeConfig[K]>
+  >;
 } & {
   select: Partial<Pick<HTMLSelectElement, AttributeConfig['select']>>;
   textarea: Partial<Pick<HTMLTextAreaElement, AttributeConfig['textarea']>>;

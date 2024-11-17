@@ -1,69 +1,136 @@
-import { Component } from '@/core/component';
-import { cn } from '@/core/cn';
-import { html } from '@/core/html';
-// import { FieldProps } from './_types';
+import { uniqueId } from '@/core/uniqueId';
+import { InputType, FieldProps, SelectFieldProps, TextareaFieldProps } from './_types';
 
-type InputType =
-  | 'date'
-  | 'email'
-  | 'file'
-  | 'number'
-  | 'password'
-  | 'tel'
-  | 'text'
-  | 'time';
+type params = [name: string, label: string];
 
-type AttributeConfig = {
-  date: 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step';
-  email: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
-  file: 'accept' | 'disabled' | 'capture' | 'readOnly' | 'required';
-  number: 'disabled' | 'max' | 'min' | 'step' | 'readOnly' | 'required';
-  password: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
-  tel: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
-  time: 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step';
-  text: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
-};
+abstract class Configurator<T extends InputType, K extends FieldProps<T>> {
+  props: K;
 
-type HTMLAttributeTypes = {
-  [K in keyof AttributeConfig]: Partial<Pick<HTMLInputElement, AttributeConfig[K]>>;
-};
-
-type FieldProps<T extends InputType> = {
-  type: T;
-  id: string;
-  name: string;
-  label: string;
-  attributes: Partial<HTMLAttributeTypes[T]>;
-};
-
-class Input<T extends InputType> extends Component {
-  #props: FieldProps<T>;
-  #value: string = '';
-
-  constructor(props: FieldProps<T>) {
-    super();
-
-    this.#props = { ...props };
-
-    this.render();
+  constructor(type: T, [name, label]: params) {
+    this.props = {
+      type,
+      id: uniqueId(),
+      name,
+      label,
+      attributes: {},
+    } as K;
   }
 
-  protected render() {
-    this.rootElement.appendChild(html`
-      <div class="${cn('text-black')}">
-        <label
-          ref="mything"
-          for="${this.#props.id}"
-          >${this.#props.label}</label
-        >
-        <input
-          type="${this.#props.type}"
-          name="${this.#props.name}"
-          id="${this.#props.id}"
-        />
-      </div>
-    `);
+  get $(): K {
+    return this.props;
+  }
+
+  disabled(condition?: boolean) {
+    this.props.attributes.disabled = condition ?? true;
+    return this;
+  }
+  required(condition?: boolean) {
+    this.props.attributes.required = condition ?? true;
+    return this;
   }
 }
 
-export { Input };
+class CheckboxConfigurator extends Configurator<'checkbox', FieldProps<'checkbox'>> {
+  constructor(args: params) {
+    super('checkbox', args);
+  }
+}
+class DateConfigurator extends Configurator<'date', FieldProps<'date'>> {
+  constructor(args: params) {
+    super('date', args);
+  }
+}
+class EmailConfigurator extends Configurator<'email', FieldProps<'email'>> {
+  constructor(args: params) {
+    super('email', args);
+  }
+}
+class FileConfigurator extends Configurator<'file', FieldProps<'file'>> {
+  constructor(args: params) {
+    super('file', args);
+  }
+
+  accept(value: string) {
+    this.props.attributes.accept = value;
+    return this;
+  }
+
+  capture(value: string) {
+    this.props.attributes.capture = value;
+    return this;
+  }
+}
+class NumberConfigurator extends Configurator<'number', FieldProps<'number'>> {
+  constructor(args: params) {
+    super('number', args);
+  }
+}
+class PasswordConfigurator extends Configurator<'password', FieldProps<'password'>> {
+  constructor(args: params) {
+    super('password', args);
+  }
+}
+class RadioConfigurator extends Configurator<'radio', FieldProps<'radio'>> {
+  constructor(args: params) {
+    super('radio', args);
+  }
+}
+class SelectConfigurator extends Configurator<'select', SelectFieldProps> {
+  constructor(args: params) {
+    super('select', args);
+  }
+
+  data(data: []) {
+    this.props.data = data;
+    return this;
+  }
+
+  multiple(value: boolean) {
+    this.props.attributes.multiple = value;
+    return this;
+  }
+}
+class TimeConfigurator extends Configurator<'time', FieldProps<'time'>> {
+  constructor(args: params) {
+    super('time', args);
+  }
+}
+class TelConfigurator extends Configurator<'tel', FieldProps<'tel'>> {
+  constructor(args: params) {
+    super('tel', args);
+  }
+}
+class TextConfigurator extends Configurator<'text', FieldProps<'text'>> {
+  constructor(args: params) {
+    super('text', args);
+  }
+}
+class TextareaConfigurator extends Configurator<'textarea', TextareaFieldProps> {
+  constructor(args: params) {
+    super('textarea', args);
+  }
+
+  minlength(length: number) {
+    this.props.attributes.minLength = length;
+    return this;
+  }
+  maxlength(length: number) {
+    this.props.attributes.maxLength = length;
+    return this;
+  }
+}
+
+export const field = {
+  checkbox: (...args: params) => new CheckboxConfigurator(args),
+  date: (...args: params) => new DateConfigurator(args),
+  email: (...args: params) => new EmailConfigurator(args),
+  file: (...args: params) => new FileConfigurator(args),
+  number: (...args: params) => new NumberConfigurator(args),
+  password: (...args: params) => new PasswordConfigurator(args),
+  radio: (...args: params) => new RadioConfigurator(args),
+  select: (...args: params) => new SelectConfigurator(args),
+  time: (...args: params) => new TimeConfigurator(args),
+  tel: (...args: params) => new TelConfigurator(args),
+  text: (...args: params) => new TextConfigurator(args),
+  textarea: (...args: params) => new TextareaConfigurator(args),
+};

@@ -1,47 +1,51 @@
 import { Component } from '@/core/component';
 import { cn } from '@/core/cn';
 import { html } from '@/core/html';
-import { FieldProps, InputType as DirtyType } from './_types';
 
-type InputType = Exclude<DirtyType, 'checkbox' | 'radio' | 'select' | 'textarea'>;
+export type InputType =
+  | 'date'
+  | 'email'
+  | 'file'
+  | 'number'
+  | 'password'
+  | 'tel'
+  | 'text'
+  | 'time';
 
-// Controlled Input/Component, keep stuff like input.value etc on class, make it reactive with proxy
-// so if we do someting like setValue() that updates the proxy value it can auto update html
+type AllowedAttributes = {
+  date: 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step';
+  email: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
+  file: 'accept' | 'disabled' | 'capture' | 'readOnly' | 'required';
+  number: 'disabled' | 'max' | 'min' | 'step' | 'readOnly' | 'required';
+  password: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
+  tel: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
+  time: 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step';
+  text: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
+};
 
-class Input<T extends InputType> extends Component {
-  #props: FieldProps<T>;
+type HTMLAttributes = {
+  [K in keyof AllowedAttributes]: Partial<Pick<HTMLInputElement, AllowedAttributes[K]>>;
+};
+
+export type Props<T extends InputType> = {
+  type: T;
+  id: string;
+  name: string;
+  label: string;
+  attributes: HTMLAttributes[T];
+};
+
+const classname = {
+  field: 'grid items-center w-full',
+  label: 'text-sm capitalize',
+  input: 'text-black leading-normal rounded py-1.5 px-3',
+};
+
+export class Input<T extends InputType> extends Component {
+  #props: Props<T>;
   #value: string = '';
 
-  constructor(props: FieldProps<T>) {
-    super();
-
-    this.#props = { ...props };
-
-    this.render();
-  }
-
-  protected render() {
-    this.rootElement.appendChild(html`
-      <div class="${cn('text-black')}">
-        <label
-          ref="mything"
-          for="${this.#props.id}"
-          >${this.#props.label}</label
-        >
-        <input
-          type="${this.#props.type}"
-          name="${this.#props.name}"
-          id="${this.#props.id}"
-        />
-      </div>
-    `);
-  }
-}
-
-class Input2<T extends InputType> extends Component {
-  #props: FieldProps<T>;
-
-  constructor(props: FieldProps<T>) {
+  constructor(props: Props<T>) {
     super();
 
     this.#props = { ...props };
@@ -67,5 +71,3 @@ class Input2<T extends InputType> extends Component {
     this.rootElement.appendChild(field);
   }
 }
-
-export { Input, Input2 };

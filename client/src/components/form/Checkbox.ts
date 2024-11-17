@@ -1,10 +1,16 @@
 import { Component } from '@/core/component';
-import { FieldProps } from './_types';
+
+export type Props = {
+  id: string;
+  name: string;
+  label: string;
+  attributes: Partial<Pick<HTMLInputElement, 'disabled' | 'required'>>;
+};
 
 class Checkbox extends Component {
-  #props: FieldProps<'checkbox'>;
+  #props: Props;
 
-  constructor(props: FieldProps<'checkbox'>) {
+  constructor(props: Props) {
     super();
 
     this.#props = { ...props };

@@ -10,6 +10,21 @@
 //   htmlParts.push(escapeHTML(String(value)));
 // }
 
+// html`
+//   <div class="${cn('text-black')}">
+//     <label
+//       ref="mything"
+//       for="${this.#props.id}"
+//       >${this.#props.label}</label
+//     >
+//     <input
+//       type="${this.#props.type}"
+//       name="${this.#props.name}"
+//       id="${this.#props.id}"
+//     />
+//   </div>
+// `;
+
 //TODO: do no allow null or undefined to get printed
 function html(strings: TemplateStringsArray, ...values: any[]): DocumentFragment {
   const placeholders = new Map<number, HTMLElement>();
