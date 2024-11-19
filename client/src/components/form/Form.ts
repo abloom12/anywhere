@@ -1,51 +1,65 @@
 import { Component } from '@/core/component';
-import { Checkbox, Props as CheckboxProps } from './Checkbox';
-import { Input, Props as InputProps } from './Input';
-import { Radio, Props as RadioProps } from './Radio';
-import { Select, Props as SelectProps } from './Select';
-import { Textarea, Props as TextareaProps } from './Textarea';
+import { Input } from '@/components/Input';
+import { Checkbox } from '@/components/Checkbox';
+import { Radio } from '@/components/Radio';
+import { Select } from '@/components/Select';
+import { Textarea } from '@/components/Textarea';
+import { Label } from '@/components/Label';
+import { Fieldset } from '@/components/Fieldset';
+import { FieldProps, FieldGroup } from './form.types';
 
-type Field =
-  | (CheckboxProps & { type: 'checkbox' })
-  | (RadioProps & { type: 'radio' })
-  | (SelectProps & { type: 'select' })
-  | (TextareaProps & { type: 'textarea' })
-  | InputProps<'date'>
-  | InputProps<'email'>
-  | InputProps<'file'>
-  | InputProps<'number'>
-  | InputProps<'password'>
-  | InputProps<'tel'>
-  | InputProps<'text'>
-  | InputProps<'time'>;
-
-type FieldGroup = {
-  legend: string;
-  fields: Field[];
-};
+import { html } from '@/core/html';
 
 type FormProps = {
   name: string;
-  fields: (Field | FieldGroup)[];
+  fields: (FieldProps | FieldGroup)[];
   autofocus?: string;
 };
 
-function createField(field: Field): Component {
-  switch (field.type) {
-    case 'checkbox':
-      return new Checkbox(field);
-    case 'radio':
-      return new Radio(field);
-    case 'select':
-      return new Select(field);
-    case 'textarea':
-      return new Textarea(field);
-    default:
-      return new Input(field);
+class FormField extends Component {
+  #props: FieldProps;
+  #field: Component;
+
+  constructor(props: FieldProps) {
+    super();
+    this.#props = {
+      ...props,
+    };
+
+    switch (props.type) {
+      case 'checkbox':
+        this.#field = new Checkbox(props);
+        break;
+      case 'radio':
+        this.#field = new Radio(props);
+        break;
+      case 'select':
+        this.#field = new Select(props);
+        break;
+      case 'textarea':
+        this.#field = new Textarea(props);
+        break;
+      default:
+        this.#field = new Input(props);
+    }
+
+    this.render();
+  }
+
+  render() {
+    const formfield = html`
+      <div class="">
+        ${Label({ text: this.#props.label })}
+        ${this.#field.element}
+        <p class=""></p>
+      </div>
+    `;
+
+    this.rootElement.appendChild(formfield);
   }
 }
 
-class Form extends Component {
+export class Form extends Component {
   #props: FormProps;
   #form: HTMLFormElement = document.createElement('form');
 
@@ -64,22 +78,15 @@ class Form extends Component {
 
     for (const field of this.#props.fields) {
       if ('legend' in field) {
-        const fieldset: HTMLFieldSetElement = document.createElement('fieldset');
-
-        const legend: HTMLLegendElement = document.createElement('legend');
-        legend.textContent = field.legend;
-
-        fieldset.appendChild(legend);
-
-        for (const groupedField of field.fields) {
-          const fieldComponent = createField(groupedField);
-          fieldComponent.appendTo(fieldset);
-        }
-
+        const { fields, legend } = field;
+        const fieldset = Fieldset({ legend });
         this.#form.appendChild(fieldset);
+
+        for (const groupedField of fields) {
+          const formField = new FormField(groupedField);
+        }
       } else {
-        const fieldComponent = createField(field);
-        fieldComponent.appendTo(this.#form);
+        const formField = new FormField(field);
       }
     }
 
@@ -90,6 +97,8 @@ class Form extends Component {
     // this.#form.elements[name | id]
   }
 
+  onChange(e: Event) {}
+
   onSubmit(e: SubmitEvent) {
     e.preventDefault();
 
@@ -98,5 +107,3 @@ class Form extends Component {
     const data = Object.fromEntries(entries);
   }
 }
-
-export { Form };

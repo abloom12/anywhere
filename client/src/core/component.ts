@@ -1,8 +1,12 @@
-abstract class Component {
+export abstract class Component {
   protected rootElement: DocumentFragment;
 
   constructor() {
     this.rootElement = document.createDocumentFragment();
+  }
+
+  get element() {
+    return this.rootElement;
   }
 
   protected abstract render(): void;
@@ -23,6 +27,4 @@ abstract class Component {
   }
 }
 
-type FC<P = {}> = (props: P) => DocumentFragment;
-
-export { Component };
+export type FC<P = {}> = (props: P) => (HTMLElement | DocumentFragment);

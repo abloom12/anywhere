@@ -26,5 +26,5 @@
     "useDefineForClassFields": true
   },
   "include": ["src"],
-  "exclude": ["src/archive"]
+  "exclude": ["src/archive/**/*"]
 }

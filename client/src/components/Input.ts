@@ -1,6 +1,8 @@
 import { Component } from '@/core/component';
 import { cn } from '@/core/cn';
-import { html } from '@/core/html';
+
+//? add type 'hidden', could be useful
+//? add month, week, range
 
 export type InputType =
   | 'date'
@@ -15,7 +17,7 @@ export type InputType =
 type AllowedAttributes = {
   date: 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step';
   email: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
-  file: 'accept' | 'disabled' | 'capture' | 'readOnly' | 'required';
+  file: 'accept' | 'disabled' | 'capture' | 'multiple' | 'readOnly' | 'required';
   number: 'disabled' | 'max' | 'min' | 'step' | 'readOnly' | 'required';
   password: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
   tel: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
@@ -31,14 +33,12 @@ export type Props<T extends InputType> = {
   type: T;
   id: string;
   name: string;
-  label: string;
   attributes: HTMLAttributes[T];
 };
 
 const classname = {
-  field: 'grid items-center w-full',
-  label: 'text-sm capitalize',
-  input: 'text-black leading-normal rounded py-1.5 px-3',
+  field: cn('grid items-center w-full'),
+  input: cn('text-black leading-normal rounded py-1.5 px-3'),
 };
 
 export class Input<T extends InputType> extends Component {
@@ -54,20 +54,12 @@ export class Input<T extends InputType> extends Component {
   }
 
   protected render() {
-    const field: HTMLDivElement = document.createElement('div');
-
     const input: HTMLInputElement = document.createElement('input');
+    input.className = classname.input;
     input.type = this.#props.type;
     input.name = this.#props.name;
     input.id = this.#props.id;
 
-    const label: HTMLLabelElement = document.createElement('label');
-    label.textContent = this.#props.label;
-    label.htmlFor = this.#props.id;
-
-    field.appendChild(label);
-    field.appendChild(input);
-
-    this.rootElement.appendChild(field);
+    this.rootElement.appendChild(input);
   }
 }

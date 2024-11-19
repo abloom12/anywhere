@@ -4,6 +4,7 @@
 
 :root {
   font-synthesis: none;
+  interpolate-size: allow-keywords;
   line-height: 1.5;
   text-rendering: optimizeLegibility;
 

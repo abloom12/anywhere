@@ -117,6 +117,15 @@ describe('html function', () => {
     expect(spanInFragment?.textContent).toBe('inner');
   });
 
+  it('should handle boolean values', () => {
+    const fragment = html`<div>${true}</div>
+      <div>${false}</div>`;
+    const divs = fragment.querySelectorAll('div');
+    expect(divs).toHaveLength(2);
+    expect(divs[0].textContent).toBe('true');
+    expect(divs[1].textContent).toBe('false');
+  });
+
   it('should handle comments properly', () => {
     const fragment = html`<div><!-- a comment --></div>`;
     const div = fragment.querySelector('div');
@@ -133,21 +142,12 @@ describe('html function', () => {
     expect((comments[0] as Comment).data.trim()).toBe('a comment');
   });
 
-  it('should handle null and undefined values', () => {
+  it('should replace null and undefined values with empty string', () => {
     const fragment = html`<div>${null}</div>
       <div>${undefined}</div>`;
     const divs = fragment.querySelectorAll('div');
     expect(divs).toHaveLength(2);
-    expect(divs[0].textContent).toBe('null');
-    expect(divs[1].textContent).toBe('undefined');
-  });
-
-  it('should handle boolean values', () => {
-    const fragment = html`<div>${true}</div>
-      <div>${false}</div>`;
-    const divs = fragment.querySelectorAll('div');
-    expect(divs).toHaveLength(2);
-    expect(divs[0].textContent).toBe('true');
-    expect(divs[1].textContent).toBe('false');
+    expect(divs[0].textContent).toBe('');
+    expect(divs[1].textContent).toBe('');
   });
 });

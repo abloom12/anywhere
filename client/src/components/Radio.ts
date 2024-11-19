@@ -3,7 +3,6 @@ import { Component } from '@/core/component';
 export type Props = {
   id: string;
   name: string;
-  label: string;
   attributes: Partial<Pick<HTMLInputElement, 'disabled' | 'required'>>;
 };
 
@@ -26,11 +25,6 @@ class Radio extends Component {
     input.name = this.#props.name;
     input.id = this.#props.id;
 
-    const label: HTMLLabelElement = document.createElement('label');
-    label.textContent = this.#props.label;
-    label.htmlFor = this.#props.id;
-
-    field.appendChild(label);
     field.appendChild(input);
 
     this.rootElement.appendChild(field);

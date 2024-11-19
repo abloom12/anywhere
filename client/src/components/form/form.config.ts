@@ -1,44 +1,47 @@
 import { uniqueId } from '@/core/uniqueId';
-import { Props as InputProps, InputType } from './Input';
-import { Props as CheckboxProps } from './Checkbox';
-import { Props as RadioProps } from './Radio';
-import { Props as SelectProps } from './Select';
-import { Props as TextareaProps } from './Textarea';
+import { Props as InputProps, InputType } from '@/components/Input';
+import { Props as CheckboxProps } from '@/components/Checkbox';
+import { Props as RadioProps } from '@/components/Radio';
+import { Props as SelectProps } from '@/components/Select';
+import { Props as TextareaProps } from '@/components/Textarea';
 
 type FieldType = InputType | 'checkbox' | 'radio' | 'select' | 'textarea';
 
 type params = [name: string, label: string];
 
-type FieldProps = {
-  checkbox: CheckboxProps;
-  radio: RadioProps;
-  select: SelectProps;
-  textarea: TextareaProps;
-  date: InputProps<'date'>;
-  email: InputProps<'email'>;
-  file: InputProps<'file'>;
-  number: InputProps<'number'>;
-  password: InputProps<'password'>;
-  tel: InputProps<'tel'>;
-  text: InputProps<'text'>;
-  time: InputProps<'time'>;
-};
-
-abstract class Configurator<T extends FieldType, K extends FieldProps[T]> {
+abstract class Configurator<
+  T extends FieldType,
+  K extends {
+    checkbox: CheckboxProps;
+    radio: RadioProps;
+    select: SelectProps;
+    textarea: TextareaProps;
+    date: InputProps<'date'>;
+    email: InputProps<'email'>;
+    file: InputProps<'file'>;
+    number: InputProps<'number'>;
+    password: InputProps<'password'>;
+    tel: InputProps<'tel'>;
+    text: InputProps<'text'>;
+    time: InputProps<'time'>;
+  }[T],
+> {
   props: K;
+  label: string;
 
   constructor(type: T, [name, label]: params) {
     this.props = {
       type,
       id: uniqueId(),
       name,
-      label,
       attributes: {},
     } as K;
+
+    this.label = label;
   }
 
-  get $(): K {
-    return this.props;
+  get $(): K & { label: string } {
+    return { ...this.props, label: this.label };
   }
 
   disabled(condition?: boolean) {
@@ -60,10 +63,32 @@ class DateConfigurator extends Configurator<'date', InputProps<'date'>> {
   constructor(args: params) {
     super('date', args);
   }
+
+  min(value: string) {
+    this.props.attributes.min = value;
+    return this;
+  }
+  max(value: string) {
+    this.props.attributes.max = value;
+    return this;
+  }
+  step(value: string) {
+    this.props.attributes.step = value;
+    return this;
+  }
 }
 class EmailConfigurator extends Configurator<'email', InputProps<'email'>> {
   constructor(args: params) {
     super('email', args);
+  }
+
+  minlength(length: number) {
+    this.props.attributes.minLength = length;
+    return this;
+  }
+  maxlength(length: number) {
+    this.props.attributes.maxLength = length;
+    return this;
   }
 }
 class FileConfigurator extends Configurator<'file', InputProps<'file'>> {
@@ -80,15 +105,42 @@ class FileConfigurator extends Configurator<'file', InputProps<'file'>> {
     this.props.attributes.capture = value;
     return this;
   }
+
+  multiple(value: boolean) {
+    this.props.attributes.multiple = value;
+    return this;
+  }
 }
 class NumberConfigurator extends Configurator<'number', InputProps<'number'>> {
   constructor(args: params) {
     super('number', args);
   }
+
+  min(value: string) {
+    this.props.attributes.min = value;
+    return this;
+  }
+  max(value: string) {
+    this.props.attributes.max = value;
+    return this;
+  }
+  step(value: string) {
+    this.props.attributes.step = value;
+    return this;
+  }
 }
 class PasswordConfigurator extends Configurator<'password', InputProps<'password'>> {
   constructor(args: params) {
     super('password', args);
+  }
+
+  minlength(length: number) {
+    this.props.attributes.minLength = length;
+    return this;
+  }
+  maxlength(length: number) {
+    this.props.attributes.maxLength = length;
+    return this;
   }
 }
 class RadioConfigurator extends Configurator<'radio', RadioProps> {
@@ -115,10 +167,32 @@ class TimeConfigurator extends Configurator<'time', InputProps<'time'>> {
   constructor(args: params) {
     super('time', args);
   }
+
+  min(value: string) {
+    this.props.attributes.min = value;
+    return this;
+  }
+  max(value: string) {
+    this.props.attributes.max = value;
+    return this;
+  }
+  step(value: string) {
+    this.props.attributes.step = value;
+    return this;
+  }
 }
 class TelConfigurator extends Configurator<'tel', InputProps<'tel'>> {
   constructor(args: params) {
     super('tel', args);
+  }
+
+  minlength(length: number) {
+    this.props.attributes.minLength = length;
+    return this;
+  }
+  maxlength(length: number) {
+    this.props.attributes.maxLength = length;
+    return this;
   }
 }
 class TextConfigurator extends Configurator<'text', InputProps<'text'>> {
@@ -131,6 +205,10 @@ class TextareaConfigurator extends Configurator<'textarea', TextareaProps> {
     super('textarea', args);
   }
 
+  autosize(value: boolean) {
+    this.props.autosize = value;
+    return this;
+  }
   minlength(length: number) {
     this.props.attributes.minLength = length;
     return this;

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -7,6 +9,9 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     build: {},
+    // plugins: [
+    //   VitePWA({ registerType: 'autoUpdate' })
+    // ],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),

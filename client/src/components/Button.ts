@@ -27,6 +27,11 @@ const buttonVariants = cva(
         large: ['h-11', 'px-8'],
         icon: ['h-10', 'w-10'],
       },
+      intent: {
+        warning: [],
+        danger: [],
+        success: [],
+      },
     },
     defaultVariants: {
       variant: 'contained',

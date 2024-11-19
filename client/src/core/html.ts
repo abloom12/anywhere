@@ -1,32 +1,4 @@
-// Handle Other Node Types
-// Currently, the html function only checks for HTMLElement instances.
-// There are other node types like Text, Comment, DocumentFragment, SVGElement
-// Solution:
-// Modify the type check to include all Node instances:
-// if (value instanceof Node) {
-//   htmlParts.push(`<!--__placeholder_${i}__-->`);
-//   placeholders.set(i, value);
-// } else {
-//   htmlParts.push(escapeHTML(String(value)));
-// }
-
-// html`
-//   <div class="${cn('text-black')}">
-//     <label
-//       ref="mything"
-//       for="${this.#props.id}"
-//       >${this.#props.label}</label
-//     >
-//     <input
-//       type="${this.#props.type}"
-//       name="${this.#props.name}"
-//       id="${this.#props.id}"
-//     />
-//   </div>
-// `;
-
-//TODO: do no allow null or undefined to get printed
-function html(strings: TemplateStringsArray, ...values: any[]): DocumentFragment {
+export function html(strings: TemplateStringsArray, ...values: any[]): DocumentFragment {
   const placeholders = new Map<number, HTMLElement>();
   const htmlParts: string[] = [];
 
@@ -36,7 +8,9 @@ function html(strings: TemplateStringsArray, ...values: any[]): DocumentFragment
     if (i < values.length) {
       const value = values[i];
 
-      if (value instanceof HTMLElement) {
+      if (value === null || value === undefined) {
+        htmlParts.push('');
+      } else if (value instanceof HTMLElement) {
         htmlParts.push(`<!--__placeholder_${i}__-->`);
         placeholders.set(i, value);
       } else {
@@ -77,7 +51,7 @@ function html(strings: TemplateStringsArray, ...values: any[]): DocumentFragment
   return template.content;
 }
 
-function withRefs<T extends Record<string, HTMLElement>>(
+export function withRefs<T extends Record<string, HTMLElement>>(
   ele: DocumentFragment,
 ): {
   ele: DocumentFragment;
@@ -97,5 +71,3 @@ function withRefs<T extends Record<string, HTMLElement>>(
     refs,
   };
 }
-
-export { html, withRefs };

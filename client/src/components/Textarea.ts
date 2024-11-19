@@ -3,12 +3,16 @@ import { Component } from '@/core/component';
 export type Props = {
   id: string;
   name: string;
-  label: string;
-  attributes: Partial<Pick<HTMLSelectElement, 'disabled' | 'multiple' | 'required'>>;
-  data?: [];
+  attributes: Partial<
+    Pick<
+      HTMLTextAreaElement,
+      'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required'
+    >
+  >;
+  autosize?: boolean;
 };
 
-class Select extends Component {
+class Textarea extends Component {
   #props: Props;
 
   constructor(props: Props) {
@@ -22,22 +26,18 @@ class Select extends Component {
   render() {
     const field: HTMLDivElement = document.createElement('div');
 
-    const select: HTMLSelectElement = document.createElement('select');
-    select.name = this.#props.name;
-    select.id = this.#props.id;
+    const textarea: HTMLTextAreaElement = document.createElement('textarea');
+    textarea.name = this.#props.name;
+    textarea.id = this.#props.id;
 
     const label: HTMLLabelElement = document.createElement('label');
-    label.textContent = this.#props.label;
     label.htmlFor = this.#props.id;
 
     field.appendChild(label);
-    field.appendChild(select);
+    field.appendChild(textarea);
 
     this.rootElement.appendChild(field);
   }
-
-  populate(data: []) {}
-  setValue(value: string) {}
 }
 
-export { Select };
+export { Textarea };

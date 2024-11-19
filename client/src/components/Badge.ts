@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Component } from '@/components/ComponentBase';
+import { Component } from '@/core/component';
 
 const badgeVariants = cva(['text-xs', 'inline-flex', 'items-center', 'justify-center'], {
   variants: {},
@@ -9,7 +9,7 @@ const badgeVariants = cva(['text-xs', 'inline-flex', 'items-center', 'justify-ce
 
 type Props = VariantProps<typeof badgeVariants> & {};
 
-class Badge extends Component {
+export class Badge extends Component {
   #props: Props;
 
   constructor(props: Props) {
@@ -24,5 +24,3 @@ class Badge extends Component {
     this.rootElement.appendChild(badge);
   }
 }
-
-export { Badge };
