@@ -1,11 +1,19 @@
-import { uniqueId } from '@/core/uniqueId';
-import { Props as InputProps, InputType } from '@/components/Input';
-import { Props as CheckboxProps } from '@/components/Checkbox';
-import { Props as RadioProps } from '@/components/Radio';
-import { Props as SelectProps } from '@/components/Select';
-import { Props as TextareaProps } from '@/components/Textarea';
+import { uniqueId } from '@/shared/util/unique-id';
+import {
+  Props as InputProps,
+  InputType,
+} from '@/shared/components/Input';
+import { Props as CheckboxProps } from '@/shared/components/Checkbox';
+import { Props as RadioProps } from '@/shared/components/Radio';
+import { Props as SelectProps } from '@/shared/components/Select';
+import { Props as TextareaProps } from '@/shared/components/Textarea';
 
-type FieldType = InputType | 'checkbox' | 'radio' | 'select' | 'textarea';
+type FieldType =
+  | InputType
+  | 'checkbox'
+  | 'radio'
+  | 'select'
+  | 'textarea';
 
 type params = [name: string, label: string];
 
@@ -54,12 +62,18 @@ abstract class Configurator<
   }
 }
 
-class CheckboxConfigurator extends Configurator<'checkbox', CheckboxProps> {
+class CheckboxConfigurator extends Configurator<
+  'checkbox',
+  CheckboxProps
+> {
   constructor(args: params) {
     super('checkbox', args);
   }
 }
-class DateConfigurator extends Configurator<'date', InputProps<'date'>> {
+class DateConfigurator extends Configurator<
+  'date',
+  InputProps<'date'>
+> {
   constructor(args: params) {
     super('date', args);
   }
@@ -77,7 +91,10 @@ class DateConfigurator extends Configurator<'date', InputProps<'date'>> {
     return this;
   }
 }
-class EmailConfigurator extends Configurator<'email', InputProps<'email'>> {
+class EmailConfigurator extends Configurator<
+  'email',
+  InputProps<'email'>
+> {
   constructor(args: params) {
     super('email', args);
   }
@@ -91,7 +108,10 @@ class EmailConfigurator extends Configurator<'email', InputProps<'email'>> {
     return this;
   }
 }
-class FileConfigurator extends Configurator<'file', InputProps<'file'>> {
+class FileConfigurator extends Configurator<
+  'file',
+  InputProps<'file'>
+> {
   constructor(args: params) {
     super('file', args);
   }
@@ -111,7 +131,10 @@ class FileConfigurator extends Configurator<'file', InputProps<'file'>> {
     return this;
   }
 }
-class NumberConfigurator extends Configurator<'number', InputProps<'number'>> {
+class NumberConfigurator extends Configurator<
+  'number',
+  InputProps<'number'>
+> {
   constructor(args: params) {
     super('number', args);
   }
@@ -129,7 +152,10 @@ class NumberConfigurator extends Configurator<'number', InputProps<'number'>> {
     return this;
   }
 }
-class PasswordConfigurator extends Configurator<'password', InputProps<'password'>> {
+class PasswordConfigurator extends Configurator<
+  'password',
+  InputProps<'password'>
+> {
   constructor(args: params) {
     super('password', args);
   }
@@ -163,7 +189,10 @@ class SelectConfigurator extends Configurator<'select', SelectProps> {
     return this;
   }
 }
-class TimeConfigurator extends Configurator<'time', InputProps<'time'>> {
+class TimeConfigurator extends Configurator<
+  'time',
+  InputProps<'time'>
+> {
   constructor(args: params) {
     super('time', args);
   }
@@ -195,12 +224,18 @@ class TelConfigurator extends Configurator<'tel', InputProps<'tel'>> {
     return this;
   }
 }
-class TextConfigurator extends Configurator<'text', InputProps<'text'>> {
+class TextConfigurator extends Configurator<
+  'text',
+  InputProps<'text'>
+> {
   constructor(args: params) {
     super('text', args);
   }
 }
-class TextareaConfigurator extends Configurator<'textarea', TextareaProps> {
+class TextareaConfigurator extends Configurator<
+  'textarea',
+  TextareaProps
+> {
   constructor(args: params) {
     super('textarea', args);
   }

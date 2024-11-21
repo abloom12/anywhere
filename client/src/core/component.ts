@@ -27,4 +27,4 @@ export abstract class Component {
   }
 }
 
-export type FC<P = {}> = (props: P) => (HTMLElement | DocumentFragment);
+export type FC<P> = (props: P) => (HTMLElement | DocumentFragment);

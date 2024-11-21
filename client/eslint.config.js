@@ -6,7 +6,12 @@ import tseslint from 'typescript-eslint';
 export default [
   { files: ['**/*.{ts}'] },
   { languageOptions: { globals: globals.browser } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  { settings: {}, rules: {} },
+  // pluginJs.configs.recommended,
+  // ...tseslint.configs.recommended,
+  // { 
+  //   files: ['**/*.{ts}'],
+  //   rules: {
+  //     "no-unused-vars": "off"
+  //   } 
+  // },
 ];

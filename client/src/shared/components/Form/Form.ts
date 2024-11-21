@@ -1,11 +1,11 @@
 import { Component } from '@/core/component';
-import { Input } from '@/components/Input';
-import { Checkbox } from '@/components/Checkbox';
-import { Radio } from '@/components/Radio';
-import { Select } from '@/components/Select';
-import { Textarea } from '@/components/Textarea';
-import { Label } from '@/components/Label';
-import { Fieldset } from '@/components/Fieldset';
+import { Input } from '@/shared/components/Input';
+import { Checkbox } from '@/shared/components/Checkbox';
+import { Radio } from '@/shared/components/Radio';
+import { Select } from '@/shared/components/Select';
+import { Textarea } from '@/shared/components/Textarea';
+import { Label } from '@/shared/components/Label';
+import { Fieldset } from '@/shared/components/Fieldset';
 import { FieldProps, FieldGroup } from './form.types';
 
 import { html } from '@/core/html';
@@ -49,8 +49,7 @@ class FormField extends Component {
   render() {
     const formfield = html`
       <div class="">
-        ${Label({ text: this.#props.label })}
-        ${this.#field.element}
+        ${Label({ text: this.#props.label })} ${this.#field.element}
         <p class=""></p>
       </div>
     `;

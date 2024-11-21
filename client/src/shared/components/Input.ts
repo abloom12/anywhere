@@ -1,5 +1,5 @@
 import { Component } from '@/core/component';
-import { cn } from '@/core/cn';
+import { cn } from '@/shared/util/cn';
 
 //? add type 'hidden', could be useful
 //? add month, week, range
@@ -16,17 +16,51 @@ export type InputType =
 
 type AllowedAttributes = {
   date: 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step';
-  email: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
-  file: 'accept' | 'disabled' | 'capture' | 'multiple' | 'readOnly' | 'required';
-  number: 'disabled' | 'max' | 'min' | 'step' | 'readOnly' | 'required';
-  password: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
-  tel: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
+  email:
+    | 'disabled'
+    | 'maxLength'
+    | 'minLength'
+    | 'readOnly'
+    | 'required';
+  file:
+    | 'accept'
+    | 'disabled'
+    | 'capture'
+    | 'multiple'
+    | 'readOnly'
+    | 'required';
+  number:
+    | 'disabled'
+    | 'max'
+    | 'min'
+    | 'step'
+    | 'readOnly'
+    | 'required';
+  password:
+    | 'disabled'
+    | 'maxLength'
+    | 'minLength'
+    | 'readOnly'
+    | 'required';
+  tel:
+    | 'disabled'
+    | 'maxLength'
+    | 'minLength'
+    | 'readOnly'
+    | 'required';
   time: 'disabled' | 'max' | 'min' | 'readOnly' | 'required' | 'step';
-  text: 'disabled' | 'maxLength' | 'minLength' | 'readOnly' | 'required';
+  text:
+    | 'disabled'
+    | 'maxLength'
+    | 'minLength'
+    | 'readOnly'
+    | 'required';
 };
 
 type HTMLAttributes = {
-  [K in keyof AllowedAttributes]: Partial<Pick<HTMLInputElement, AllowedAttributes[K]>>;
+  [K in keyof AllowedAttributes]: Partial<
+    Pick<HTMLInputElement, AllowedAttributes[K]>
+  >;
 };
 
 export type Props<T extends InputType> = {

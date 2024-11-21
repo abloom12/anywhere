@@ -1,8 +1,8 @@
-import { Props as InputProps } from '@/components/Input';
-import { Props as CheckboxProps } from '@/components/Checkbox';
-import { Props as RadioProps } from '@/components/Radio';
-import { Props as SelectProps } from '@/components/Select';
-import { Props as TextareaProps } from '@/components/Textarea';
+import { Props as InputProps } from '@/shared/components/Input';
+import { Props as CheckboxProps } from '@/shared/components/Checkbox';
+import { Props as RadioProps } from '@/shared/components/Radio';
+import { Props as SelectProps } from '@/shared/components/Select';
+import { Props as TextareaProps } from '@/shared/components/Textarea';
 
 export type FieldProps = {
   label: string;
