@@ -1,4 +1,4 @@
-import { Component } from '@/components/ComponentBase';
+import { Component } from '@/core/component';
 
 // table = table ref
 // table.tHead = table header
@@ -56,7 +56,8 @@ class Table extends Component {
 
     const tcontrol: HTMLDivElement = document.createElement('div');
 
-    const thead: HTMLTableSectionElement = document.createElement('thead');
+    const thead: HTMLTableSectionElement =
+      document.createElement('thead');
     this.#props.headings.forEach(heading => {
       const th: HTMLTableCellElement = document.createElement('th');
       const headingNode = document.createTextNode(heading);
@@ -64,7 +65,8 @@ class Table extends Component {
       thead.appendChild(th);
     });
 
-    const tbody: HTMLTableSectionElement = document.createElement('tbody');
+    const tbody: HTMLTableSectionElement =
+      document.createElement('tbody');
 
     table.appendChild(thead);
     table.appendChild(tbody);

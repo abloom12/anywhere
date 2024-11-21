@@ -3,7 +3,7 @@
     "allowImportingTsExtensions": true,
     "allowJs": true,
     "isolatedModules": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable", "WebWorker"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "moduleDetection": "force",
@@ -14,7 +14,6 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@/*": ["./src/*"]
-      //"@ui/*": ["./src/components/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,
@@ -22,7 +21,7 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
-    "target": "ES2020",
+    "target": "ES2022",
     "useDefineForClassFields": true
   },
   "include": ["src"],
