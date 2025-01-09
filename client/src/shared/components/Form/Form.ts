@@ -97,6 +97,7 @@ export class Form extends Component {
   }
 
   onChange(e: Event) {}
+  onInput(e: Event) {}
 
   onSubmit(e: SubmitEvent) {
     e.preventDefault();

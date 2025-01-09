@@ -12,3 +12,5 @@ export const router = new Router();
 //     console.log(reps);
 //   },
 // });
+
+const app = () => {};

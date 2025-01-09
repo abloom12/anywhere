@@ -29,10 +29,11 @@ Component: self contained, reusable piece of code that represents a specific par
 
 Lib: a collection of internal libraries, should have one area of focus, for example, dates, colors, text manipulation, etc.
 
-Feature: collection of related code that implements a specific functionality within an application. For example, a login feature might include components like the login form, database interactions for authentication, utility functions for handling passwords, and any other logic required to support user login.
+Feature: collection of related code that implements a specific functionality within an application. A feature contains the UI to perform the action, API calls needed to make the action, validation and schemas.
 
 Route: A mapping between a URL path and a handler function or component. Routes are used to define navigation and control which part of the application is displayed for a given URL.
 
 ## Files
+
 main.ts => entry point, global stuff here like google stuff, geolocation?
 app/app.ts => entry point for anyhere, create router and global store
