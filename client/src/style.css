@@ -26,3 +26,46 @@ body {
   white-space: nowrap;
   width: 1px;
 }
+
+/* Calendar Shit */
+body {
+  padding: 20px;
+}
+.calendarWrap {
+}
+.calendarNav {
+}
+.calendar {
+  background: gray;
+
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: 40px;
+  grid-auto-rows: minmax(80px, auto);
+  grid-gap: 2px;
+  padding: 4px;
+
+  .month-view,
+  .week-view,
+  .day-view {
+    display: contents;
+  }
+
+  .dayNameHeader {
+    display: contents;
+
+    > div {
+      background: #202020;
+      /* align-self: center;
+      justify-self: center; */
+    }
+  }
+
+  .week {
+    display: contents;
+
+    .day {
+      background: #202020;
+    }
+  }
+}
