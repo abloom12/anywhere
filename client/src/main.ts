@@ -1,11 +1,4 @@
 import './style.css';
-import { Calendar } from './calendar';
-
-const myCal = Calendar.init();
-
-const appContainer = document.getElementById('app');
-
-appContainer?.appendChild(myCal);
 
 // if ('serviceWorker' in navigator) {
 //   navigator.serviceWorker.register(

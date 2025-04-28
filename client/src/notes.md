@@ -1,1 +1,4 @@
-
+- a way to hide/show form fields. maybe a new visibility option that can take a value.
+- ^^ include a way to hide/show fields after form has been rendered????
+- a way to tie into form onChange, onInput, onSubmit events
+- remove FC component base, we are going with just Class to keep consistency

@@ -19,13 +19,6 @@ const buttonVariants = cva(
       variant: {
         contained: ['bg-primary', 'rounded', 'text-black'],
         ghost: ['rounded', 'border-2', 'border-primary', 'border-solid'],
-        text: 'text-black',
-      },
-      size: {
-        small: ['h-9', 'px-2'],
-        medium: ['h-10', 'px-3'],
-        large: ['h-11', 'px-8'],
-        icon: ['h-10', 'w-10'],
       },
       intent: {
         warning: [],
@@ -35,7 +28,6 @@ const buttonVariants = cva(
     },
     defaultVariants: {
       variant: 'contained',
-      size: 'medium',
     },
   },
 );
@@ -54,7 +46,6 @@ class Button extends Component {
 
     this.#props = {
       type: 'button',
-      size: 'medium',
       variant: 'contained',
       ...props,
     };
@@ -68,7 +59,6 @@ class Button extends Component {
 
     button.className = buttonVariants({
       variant: this.#props.variant,
-      size: this.#props.size,
     });
 
     this.rootElement.appendChild(button);
