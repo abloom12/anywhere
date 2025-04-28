@@ -1,6 +1,8 @@
 import { cva, type VariantProps } from 'class-variance-authority';
+
 import { Component } from '@/core/component';
-import { cn } from '@/shared/util/cn';
+import { html } from '@/core/html';
+import { cn } from '@/core/cn';
 
 //? add type 'hidden', could be useful
 //? add month, week, range
@@ -37,11 +39,6 @@ export type Props<T extends InputType> = {
   attributes: HTMLAttributes[T];
 };
 
-const classname = {
-  field: cn('grid items-center w-full'),
-  input: cn('text-black leading-normal rounded py-1.5 px-3'),
-};
-
 export class Input<T extends InputType> extends Component {
   #props: Props<T>;
   #value: string = '';
@@ -55,11 +52,13 @@ export class Input<T extends InputType> extends Component {
   }
 
   protected render() {
-    const input: HTMLInputElement = document.createElement('input');
-    input.className = classname.input;
-    input.type = this.#props.type;
-    input.name = this.#props.name;
-    input.id = this.#props.id;
+    const input = html`
+      <input
+        type="${this.#props.type}"
+        name="${this.#props.name}"
+        id="${this.#props.id}"
+      />
+    `;
 
     this.rootElement.appendChild(input);
   }

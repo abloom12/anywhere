@@ -1,4 +1,10 @@
-export function html(strings: TemplateStringsArray, ...values: any[]): DocumentFragment {
+type HtmlValue = string | number | null | undefined | HTMLElement | DocumentFragment;
+// ...values: HtmlValue[] (old was) any[]
+
+export function html(
+  strings: TemplateStringsArray,
+  ...values: HtmlValue[]
+): DocumentFragment {
   const placeholders = new Map<number, HTMLElement>();
   const htmlParts: string[] = [];
 

@@ -9,10 +9,16 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: 'rgb(var(--primary))',
+          DEFAULT: 'hsl(var(--primary))',
         },
         secondary: {
-          DEFAULT: 'rgb(var(--secondary))',
+          DEFAULT: 'hsl(var(--secondary))',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+        },
+        error: {
+          DEFAULT: 'hsl(var(--error))',
         },
       },
     },
@@ -23,8 +29,10 @@ export default {
     plugin(({ addBase, addComponents }) => {
       addBase({
         ':root': {
-          '--primary': '54, 106, 152', // 208, 48, 40 || #366A98
-          '--secondary': '129, 185, 65', // 88, 48, 49 || #81B941
+          '--primary': '208, 48, 40',
+          '--secondary': '88, 48, 49',
+          '--warning': '48, 70%, 55%',
+          '--error': '0, 65%, 50%',
         },
       });
     }),

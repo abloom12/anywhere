@@ -1,5 +1,8 @@
 import { cva, type VariantProps } from 'class-variance-authority';
+
 import { Component } from '@/core/component';
+import { html } from '@/core/html';
+import { cn } from '@/core/cn';
 
 const buttonVariants = cva(
   [
@@ -16,18 +19,51 @@ const buttonVariants = cva(
   ],
   {
     variants: {
-      variant: {
-        contained: ['bg-primary', 'rounded', 'text-black'],
-        ghost: ['rounded', 'border-2', 'border-primary', 'border-solid'],
+      style: {
+        contained: ['rounded'],
+        outlined: ['bg-transparent', 'border-2', 'border-solid', 'rounded'],
+        text: ['bg-transparent'],
       },
       intent: {
-        warning: [],
+        default: [],
         danger: [],
-        success: [],
       },
     },
+    compoundVariants: [
+      {
+        style: 'contained',
+        intent: 'default',
+        class: ['bg-primary', 'text-white'],
+      },
+      {
+        style: 'contained',
+        intent: 'danger',
+        class: ['bg-error', 'text-white'],
+      },
+      {
+        style: 'outlined',
+        intent: 'default',
+        class: ['border-primary', 'text-primary'],
+      },
+      {
+        style: 'outlined',
+        intent: 'danger',
+        class: ['border-error', 'text-error'],
+      },
+      {
+        style: 'text',
+        intent: 'default',
+        class: ['text-primary'],
+      },
+      {
+        style: 'text',
+        intent: 'danger',
+        class: ['text-error'],
+      },
+    ],
     defaultVariants: {
-      variant: 'contained',
+      style: 'contained',
+      intent: 'default',
     },
   },
 );
@@ -38,7 +74,7 @@ type Props = VariantProps<typeof buttonVariants> & {
   icon?: string;
 };
 
-class Button extends Component {
+export class Button extends Component {
   #props: Props;
 
   constructor(props: Props) {
@@ -46,23 +82,28 @@ class Button extends Component {
 
     this.#props = {
       type: 'button',
-      variant: 'contained',
       ...props,
     };
 
     this.render();
   }
 
-  render() {
-    const button: HTMLButtonElement = document.createElement('button');
-    button.textContent = this.#props.text;
-
-    button.className = buttonVariants({
-      variant: this.#props.variant,
-    });
+  protected render() {
+    //TODO: icon option, add svg inside button and wrap text inside a span
+    const button = html`
+      <button
+        type="${this.#props.type}"
+        class="${cn(
+          buttonVariants({
+            style: this.#props.style,
+            intent: this.#props.intent,
+          }),
+        )}"
+      >
+        ${this.#props.text}
+      </button>
+    `;
 
     this.rootElement.appendChild(button);
   }
 }
-
-export { Button };

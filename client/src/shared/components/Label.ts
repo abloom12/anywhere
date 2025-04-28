@@ -1,14 +1,34 @@
-import { FC } from '@/core/component';
+import { Component } from '@/core/component';
+import { html } from '@/core/html';
+import { cn } from '@/core/cn';
 
 type Props = {
   text: string;
+  for?: string;
 };
 
-const classname = 'text-black text-sm capitalize';
+export class Label extends Component {
+  #props: Props;
 
-export const Label: FC<Props> = (props: Props) => {
-  const labelElement: HTMLLabelElement = document.createElement('label');
-  labelElement.textContent = props.text;
-  labelElement.className = classname;
-  return labelElement;
-};
+  constructor(props: Props) {
+    super();
+
+    this.#props = {
+      ...props,
+    };
+
+    this.render();
+  }
+
+  protected render() {
+    const label = html`
+      <label
+        for="${this.#props.for}"
+        class="text-sm capitalize"
+        >${this.#props.text}</label
+      >
+    `;
+
+    this.rootElement.appendChild(label);
+  }
+}
