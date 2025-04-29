@@ -1,4 +1,6 @@
 import { Component } from '@/core/component';
+import { cn } from '@/core/cn';
+
 import { FormField, FieldProps } from '@/shared/components/Form/FormField';
 import { Fieldset } from '@/shared/components/Form/Fieldset';
 
@@ -54,7 +56,6 @@ export class Form extends Component {
 
   onChange(e: Event) {}
   onInput(e: Event) {}
-
   onSubmit(e: SubmitEvent) {
     e.preventDefault();
 

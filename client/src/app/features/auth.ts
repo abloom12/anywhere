@@ -1,11 +1,8 @@
 import { md5 } from '@/shared/lib/crypto';
-import { parseXml } from '@/shared/lib/parse-xml';
-import { fetchData } from '@/core/fetch';
+import { parseXml } from '@/shared/util/parse-xml';
+import { fetchData } from '@/shared/util/fetch';
 
-export async function authenticateUser(
-  user: string,
-  password: string,
-): Promise<string> {
+export async function authenticateUser(user: string, password: string): Promise<string> {
   const authResp = await fetchData('getLogIn', {
     userId: user,
     hash: md5('ash'),
@@ -35,8 +32,7 @@ export async function authenticateUser(
   if (windowName.innerHTML === 'Invalid username') {
   }
   if (windowName.innerHTML === 'Failed attempts') {
-    const count =
-      resXML.getElementsByTagName('special_data')[0].innerHTML;
+    const count = resXML.getElementsByTagName('special_data')[0].innerHTML;
   }
   if (windowName.innerHTML === 'Expired password') {
   }

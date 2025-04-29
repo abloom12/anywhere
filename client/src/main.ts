@@ -7,3 +7,5 @@ import './style.css';
 //     : '/dev-sw.js?dev-sw',
 //   );
 // }
+
+const MOUNT_ELEMENT = document.querySelector('#root');

@@ -1,5 +1,6 @@
 import { Component } from '@/core/component';
 import { html } from '@/core/html';
+import { cn } from '@/core/cn';
 
 import { Input, Props as InputProps } from '@/shared/components/Input';
 import { Checkbox, Props as CheckboxProps } from '@/shared/components/Checkbox';

@@ -1,6 +1,6 @@
 import { md5 } from '@/shared/lib/crypto';
-import { fetchData } from '@/core/fetch';
-import { parseXml } from '@/shared/lib/parse-xml';
+import { fetchData } from '@/shared/util/fetch';
+import { parseXml } from '@/shared/util/parse-xml';
 
 const LOGIN_ERRORS = {
   'Failed attempts': '',
