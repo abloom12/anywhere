@@ -89,7 +89,6 @@ export class Button extends Component {
   }
 
   protected render() {
-    //TODO: icon option, add svg inside button and wrap text inside a span
     const button = html`
       <button
         type="${this.#props.type}"

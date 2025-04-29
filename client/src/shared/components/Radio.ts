@@ -1,4 +1,6 @@
 import { Component } from '@/core/component';
+import { html } from '@/core/html';
+import { cn } from '@/core/cn';
 
 export type Props = {
   id: string;
@@ -6,7 +8,7 @@ export type Props = {
   attributes: Partial<Pick<HTMLInputElement, 'disabled' | 'required'>>;
 };
 
-class Radio extends Component {
+export class Radio extends Component {
   #props: Props;
 
   constructor(props: Props) {
@@ -17,18 +19,16 @@ class Radio extends Component {
     this.render();
   }
 
-  render() {
-    const field: HTMLDivElement = document.createElement('div');
+  protected render() {
+    const input = html`
+      <input
+        type="radio"
+        name="${this.#props.name}"
+        id="${this.#props.id}"
+        class="invalid:border-error text-black"
+      />
+    `;
 
-    const input: HTMLInputElement = document.createElement('input');
-    input.type = 'radio';
-    input.name = this.#props.name;
-    input.id = this.#props.id;
-
-    field.appendChild(input);
-
-    this.rootElement.appendChild(field);
+    this.rootElement.appendChild(input);
   }
 }
-
-export { Radio };

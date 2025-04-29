@@ -1,4 +1,6 @@
 import { Component } from '@/core/component';
+import { html } from '@/core/html';
+import { cn } from '@/core/cn';
 
 export type Props = {
   id: string;
@@ -12,7 +14,7 @@ export type Props = {
   autosize?: boolean;
 };
 
-class Textarea extends Component {
+export class Textarea extends Component {
   #props: Props;
 
   constructor(props: Props) {
@@ -23,21 +25,15 @@ class Textarea extends Component {
     this.render();
   }
 
-  render() {
-    const field: HTMLDivElement = document.createElement('div');
+  protected render() {
+    const textarea = html`
+      <textarea
+        name="${this.#props.name}"
+        id="${this.#props.id}"
+        class="invalid:border-error text-black"
+      ></textarea>
+    `;
 
-    const textarea: HTMLTextAreaElement = document.createElement('textarea');
-    textarea.name = this.#props.name;
-    textarea.id = this.#props.id;
-
-    const label: HTMLLabelElement = document.createElement('label');
-    label.htmlFor = this.#props.id;
-
-    field.appendChild(label);
-    field.appendChild(textarea);
-
-    this.rootElement.appendChild(field);
+    this.rootElement.appendChild(textarea);
   }
 }
-
-export { Textarea };

@@ -26,5 +26,3 @@ export abstract class Component {
     node.appendChild(this.rootElement);
   }
 }
-
-export type FC<P> = (props: P) => (HTMLElement | DocumentFragment);

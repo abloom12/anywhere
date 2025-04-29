@@ -1,5 +1,3 @@
-import { cva, type VariantProps } from 'class-variance-authority';
-
 import { Component } from '@/core/component';
 import { html } from '@/core/html';
 import { cn } from '@/core/cn';
@@ -57,6 +55,7 @@ export class Input<T extends InputType> extends Component {
         type="${this.#props.type}"
         name="${this.#props.name}"
         id="${this.#props.id}"
+        class="invalid:border-error text-black"
       />
     `;
 

@@ -4,7 +4,7 @@ import { cn } from '@/core/cn';
 
 type Props = {
   text: string;
-  for?: string;
+  for?: string; //TODO: make this required
 };
 
 export class Label extends Component {

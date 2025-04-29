@@ -1,4 +1,6 @@
 import { Component } from '@/core/component';
+import { html } from '@/core/html';
+import { cn } from '@/core/cn';
 
 export type Props = {
   id: string;
@@ -7,7 +9,7 @@ export type Props = {
   data?: [];
 };
 
-class Select extends Component {
+export class Select extends Component {
   #props: Props;
 
   constructor(props: Props) {
@@ -18,24 +20,18 @@ class Select extends Component {
     this.render();
   }
 
-  render() {
-    const field: HTMLDivElement = document.createElement('div');
+  protected render() {
+    const select = html`
+      <select
+        name="${this.#props.name}"
+        id="${this.#props.id}"
+        class="invalid:border-erro"
+      ></select>
+    `;
 
-    const select: HTMLSelectElement = document.createElement('select');
-    select.name = this.#props.name;
-    select.id = this.#props.id;
-
-    const label: HTMLLabelElement = document.createElement('label');
-    label.htmlFor = this.#props.id;
-
-    field.appendChild(label);
-    field.appendChild(select);
-
-    this.rootElement.appendChild(field);
+    this.rootElement.appendChild(select);
   }
 
   populate(data: []) {}
   setValue(value: string) {}
 }
-
-export { Select };
