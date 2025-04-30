@@ -8,4 +8,6 @@ import './style.css';
 //   );
 // }
 
+import { Router } from './core/Router';
+
 const MOUNT_ELEMENT = document.querySelector('#root');
