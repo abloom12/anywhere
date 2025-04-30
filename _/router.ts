@@ -1,5 +1,3 @@
-import { Component } from './component';
-
 class TrieNode {
   children: Map<string, TrieNode>;
   isComplete: boolean;
@@ -11,7 +9,7 @@ class TrieNode {
   }
 
   addChild(segment: string, isCompleted: boolean = false): TrieNode {
-    if (segment.startsWith(':')) {
+    if (segment.startsWith(":")) {
       if (!this.dynamicChild) {
         this.dynamicChild = [segment, new TrieNode()];
       }
@@ -55,7 +53,7 @@ class Trie {
 
   add({ path }: { path: string }) {
     const segments: string[] = path
-      .split('/')
+      .split("/")
       .filter((segment: string) => segment.length > 0);
     const segmentsLength = segments.length;
     let currentNode = this.head;
@@ -68,7 +66,7 @@ class Trie {
 
   get(path: string): TrieNode | null {
     const segments: string[] = path
-      .split('/')
+      .split("/")
       .filter((segment: string) => segment.length > 0);
     let currentNode: TrieNode | undefined = this.head;
 
@@ -85,12 +83,11 @@ class Trie {
 
   print(
     node: TrieNode = this.head,
-    prefix: string = '',
-    isLast: boolean = true,
+    prefix: string = "",
+    isLast: boolean = true
   ): void {
     const hasDynamicChild = !!node.dynamicChild;
-    const totalChildrenCount =
-      node.children.size + (hasDynamicChild ? 1 : 0);
+    const totalChildrenCount = node.children.size + (hasDynamicChild ? 1 : 0);
     let index = 0;
 
     if (node === this.head) {
@@ -98,30 +95,26 @@ class Trie {
     }
 
     for (const [segment, childNode] of node.children) {
-      const isLastChild =
-        index === totalChildrenCount - 1 && !hasDynamicChild;
-      const marker = childNode.isComplete ? '[Complete]' : '';
+      const isLastChild = index === totalChildrenCount - 1 && !hasDynamicChild;
+      const marker = childNode.isComplete ? "[Complete]" : "";
 
-      console.log(
-        `${prefix}${isLast ? '└── ' : '├── '}${segment} ${marker}`,
-      );
+      console.log(`${prefix}${isLast ? "└── " : "├── "}${segment} ${marker}`);
 
-      const newPrefix = prefix + (isLast ? '    ' : '│   ');
+      const newPrefix = prefix + (isLast ? "    " : "│   ");
       this.print(childNode, newPrefix, isLastChild);
 
       index++;
     }
 
     if (hasDynamicChild) {
-      const marker =
-        node.dynamicChild![1].isComplete ? '[Complete]' : '';
+      const marker = node.dynamicChild![1].isComplete ? "[Complete]" : "";
       console.log(
-        `${prefix}${isLast ? '└── ' : '├── '}${node.dynamicChild![0]} ${marker}`,
+        `${prefix}${isLast ? "└── " : "├── "}${node.dynamicChild![0]} ${marker}`
       );
       this.print(
         node.dynamicChild![1],
-        prefix + (isLast ? '    ' : '│   '),
-        true,
+        prefix + (isLast ? "    " : "│   "),
+        true
       );
     }
   }
@@ -132,25 +125,24 @@ type Middleware = (params: {
   path: string;
 }) => Promise<void> | void;
 
-type Route = {
-  path: string;
-  page: Component;
-  loader: () => Promise<void>;
-};
+// type Route = {
+//   path: string;
+//   loader: () => Promise<void>;
+// };
 
-class Router {
+export class Router {
   routeTrie: Trie = new Trie();
   middlewares: Middleware[] = [];
 
   constructor() {
-    window.addEventListener('popstate', () => {
+    window.addEventListener("popstate", () => {
       this.#transitionRoute();
     });
 
-    window.addEventListener('DOMContentLoaded', () => {
-      [...document.querySelectorAll('a')].forEach(link => {
-        link.removeEventListener('click', this.#linkHandler);
-        link.addEventListener('click', this.#linkHandler);
+    window.addEventListener("DOMContentLoaded", () => {
+      [...document.querySelectorAll("a")].forEach((link) => {
+        link.removeEventListener("click", this.#linkHandler);
+        link.addEventListener("click", this.#linkHandler);
       });
     });
   }
@@ -159,22 +151,21 @@ class Router {
     if (
       (e.ctrlKey || e.metaKey) &&
       e.target instanceof HTMLElement &&
-      e.target.tagName.toLowerCase() === 'a'
+      e.target.tagName.toLowerCase() === "a"
     ) {
       return false;
     }
 
     let location =
-      e.target instanceof HTMLElement &&
-      e.target.getAttribute('href');
-    if (typeof location === 'undefined' || location === null) {
+      e.target instanceof HTMLElement && e.target.getAttribute("href");
+    if (typeof location === "undefined" || location === null) {
       return false;
     }
 
     if (
-      typeof location === 'string' &&
+      typeof location === "string" &&
       location.match(/^(http|https)/) &&
-      typeof URL !== 'undefined'
+      typeof URL !== "undefined"
     ) {
       try {
         const u = new URL(location);
@@ -187,7 +178,7 @@ class Router {
     e.preventDefault();
     e.stopPropagation();
 
-    if (typeof location === 'string') {
+    if (typeof location === "string") {
       this.navigate(location);
     }
   }
@@ -198,6 +189,9 @@ class Router {
     const query = url.search;
 
     const match = this.routeTrie.get(path);
+    if (!match) {
+      console.error("No match found for:", path);
+    }
 
     //TODO: call match.loader() to prefetch data
 
@@ -218,17 +212,12 @@ class Router {
   // Public
   on(route: { path: string }) {
     this.routeTrie.add(route);
-
-    // children.forEach((childRoute) => {
-    //   const childPath = `${path}${childRoute.path}`;
-    //   this.createRoute({ ...childRoute, path: childPath });
-    // });
   }
   use(middleware: Middleware) {
     this.middlewares.push(middleware);
   }
   navigate(url: string) {
-    history.pushState(null, '', url);
+    history.pushState(null, "", url);
     this.#transitionRoute();
   }
   visualizeTrie() {
@@ -236,4 +225,17 @@ class Router {
   }
 }
 
-export { Router };
+// const loader = this.loaders[path];
+// if (!loader) {
+//   console.error(`No loader registered for ${path}`);
+//   return;
+// }
+
+// try {
+//   const mod = await loader();
+//   const PageClass = mod.default;
+//   const page = new PageClass();
+//   page.mount();
+// } catch (err) {
+//   console.error(`Failed to load route ${path}:`, err);
+// }
