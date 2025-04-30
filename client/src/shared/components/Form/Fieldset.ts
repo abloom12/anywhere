@@ -1,4 +1,4 @@
-import { FC } from '@/core/component';
+import { FC } from '@/core/Component';
 
 type Props = {
   legend: string;

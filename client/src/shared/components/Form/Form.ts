@@ -1,4 +1,4 @@
-import { Component } from '@/core/component';
+import { Component } from '@/core/Component';
 import { cn } from '@/core/cn';
 
 import { FormField, FieldProps } from '@/shared/components/Form/FormField';

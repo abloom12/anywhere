@@ -1,4 +1,4 @@
-import { Component } from '@/core/component';
+import { Component } from '@/core/Component';
 import { html } from '@/core/html';
 import { cn } from '@/core/cn';
 
