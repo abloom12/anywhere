@@ -25,7 +25,7 @@ export abstract class Page {
 //   }
 
 //   render() {
-//     const layout = html``;
+//     const layout = html` <h1>TEMPLATE Page</h1> `;
 //     this.rootElement.append(layout);
 //   }
 // }

@@ -2,12 +2,12 @@ import { Component } from '@/core/Component';
 import { html } from '@/core/html';
 import { cn } from '@/core/cn';
 
-import { Input, Props as InputProps } from '@/shared/components/Input';
-import { Checkbox, Props as CheckboxProps } from '@/shared/components/Checkbox';
-import { Radio, Props as RadioProps } from '@/shared/components/Radio';
-import { Select, Props as SelectProps } from '@/shared/components/Select';
-import { Textarea, Props as TextareaProps } from '@/shared/components/Textarea';
-import { Label } from '@/shared/components/Label';
+import { Input, Props as InputProps } from '@/shared/components/ui/Input';
+import { Checkbox, Props as CheckboxProps } from '@/shared/components/ui/Checkbox';
+import { Radio, Props as RadioProps } from '@/shared/components/ui/Radio';
+import { Select, Props as SelectProps } from '@/shared/components/ui/Select';
+import { Textarea, Props as TextareaProps } from '@/shared/components/ui/Textarea';
+import { Label } from '@/shared/components/ui/Label';
 
 export type FieldProps = {
   label: string;

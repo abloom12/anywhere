@@ -1,8 +1,8 @@
 import { Component } from '@/core/Component';
 import { cn } from '@/core/cn';
 
-import { FormField, FieldProps } from '@/shared/components/Form/FormField';
-import { Fieldset } from '@/shared/components/Form/Fieldset';
+import { FormField, FieldProps } from '@/shared/components/ui/Form/FormField';
+import { Fieldset } from '@/shared/components/ui/Form/Fieldset';
 
 type FormProps = {
   name: string;
