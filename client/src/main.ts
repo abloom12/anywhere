@@ -8,6 +8,36 @@ import './style.css';
 //   );
 // }
 
-import { Router } from './core/Router';
+document.addEventListener('DOMContentLoaded', () => {
+  // loadApp(document.querySelector('#app'));
+});
 
-const MOUNT_ELEMENT = document.querySelector('#root');
+//* MOVE BELOW TO APP.TS
+import { Router } from '@/core/Router';
+
+const AppRouter = new Router('#app');
+
+const pages = import.meta.glob('/src/app/pages/**/*.ts');
+
+Object.entries(pages).forEach(([filePath, loader]) => {
+  const parts = filePath
+    .replace(/^.*\/pages\//, '')
+    .replace(/\.ts$/, '')
+    .split('/');
+
+  const fileName = parts.pop()!;
+  const dirs = parts;
+
+  const segments = fileName.toLowerCase() === 'index' ? dirs : [...dirs, fileName];
+
+  const path = `/${segments
+    .map(seg =>
+      seg
+        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+        .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
+        .toLowerCase(),
+    )
+    .join('/')}`;
+
+  AppRouter.on({ path, loader });
+});

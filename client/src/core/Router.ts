@@ -9,13 +9,12 @@ class TrieNode {
   }
 
   addChild(segment: string, isCompleted: boolean = false): TrieNode {
-    if (segment.startsWith(":")) {
+    if (segment.startsWith(':')) {
       if (!this.dynamicChild) {
         this.dynamicChild = [segment, new TrieNode()];
       }
 
-      this.dynamicChild[1].isComplete =
-        this.dynamicChild[1].isComplete || isCompleted;
+      this.dynamicChild[1].isComplete = this.dynamicChild[1].isComplete || isCompleted;
 
       return this.dynamicChild[1];
     }
@@ -53,7 +52,7 @@ class Trie {
 
   add({ path }: { path: string }) {
     const segments: string[] = path
-      .split("/")
+      .split('/')
       .filter((segment: string) => segment.length > 0);
     const segmentsLength = segments.length;
     let currentNode = this.head;
@@ -66,7 +65,7 @@ class Trie {
 
   get(path: string): TrieNode | null {
     const segments: string[] = path
-      .split("/")
+      .split('/')
       .filter((segment: string) => segment.length > 0);
     let currentNode: TrieNode | undefined = this.head;
 
@@ -81,11 +80,7 @@ class Trie {
     return currentNode;
   }
 
-  print(
-    node: TrieNode = this.head,
-    prefix: string = "",
-    isLast: boolean = true
-  ): void {
+  print(node: TrieNode = this.head, prefix: string = '', isLast: boolean = true): void {
     const hasDynamicChild = !!node.dynamicChild;
     const totalChildrenCount = node.children.size + (hasDynamicChild ? 1 : 0);
     let index = 0;
@@ -96,26 +91,22 @@ class Trie {
 
     for (const [segment, childNode] of node.children) {
       const isLastChild = index === totalChildrenCount - 1 && !hasDynamicChild;
-      const marker = childNode.isComplete ? "[Complete]" : "";
+      const marker = childNode.isComplete ? '[Complete]' : '';
 
-      console.log(`${prefix}${isLast ? "└── " : "├── "}${segment} ${marker}`);
+      console.log(`${prefix}${isLast ? '└── ' : '├── '}${segment} ${marker}`);
 
-      const newPrefix = prefix + (isLast ? "    " : "│   ");
+      const newPrefix = prefix + (isLast ? '    ' : '│   ');
       this.print(childNode, newPrefix, isLastChild);
 
       index++;
     }
 
     if (hasDynamicChild) {
-      const marker = node.dynamicChild![1].isComplete ? "[Complete]" : "";
+      const marker = node.dynamicChild![1].isComplete ? '[Complete]' : '';
       console.log(
-        `${prefix}${isLast ? "└── " : "├── "}${node.dynamicChild![0]} ${marker}`
+        `${prefix}${isLast ? '└── ' : '├── '}${node.dynamicChild![0]} ${marker}`,
       );
-      this.print(
-        node.dynamicChild![1],
-        prefix + (isLast ? "    " : "│   "),
-        true
-      );
+      this.print(node.dynamicChild![1], prefix + (isLast ? '    ' : '│   '), true);
     }
   }
 }
@@ -125,24 +116,27 @@ type Middleware = (params: {
   path: string;
 }) => Promise<void> | void;
 
-// type Route = {
-//   path: string;
-//   loader: () => Promise<void>;
-// };
+type Loaders = Record<string, () => Promise<any>>;
+
+type Route = {
+  path: string;
+  loader: () => Promise<any>;
+};
 
 export class Router {
   routeTrie: Trie = new Trie();
+  loaders: Loaders = {};
   middlewares: Middleware[] = [];
 
-  constructor() {
-    window.addEventListener("popstate", () => {
+  constructor(rootElementId: string) {
+    window.addEventListener('popstate', () => {
       this.#transitionRoute();
     });
 
-    window.addEventListener("DOMContentLoaded", () => {
-      [...document.querySelectorAll("a")].forEach((link) => {
-        link.removeEventListener("click", this.#linkHandler);
-        link.addEventListener("click", this.#linkHandler);
+    window.addEventListener('DOMContentLoaded', () => {
+      [...document.querySelectorAll('a')].forEach(link => {
+        link.removeEventListener('click', this.#linkHandler);
+        link.addEventListener('click', this.#linkHandler);
       });
     });
   }
@@ -151,21 +145,20 @@ export class Router {
     if (
       (e.ctrlKey || e.metaKey) &&
       e.target instanceof HTMLElement &&
-      e.target.tagName.toLowerCase() === "a"
+      e.target.tagName.toLowerCase() === 'a'
     ) {
       return false;
     }
 
-    let location =
-      e.target instanceof HTMLElement && e.target.getAttribute("href");
-    if (typeof location === "undefined" || location === null) {
+    let location = e.target instanceof HTMLElement && e.target.getAttribute('href');
+    if (typeof location === 'undefined' || location === null) {
       return false;
     }
 
     if (
-      typeof location === "string" &&
+      typeof location === 'string' &&
       location.match(/^(http|https)/) &&
-      typeof URL !== "undefined"
+      typeof URL !== 'undefined'
     ) {
       try {
         const u = new URL(location);
@@ -178,8 +171,26 @@ export class Router {
     e.preventDefault();
     e.stopPropagation();
 
-    if (typeof location === "string") {
+    if (typeof location === 'string') {
       this.navigate(location);
+    }
+  }
+
+  //? maybe name this mountPage
+  async #mountRoute(path: string) {
+    const loader = this.loaders[path];
+    if (!loader) {
+      console.error(`No loader registered for ${path}`);
+      return;
+    }
+
+    try {
+      const module = await loader();
+      const PageClass = module.default;
+      const page = new PageClass(); //? maybe pass the query data
+      page.mount();
+    } catch (error) {
+      console.log(`Failed to load route ${path}:`, error);
     }
   }
 
@@ -190,10 +201,8 @@ export class Router {
 
     const match = this.routeTrie.get(path);
     if (!match) {
-      console.error("No match found for:", path);
+      console.error('No match found for:', path);
     }
-
-    //TODO: call match.loader() to prefetch data
 
     const runMiddlewares = async (index: number): Promise<void> => {
       if (index < this.middlewares.length) {
@@ -207,35 +216,23 @@ export class Router {
     };
 
     await runMiddlewares(0);
+
+    this.#mountRoute(path);
   }
 
   // Public
-  on(route: { path: string }) {
+  on(route: Route) {
     this.routeTrie.add(route);
+    this.loaders[route.path] = route.loader;
   }
   use(middleware: Middleware) {
     this.middlewares.push(middleware);
   }
-  navigate(url: string) {
-    history.pushState(null, "", url);
-    this.#transitionRoute();
+  async navigate(url: string) {
+    history.pushState(null, '', url);
+    await this.#transitionRoute();
   }
   visualizeTrie() {
     this.routeTrie.print();
   }
 }
-
-// const loader = this.loaders[path];
-// if (!loader) {
-//   console.error(`No loader registered for ${path}`);
-//   return;
-// }
-
-// try {
-//   const mod = await loader();
-//   const PageClass = mod.default;
-//   const page = new PageClass();
-//   page.mount();
-// } catch (err) {
-//   console.error(`Failed to load route ${path}:`, err);
-// }
