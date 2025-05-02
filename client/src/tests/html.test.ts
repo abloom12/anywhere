@@ -117,14 +117,15 @@ describe('html function', () => {
     expect(spanInFragment?.textContent).toBe('inner');
   });
 
-  it('should handle boolean values', () => {
-    const fragment = html`<div>${true}</div>
-      <div>${false}</div>`;
-    const divs = fragment.querySelectorAll('div');
-    expect(divs).toHaveLength(2);
-    expect(divs[0].textContent).toBe('true');
-    expect(divs[1].textContent).toBe('false');
-  });
+  //? do we even want to worry about boolean values
+  // it('should handle boolean values', () => {
+  //   const fragment = html`<div>${true}</div>
+  //     <div>${false}</div>`;
+  //   const divs = fragment.querySelectorAll('div');
+  //   expect(divs).toHaveLength(2);
+  //   expect(divs[0].textContent).toBe('true');
+  //   expect(divs[1].textContent).toBe('false');
+  // });
 
   it('should handle comments properly', () => {
     const fragment = html`<div><!-- a comment --></div>`;

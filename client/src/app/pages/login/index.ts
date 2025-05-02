@@ -7,7 +7,7 @@ export default class Login extends Page {
   }
 
   render() {
-    const layout = html` <h1>Login Page</h1> `;
+    const layout = html`<h1>Login Page</h1>`;
     this.rootElement.append(layout);
   }
 }
