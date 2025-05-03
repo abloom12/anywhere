@@ -6,13 +6,6 @@ export abstract class Page {
   }
 
   protected abstract render(): void;
-
-  protected mount() {
-    //TODO: instead let the router pass the #app element
-    // const appRootElement = document.querySelector('#app');
-    // appRootElement!.innerHTML = '';
-    // appRootElement!.append(this.rootElement);
-  }
 }
 
 //* PAGE STARTER CLASS

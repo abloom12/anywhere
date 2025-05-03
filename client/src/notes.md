@@ -1,3 +1,4 @@
-- a way to hide/show form fields. maybe a new visibility option that can take a value.
-- ^^ include a way to hide/show fields after form has been rendered????
-- a way to tie into form onChange, onInput, onSubmit events
+- add layout logic to router \ outlets
+- await loader on link hover \ debonce for like 200ms
+- keep track of nav renders \ abort ajax calls on quick link clicks
+- need a 404 page

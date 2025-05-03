@@ -17,16 +17,20 @@ import { Router } from '@/core/Router';
 
 const AppRouter = new Router('#app');
 
-const pages = import.meta.glob('/src/app/pages/**/*.ts');
+const pages = import.meta.glob('/src/app/pages/**/!(*layout).ts');
+const layouts = import.meta.glob('/src/app/pages/**/layout.ts');
 
+const isGroup = (part: string) => /^\(.*\)$/.test(part);
 Object.entries(pages).forEach(([filePath, loader]) => {
   const parts = filePath
     .replace(/^.*\/pages\//, '')
     .replace(/\.ts$/, '')
     .split('/');
 
-  const fileName = parts.pop()!;
-  const dirs = parts;
+  const filtered = parts.filter(p => !isGroup(p));
+
+  const fileName = filtered.pop()!;
+  const dirs = filtered;
 
   const segments = fileName.toLowerCase() === 'index' ? dirs : [...dirs, fileName];
 
@@ -39,5 +43,17 @@ Object.entries(pages).forEach(([filePath, loader]) => {
     )
     .join('/')}`;
 
-  AppRouter.on({ path, loader });
+  console.log('route path', path);
+
+  // AppRouter.on({ path, loader });
+});
+
+Object.entries(layouts).forEach(([filePath, loader]) => {
+  const raw = filePath.replace(/^.*\/pages/, '').replace(/\/layout\.ts$/, '');
+
+  const segments = raw.split('/').filter(seg => seg.length > 0 && !isGroup(seg));
+
+  const path = segments.length ? `/${segments.join('/')}` : '/';
+
+  console.log('layout path', path);
 });

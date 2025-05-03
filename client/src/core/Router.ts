@@ -128,7 +128,7 @@ export class Router {
   loaders: Loaders = {};
   middlewares: Middleware[] = [];
 
-  constructor(rootElementId: string) {
+  constructor(basePath: string) {
     window.addEventListener('popstate', () => {
       this.#transitionRoute();
     });
@@ -139,6 +139,8 @@ export class Router {
         link.addEventListener('click', this.#linkHandler);
       });
     });
+
+    //this.#transitionRoute();
   }
 
   #linkHandler(e: MouseEvent) {
@@ -176,7 +178,6 @@ export class Router {
     }
   }
 
-  //? maybe name this mountPage
   async #mountRoute(path: string) {
     const loader = this.loaders[path];
     if (!loader) {
@@ -189,6 +190,7 @@ export class Router {
       const PageClass = module.default;
       const page = new PageClass(); //? maybe pass the query data
       page.mount();
+      //TODO: make sure we clean up the root outlet before appending new page
     } catch (error) {
       console.log(`Failed to load route ${path}:`, error);
     }
@@ -202,6 +204,7 @@ export class Router {
     const match = this.routeTrie.get(path);
     if (!match) {
       console.error('No match found for:', path);
+      //TODO: should show a 404 page here
     }
 
     const runMiddlewares = async (index: number): Promise<void> => {
@@ -210,8 +213,6 @@ export class Router {
           next: async () => await runMiddlewares(index + 1),
           path,
         });
-      } else {
-        //TODO: load match.page
       }
     };
 
