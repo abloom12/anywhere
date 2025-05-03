@@ -196,7 +196,7 @@ export class Router {
       const page = new PageClass(); //? maybe pass the query data
       //TODO: start pre fetch (web worker)
       //TODO: clean up old
-      page.mount();
+      page.render();
     } catch (error) {
       console.log(`Failed to load route ${path}:`, error);
     }
