@@ -17,7 +17,10 @@ import { Router } from '@/core/Router';
 
 const AppRouter = new Router('#app');
 
-const pages = import.meta.glob('/src/app/pages/**/!(*layout).ts');
+const pages = import.meta.glob([
+  '/src/app/pages/**/!(*layout).ts',
+  '!/src/app/pages/not-found.ts',
+]);
 const layouts = import.meta.glob('/src/app/pages/**/layout.ts');
 
 const isGroup = (part: string) => /^\(.*\)$/.test(part);

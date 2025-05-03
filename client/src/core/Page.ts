@@ -1,24 +1,9 @@
 export abstract class Page {
-  protected rootElement: DocumentFragment;
+  protected prefetchAbortController = new AbortController();
+  // cancel any in-flight fetch
+  // this.abortCtrl.abort();
 
-  constructor() {
-    this.rootElement = document.createDocumentFragment();
-  }
+  constructor() {}
 
-  protected abstract render(): void;
+  protected abstract render(): DocumentFragment;
 }
-
-//* PAGE STARTER CLASS
-// import { Page } from '@/core/Page';
-// import { html } from '@/core/html';
-
-// export default class TEMPLATE extends Page {
-//   constructor() {
-//     super();
-//   }
-
-//   render() {
-//     const layout = html` <h1>TEMPLATE Page</h1> `;
-//     this.rootElement.append(layout);
-//   }
-// }

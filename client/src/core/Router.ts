@@ -127,6 +127,7 @@ export class Router {
   routeTrie: Trie = new Trie();
   loaders: Loaders = {};
   middlewares: Middleware[] = [];
+  currentRequestId: number = 0;
 
   constructor(basePath: string) {
     window.addEventListener('popstate', () => {
@@ -178,7 +179,7 @@ export class Router {
     }
   }
 
-  async #mountRoute(path: string) {
+  async #mountRoute(path: string, requestId: number) {
     const loader = this.loaders[path];
     if (!loader) {
       console.error(`No loader registered for ${path}`);
@@ -187,16 +188,23 @@ export class Router {
 
     try {
       const module = await loader();
+      if (requestId === this.currentRequestId) {
+        //* This can be moved or added anywhere to check to see if request is still valid
+        console.warn('Stale transition—aborting before mount:', path);
+      }
       const PageClass = module.default;
       const page = new PageClass(); //? maybe pass the query data
+      //TODO: start pre fetch (web worker)
+      //TODO: clean up old
       page.mount();
-      //TODO: make sure we clean up the root outlet before appending new page
     } catch (error) {
       console.log(`Failed to load route ${path}:`, error);
     }
   }
 
   async #transitionRoute(): Promise<void> {
+    const requestId = ++this.currentRequestId;
+
     const url = new URL(window.location.href);
     const path = url.pathname;
     const query = url.search;
@@ -204,7 +212,8 @@ export class Router {
     const match = this.routeTrie.get(path);
     if (!match) {
       console.error('No match found for:', path);
-      //TODO: should show a 404 page here
+      //TODO: 404 not found page
+      //const module = await import('@/app/pages/not-found.ts');
     }
 
     const runMiddlewares = async (index: number): Promise<void> => {
@@ -218,7 +227,12 @@ export class Router {
 
     await runMiddlewares(0);
 
-    this.#mountRoute(path);
+    if (requestId === this.currentRequestId) {
+      //* This can be moved or added anywhere to check to see if request is still valid
+      console.warn('Stale transition—aborting before mount:', path);
+    }
+
+    this.#mountRoute(path, requestId);
   }
 
   // Public
