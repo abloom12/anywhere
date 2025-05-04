@@ -50,7 +50,7 @@ class Trie {
     this.head = new TrieNode();
   }
 
-  add({ path }: { path: string }) {
+  add(path: string) {
     const segments: string[] = path
       .split('/')
       .filter((segment: string) => segment.length > 0);
@@ -129,7 +129,7 @@ export class Router {
   middlewares: Middleware[] = [];
   currentRequestId: number = 0;
 
-  constructor(basePath: string) {
+  constructor(basePath: string, rootElement: HTMLElement) {
     window.addEventListener('popstate', () => {
       this.#transitionRoute();
     });
@@ -237,7 +237,7 @@ export class Router {
 
   // Public
   on(route: Route) {
-    this.routeTrie.add(route);
+    this.routeTrie.add(route.path);
     this.loaders[route.path] = route.loader;
   }
   use(middleware: Middleware) {
