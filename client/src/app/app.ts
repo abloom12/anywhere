@@ -11,7 +11,7 @@ export function loadApp() {
   const layouts = import.meta.glob('/src/app/pages/**/layout.ts');
   const layoutLoaders = Object.entries(layouts).map(([filePath, loader]) => {
     const parts = filePath.replace(/^.*\/pages/, '').replace(/\/layout\.ts$/, '');
-    //console.log('layout parts', parts);
+    // console.log('layout parts', parts);
     // const segments = parts.split('/').filter(seg => seg.length > 0 && !isGroup(seg));
     // const path = segments.length ? `/${segments.join('/')}` : '/';
   });
