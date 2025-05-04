@@ -4,11 +4,10 @@ function isGroup(part: string) {
   return /^\(.*\)$/.test(part);
 }
 
+const rootElement: HTMLElement = document.querySelector('#app')!;
+const AppRouter = new Router('/webroot', rootElement);
+
 export function loadApp() {
-  const rootElement: HTMLElement = document.querySelector('#app')!;
-
-  const AppRouter = new Router('/webroot', rootElement);
-
   const layouts = import.meta.glob('/src/app/pages/**/layout.ts');
   const layoutLoaders = Object.entries(layouts).map(([filePath, loader]) => {
     const parts = filePath.replace(/^.*\/pages/, '').replace(/\/layout\.ts$/, '');
