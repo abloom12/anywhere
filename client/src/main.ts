@@ -1,6 +1,5 @@
 import './style.css';
-
-import { loadApp } from './app/app';
+import './app/app';
 
 // if ('serviceWorker' in navigator) {
 //   navigator.serviceWorker.register(
@@ -9,5 +8,3 @@ import { loadApp } from './app/app';
 //     : '/dev-sw.js?dev-sw',
 //   );
 // }
-
-loadApp();
