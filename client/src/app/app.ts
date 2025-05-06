@@ -1,50 +1,66 @@
 import { Router } from '@/core/Router';
 
-import { EventBus } from '@/shared/util/event-bus';
-
-function isGroup(part: string): boolean {
-  return /^\(.*\)$/.test(part);
-}
-
-const rootElement: HTMLElement = document.querySelector('#app')!;
-const AppRouter = new Router('/webroot', rootElement);
-const bus = new EventBus<{
-  'router:login': { userId: string };
-}>();
+export const AppRouter = new Router(
+  '/webroot',
+  document.querySelector('#app')!,
+);
 
 const layouts = import.meta.glob('/src/app/pages/**/layout.ts');
+const layoutMap = Object.fromEntries(
+  Object.entries(layouts).map(([filePath, loader]) => {
+    const key = filePath
+      .replace(/^.*\/pages/, '')
+      .replace(/\/layout\.ts$/, '')
+      .toLowerCase();
+
+    return [key, loader] as const;
+  }),
+);
+
 const pages = import.meta.glob([
   '/src/app/pages/**/!(*layout).ts',
-  '!/src/app/pages/not-found.ts',
+  '!/src/app/pages/404.ts',
 ]);
 
-Object.entries(pages).forEach(([filePath, loader]) => {
+const CAMEL_TO_DASH1 = /([a-z0-9])([A-Z])/g;
+const CAMEL_TO_DASH2 = /([A-Z])([A-Z][a-z])/g;
+const STRIP_LEADING = /^.*\/pages\//;
+const STRIP_TS_EXT = /\.ts$/;
+const GROUP_SEGMENT = /^\(.*\)$/;
+
+for (const [filePath, loader] of Object.entries(pages)) {
   const parts = filePath
-    .replace(/^.*\/pages\//, '')
-    .replace(/\.ts$/, '')
+    .replace(STRIP_LEADING, '')
+    .replace(STRIP_TS_EXT, '')
+    .toLowerCase()
     .split('/');
 
   const fileName = parts.pop()!;
-  const segments = fileName.toLowerCase() === 'index' ? parts : [...parts, fileName];
-  const rawUrl = segments.map(seg =>
+  const segments = (
+    fileName === 'index' ? parts : [...parts, fileName]).map(seg =>
     seg
-      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-      .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
-      .toLowerCase(),
+      .replace(CAMEL_TO_DASH1, '$1-$2')
+      .replace(CAMEL_TO_DASH2, '$1-$2'),
   );
 
-  const rawPath = `/${rawUrl.join('/')}`;
-  const path = `/${rawUrl.filter(p => !isGroup(p)).join('/')}`;
+  let layouts = [];
+  let segment = '';
+  for (let index = 0; index < segments.length; index++) {
+    segment += `/${segments[index]}`;
+    const layout = layoutMap[segment];
+    if (layout) {
+      layouts.push([segment, layout]);
+    }
+  }
 
-  console.log(rawPath);
-  console.log(path);
+  if (layouts.length) {
+    layouts = Object.fromEntries(layouts);
+    console.log(`/${segments.join('/')}`);
+    console.table(layouts);
+  }
 
-  AppRouter.on({ path, loader });
-});
-
-// const layoutLoaders = Object.entries(layouts).map(([filePath, loader]) => {
-//   const parts = filePath.replace(/^.*\/pages/, '').replace(/\/layout\.ts$/, '');
-//   // console.log('layout parts', parts);
-//   // const segments = parts.split('/').filter(seg => seg.length > 0 && !isGroup(seg));
-//   // const path = segments.length ? `/${segments.join('/')}` : '/';
-// });
+  AppRouter.on({
+    path: `/${segments.filter(p => !GROUP_SEGMENT.test(p)).join('/')}`,
+    loader,
+  });
+}
