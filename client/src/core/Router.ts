@@ -135,6 +135,7 @@ type Loaders = Record<string, () => Promise<any>>;
 type Route = {
   path: string;
   loader: () => Promise<any>;
+  layouts: Map<string, () => Promise<any>>;
 };
 
 export class Router {
@@ -260,6 +261,7 @@ export class Router {
   on(route: Route) {
     this.routeTrie.add(route.path);
     this.loaders[route.path] = route.loader;
+    console.log(route);
   }
   use(middleware: Middleware) {
     this.middlewares.push(middleware);
