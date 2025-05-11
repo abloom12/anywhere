@@ -130,17 +130,17 @@ type Middleware = (params: {
   path: string;
 }) => Promise<void> | void;
 
-type Loaders = Record<string, () => Promise<any>>;
-
-type Route = {
-  path: string;
-  loader: () => Promise<any>;
-  layouts: Map<string, () => Promise<any>>;
-};
+type RouteLoaders = Record<
+  string,
+  {
+    page: () => Promise<any>;
+    layouts: Map<string, () => Promise<any>>;
+  }
+>;
 
 export class Router {
   routeTrie: Trie = new Trie();
-  loaders: Loaders = {};
+  routeLoaders: RouteLoaders = {};
   middlewares: Middleware[] = [];
   currentRequestId: number = 0;
   rootElement: HTMLElement;
@@ -202,85 +202,73 @@ export class Router {
   }
 
   #registerFileRoutes() {
-    const CAMEL_TO_DASH1 = /([a-z0-9])([A-Z])/g;
-    const CAMEL_TO_DASH2 = /([A-Z])([A-Z][a-z])/g;
-    const STRIP_LEADING = /^.*\/pages\//;
-    const STRIP_TS_EXT = /\.ts$/;
-    const GROUP_SEGMENT = /^\(.*\)$/;
-
     const layouts = import.meta.glob('/src/app/pages/**/layout.ts');
-    const layoutMap = Object.fromEntries(
-      Object.entries(layouts)
-        .map(([filePath, loader]) => {
-          const key = filePath
-            .replace(/^.*\/pages/, '')
-            .replace(/\/layout\.ts$/, '')
-            .toLowerCase();
-
-          return [key, loader] as const;
-        })
-        .sort(([a], [b]) => a.length - b.length),
-    );
-
     const pages = import.meta.glob([
       '/src/app/pages/**/!(*layout).ts',
       '!/src/app/pages/404.ts',
+      '!/src/app/pages/not-found.ts',
     ]);
 
     for (const [filePath, loader] of Object.entries(pages)) {
       // Parse File Path
       const parts = filePath
-        .replace(STRIP_LEADING, '')
-        .replace(STRIP_TS_EXT, '')
+        .replace(/^.*\/pages\//, '')
+        .replace(/\.ts$/, '')
         .toLowerCase()
         .split('/');
 
       const fileName = parts.pop()!;
-      const segments =
-        fileName === 'index' ? parts : [...parts, fileName];
 
       // Grab Layouts for Route
-      let segment = '';
-      const layouts = new Map<string, () => Promise<any>>();
-      for (let index = 0; index < segments.length; index++) {
-        segment += `/${segments[index]}`;
+      const rootLayout = layouts['/src/app/pages/layout.ts'];
+      const layoutLoaderMap = new Map<string, () => Promise<any>>(
+        rootLayout ? [['/', rootLayout]] : [],
+      );
 
-        const layoutLoader = layoutMap[segment];
+      let layoutPathKey = '';
+      for (let index = 0; index < parts.length; index++) {
+        layoutPathKey += `/${parts[index]}`;
+
+        const layoutFile = `/src/app/pages${layoutPathKey}/layout.ts`;
+        const layoutLoader = layouts[layoutFile];
+
         if (layoutLoader) {
-          layouts.set(segment, layoutLoader);
+          layoutLoaderMap.set(
+            layoutPathKey,
+            layoutLoader as () => Promise<any>,
+          );
         }
       }
 
       // Register with Router
-      const path = `/${segments.filter(p => !GROUP_SEGMENT.test(p)).join('/')}`;
-      this.routeTrie.add(path);
-      this.loaders[path] = loader;
+      const segments =
+        fileName === 'index' ? parts : [...parts, fileName];
+      const path = `/${segments.filter(p => !/^\(.*\)$/.test(p)).join('/')}`;
 
-      console.log(path, loader);
-      console.log(layouts);
+      console.log(path);
+      console.log(layoutLoaderMap);
+
+      this.routeTrie.add(path);
+      this.routeLoaders[path] = {
+        page: loader,
+        layouts: layoutLoaderMap,
+      };
     }
   }
 
+  //TODO: need to know which layouts are already on screen so we don't re render shit
   async #mountRoute(path: string, requestId: number) {
-    const loader = this.loaders[path];
-    if (!loader) {
-      console.error(`No loader registered for ${path}`);
-      return;
-    }
+    const loaders = this.routeLoaders[path];
 
-    try {
-      const module = await loader();
-      if (requestId === this.currentRequestId) {
-        //* This can be moved or added anywhere to check to see if request is still valid
-        console.warn('Stale transition—aborting before mount:', path);
-      }
-      const PageClass = module.default;
-      const page = new PageClass(); //? maybe pass the query data
-      //TODO: start pre fetch (web worker)
-      this.rootElement.innerHTML = '';
-      this.rootElement.append(page.render());
-    } catch (error) {
-      console.log(`Failed to load route ${path}:`, error);
+    let parentElement: HTMLElement = this.rootElement;
+
+    for (const [layoutPath, layoutLaoder] of loaders.layouts) {
+      const layoutModule = await layoutLaoder();
+      const layoutClass = new layoutModule.default();
+      parentElement.append(layoutClass.render());
+
+      parentElement =
+        parentElement.querySelector<HTMLElement>('[data-outlet]')!;
     }
   }
 

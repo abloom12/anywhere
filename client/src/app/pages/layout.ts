@@ -1,7 +1,7 @@
 import { Layout } from '@/core/Layout';
 import { html } from '@/core/html';
 
-export default class LoginLayout extends Layout {
+export default class RootLayout extends Layout {
   constructor() {
     super();
   }
