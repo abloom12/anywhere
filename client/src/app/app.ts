@@ -2,7 +2,7 @@ import { Router } from '@/core/Router';
 
 export const AppRouter = new Router(
   '/webroot',
-  document.querySelector('#app')!,
+  document.querySelector('#app')! as HTMLElement,
 );
 
 AppRouter.use(async ({ next, path }) => {

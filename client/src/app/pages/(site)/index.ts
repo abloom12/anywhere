@@ -1,12 +1,12 @@
 import { Page } from '@/core/Page';
 import { html } from '@/core/html';
 
-export default class RosterPage extends Page {
+export default class DashboardPage extends Page {
   constructor() {
     super();
   }
 
   render() {
-    return html`<h1>Roster Page</h1>`;
+    return html`<h1>Dashboard Page</h1>`;
   }
 }
