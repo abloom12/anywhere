@@ -140,20 +140,20 @@ type RouteLoaders = Record<
 type LayoutLoaders = Record<string, () => Promise<any>>;
 
 export class Router {
-  rootElement: HTMLElement;
-  basePath: string = '/';
+  #rootElement: HTMLElement;
+  #basePath: string = '/';
 
-  routeTrie: Trie = new Trie();
-  routeLoaders: RouteLoaders = {};
-  layoutLoaders: LayoutLoaders = {};
-  middlewares: Middleware[] = [];
-  currentRequestId: number = 0;
+  #routeTrie: Trie = new Trie();
+  #routeLoaders: RouteLoaders = {};
+  #layoutLoaders: LayoutLoaders = {};
+  #middlewares: Middleware[] = [];
+  #currentRequestId: number = 0;
 
   mountedChain: Array<{ path: string; outlet: HTMLElement }> = [];
 
   constructor(basePath: string, rootElement: HTMLElement) {
-    this.rootElement = rootElement;
-    this.basePath = basePath;
+    this.#rootElement = rootElement;
+    this.#basePath = basePath;
 
     window.addEventListener('popstate', () => {
       this.#transitionRoute();
@@ -244,14 +244,14 @@ export class Router {
         const layoutLoader = layouts[layoutFile];
 
         if (layoutLoader) {
-          this.layoutLoaders[layoutPathKey] = layoutLoader;
+          this.#layoutLoaders[layoutPathKey] = layoutLoader;
           layoutPaths.push(layoutPathKey);
         }
       }
 
       // Register with Router
-      this.routeTrie.add(path);
-      this.routeLoaders[path] = {
+      this.#routeTrie.add(path);
+      this.#routeLoaders[path] = {
         page: loader,
         layouts: layoutPaths,
       };
@@ -259,13 +259,14 @@ export class Router {
   }
 
   async #mountRoute(path: string, requestId: number) {
-    const loader = this.routeLoaders[path];
+    const loader = this.#routeLoaders[path];
 
-    let parentElement: HTMLElement = this.rootElement;
+    let parentElement: HTMLElement = this.#rootElement;
 
     for (const layoutPath of loader.layouts) {
-      const layoutLoader = this.layoutLoaders[layoutPath];
+      const layoutLoader = this.#layoutLoaders[layoutPath];
       if (!layoutLoader) continue;
+
       const layoutModule = await layoutLoader();
       const layoutClass = new layoutModule.default();
       parentElement.append(layoutClass.render());
@@ -279,13 +280,13 @@ export class Router {
   }
 
   async #transitionRoute(): Promise<void> {
-    const requestId = ++this.currentRequestId;
+    const requestId = ++this.#currentRequestId;
 
     const url = new URL(window.location.href);
     const path = url.pathname;
     const query = url.search;
 
-    const match = this.routeTrie.get(path);
+    const match = this.#routeTrie.get(path);
     if (!match) {
       console.error('No match found for:', path);
       //TODO: 404 not found page
@@ -293,8 +294,8 @@ export class Router {
     }
 
     const runMiddlewares = async (index: number): Promise<void> => {
-      if (index < this.middlewares.length) {
-        await this.middlewares[index]({
+      if (index < this.#middlewares.length) {
+        await this.#middlewares[index]({
           next: async () => await runMiddlewares(index + 1),
           path,
         });
@@ -303,7 +304,7 @@ export class Router {
 
     await runMiddlewares(0);
 
-    if (requestId === this.currentRequestId) {
+    if (requestId === this.#currentRequestId) {
       //* This can be moved or added anywhere to check to see if request is still valid
       console.warn('Stale transition—aborting before mount:', path);
     }
@@ -313,13 +314,13 @@ export class Router {
 
   // Public
   use(middleware: Middleware) {
-    this.middlewares.push(middleware);
+    this.#middlewares.push(middleware);
   }
   async navigate(url: string) {
     history.pushState(null, '', url);
     await this.#transitionRoute();
   }
   visualizeTrie() {
-    this.routeTrie.print();
+    this.#routeTrie.print();
   }
 }
