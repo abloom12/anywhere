@@ -1,5 +1,11 @@
 export abstract class Layout {
   constructor() {}
 
-  protected abstract render(): DocumentFragment;
+  abstract render(): DocumentFragment;
+}
+
+export type LayoutConstructor = new () => Layout;
+
+export interface LayoutModule {
+  default: LayoutConstructor;
 }

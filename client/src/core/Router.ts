@@ -1,3 +1,6 @@
+import { Page as PageBase, PageModule } from './Page';
+import { Layout as LayoutBase, LayoutModule } from './Layout';
+
 class TrieNode {
   children: Map<string, TrieNode>;
   isComplete: boolean;
@@ -68,6 +71,7 @@ class Trie {
     const segments: string[] = path
       .split('/')
       .filter((segment: string) => segment.length > 0);
+
     let currentNode: TrieNode | undefined = this.head;
 
     for (const segment of segments) {
@@ -76,6 +80,10 @@ class Trie {
       if (!currentNode) {
         return null;
       }
+    }
+
+    if (!currentNode.isComplete) {
+      return null;
     }
 
     return currentNode;
@@ -125,19 +133,16 @@ class Trie {
   }
 }
 
+type RouteLoader = {
+  page: () => Promise<PageModule>;
+  layouts: string[];
+};
+type RouteLoaders = Record<string, RouteLoader>;
+type LayoutLoaders = Record<string, () => Promise<LayoutModule>>;
 type Middleware = (params: {
   next: () => Promise<void>;
   path: string;
 }) => Promise<void> | void;
-
-type RouteLoaders = Record<
-  string,
-  {
-    page: () => Promise<any>;
-    layouts: string[];
-  }
->;
-type LayoutLoaders = Record<string, () => Promise<any>>;
 
 export class Router {
   #rootElement: HTMLElement;
@@ -147,9 +152,13 @@ export class Router {
   #routeLoaders: RouteLoaders = {};
   #layoutLoaders: LayoutLoaders = {};
   #middlewares: Middleware[] = [];
-  #currentRequestId: number = 0;
 
-  mountedChain: Array<{ path: string; outlet: HTMLElement }> = [];
+  #currentRequestId: number = 0;
+  #mountedChain: Array<{
+    path: string;
+    root: HTMLElement[];
+    outlet: HTMLElement;
+  }> = [];
 
   constructor(basePath: string, rootElement: HTMLElement) {
     this.#rootElement = rootElement;
@@ -162,12 +171,12 @@ export class Router {
     window.addEventListener('DOMContentLoaded', () => {
       [...document.querySelectorAll('a')].forEach(link => {
         link.removeEventListener('click', this.#linkHandler);
-        link.addEventListener('click', this.#linkHandler);
+        link.addEventListener('click', this.#linkHandler.bind(this));
       });
     });
 
     this.#registerFileRoutes();
-    // this.#transitionRoute();
+    this.#transitionRoute();
   }
 
   #linkHandler(e: MouseEvent) {
@@ -210,12 +219,13 @@ export class Router {
   #registerFileRoutes() {
     const layouts = import.meta.glob(
       '/src/app/pages/**/layout.ts',
-    ) as Record<string, (() => Promise<any>) | undefined>;
+    ) as Record<string, (() => Promise<LayoutModule>) | undefined>;
+
     const pages = import.meta.glob([
       '/src/app/pages/**/!(*layout).ts',
       '!/src/app/pages/404.ts',
       '!/src/app/pages/not-found.ts',
-    ]);
+    ]) as Record<string, () => Promise<PageModule>>;
 
     for (const [filePath, loader] of Object.entries(pages)) {
       // Parse File Path
@@ -230,11 +240,20 @@ export class Router {
         fileName === 'index' ? parts : [...parts, fileName];
       const path = `/${segments.filter(p => !/^\(.*\)$/.test(p)).join('/')}`;
 
+      if (this.#routeLoaders[path]) {
+        throw new Error(
+          `Duplicate Routes: Multiple pages are trying to register to the same path: ${path}`,
+        );
+      }
+
       // Grab Layouts for Route
-      const layoutPaths: string[] =
-        Object.hasOwn(layouts, '/src/app/pages/layout.ts') ?
-          ['/']
-        : [];
+      const layoutPaths: string[] = [];
+
+      if (Object.hasOwn(layouts, '/src/app/pages/layout.ts')) {
+        layoutPaths.push('/');
+        this.#layoutLoaders['/'] =
+          layouts['/src/app/pages/layout.ts']!;
+      }
 
       let layoutPathKey = '';
       for (let index = 0; index < parts.length; index++) {
@@ -260,23 +279,72 @@ export class Router {
 
   async #mountRoute(path: string, requestId: number) {
     const loader = this.#routeLoaders[path];
-
     let parentElement: HTMLElement = this.#rootElement;
 
-    for (const layoutPath of loader.layouts) {
-      const layoutLoader = this.#layoutLoaders[layoutPath];
-      if (!layoutLoader) continue;
+    try {
+      // Layouts
+      for (let i = 0; i < loader.layouts.length; i++) {
+        const layoutPath = loader.layouts[i];
 
-      const layoutModule = await layoutLoader();
-      const layoutClass = new layoutModule.default();
-      parentElement.append(layoutClass.render());
-      parentElement =
-        parentElement.querySelector<HTMLElement>('[data-outlet]')!;
+        if (this.#mountedChain[i]?.path === layoutPath) {
+          parentElement = this.#mountedChain[i].outlet;
+          continue;
+        }
+
+        if (this.#mountedChain[i]) {
+          //? add unMount method to layout to clean up things like portals, modals or siblings
+          this.#mountedChain[i].root!.forEach(n => n?.remove());
+          this.#mountedChain.length = i;
+        }
+
+        const layoutLoader = this.#layoutLoaders[layoutPath];
+        if (!layoutLoader) continue;
+
+        const layoutModule: LayoutModule = await layoutLoader();
+        const layoutClass: LayoutBase = new layoutModule.default();
+        const layoutFrag: DocumentFragment = layoutClass.render();
+        const nodes = Array.from(
+          layoutFrag.childNodes,
+        ) as HTMLElement[];
+        parentElement.append(...nodes);
+
+        const outlet =
+          parentElement.querySelector<HTMLElement>('[data-outlet]');
+
+        if (!outlet) {
+          throw new Error(
+            `Layout "${layoutPath}" needs a [data-outlet] element`,
+          );
+        }
+
+        parentElement = outlet;
+        this.#mountedChain.push({
+          path: layoutPath,
+          root: nodes,
+          outlet,
+        });
+      }
+
+      if (this.#mountedChain.length > loader.layouts.length) {
+        for (
+          let j = loader.layouts.length;
+          j < this.#mountedChain.length;
+          j++
+        ) {
+          this.#mountedChain[j].root.forEach(n => n.remove());
+        }
+
+        this.#mountedChain.length = loader.layouts.length;
+      }
+
+      // Page
+      const pageModule: PageModule = await loader.page();
+      const pageClass: PageBase = new pageModule.default();
+      parentElement.innerHTML = '';
+      parentElement.append(pageClass.render());
+    } catch (error) {
+      console.error(error);
     }
-
-    const pageModule = await loader.page();
-    const pageClass = pageModule.default();
-    parentElement.append(pageClass.render());
   }
 
   async #transitionRoute(): Promise<void> {
@@ -290,23 +358,29 @@ export class Router {
     if (!match) {
       console.error('No match found for:', path);
       //TODO: 404 not found page
-      //const module = await import('@/app/pages/not-found.ts');
+      // const module = await import('@/app/pages/not-found.ts');
+      // this.#mountRoute('/not-found', requestId);
     }
 
     const runMiddlewares = async (index: number): Promise<void> => {
       if (index < this.#middlewares.length) {
-        await this.#middlewares[index]({
-          next: async () => await runMiddlewares(index + 1),
-          path,
-        });
+        try {
+          await this.#middlewares[index]({
+            next: async () => await runMiddlewares(index + 1),
+            path,
+          });
+        } catch (error) {
+          console.error(`Middleware ${index} failed:`, error);
+          await runMiddlewares(index + 1);
+        }
       }
     };
 
     await runMiddlewares(0);
 
-    if (requestId === this.#currentRequestId) {
-      //* This can be moved or added anywhere to check to see if request is still valid
+    if (requestId !== this.#currentRequestId) {
       console.warn('Stale transition—aborting before mount:', path);
+      return;
     }
 
     this.#mountRoute(path, requestId);

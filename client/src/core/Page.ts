@@ -5,5 +5,11 @@ export abstract class Page {
 
   constructor() {}
 
-  protected abstract render(): DocumentFragment;
+  abstract render(): DocumentFragment;
+}
+
+export type PageConstructor = new () => Page;
+
+export interface PageModule {
+  default: PageConstructor;
 }
