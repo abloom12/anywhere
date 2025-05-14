@@ -4,11 +4,15 @@ import { Props as CheckboxProps } from '@/shared/components/ui/Checkbox';
 import { Props as RadioProps } from '@/shared/components/ui/Radio';
 import { Props as SelectProps } from '@/shared/components/ui/Select';
 import { Props as TextareaProps } from '@/shared/components/ui/Textarea';
-import { Props as ButtonProps } from '@/shared/components/ui/Button';
+import {
+  Props as ButtonProps,
+  StyleType,
+  IntentType,
+} from '@/shared/components/ui/Button';
 
 type FieldType = InputType | 'checkbox' | 'radio' | 'select' | 'textarea';
 
-type params = [name: string, label: string];
+type fieldParams = [name: string, label: string];
 
 abstract class FieldConfigurator<
   T extends FieldType,
@@ -30,7 +34,7 @@ abstract class FieldConfigurator<
   props: K;
   label: string;
 
-  constructor(type: T, [name, label]: params) {
+  constructor(type: T, [name, label]: fieldParams) {
     this.props = {
       type,
       id: uniqueId(),
@@ -56,12 +60,12 @@ abstract class FieldConfigurator<
 }
 
 class CheckboxConfigurator extends FieldConfigurator<'checkbox', CheckboxProps> {
-  constructor(args: params) {
+  constructor(args: fieldParams) {
     super('checkbox', args);
   }
 }
 class DateConfigurator extends FieldConfigurator<'date', InputProps<'date'>> {
-  constructor(args: params) {
+  constructor(args: fieldParams) {
     super('date', args);
   }
 
@@ -79,7 +83,7 @@ class DateConfigurator extends FieldConfigurator<'date', InputProps<'date'>> {
   }
 }
 class EmailConfigurator extends FieldConfigurator<'email', InputProps<'email'>> {
-  constructor(args: params) {
+  constructor(args: fieldParams) {
     super('email', args);
   }
 
@@ -93,7 +97,7 @@ class EmailConfigurator extends FieldConfigurator<'email', InputProps<'email'>> 
   }
 }
 class FileConfigurator extends FieldConfigurator<'file', InputProps<'file'>> {
-  constructor(args: params) {
+  constructor(args: fieldParams) {
     super('file', args);
   }
 
@@ -113,7 +117,7 @@ class FileConfigurator extends FieldConfigurator<'file', InputProps<'file'>> {
   }
 }
 class NumberConfigurator extends FieldConfigurator<'number', InputProps<'number'>> {
-  constructor(args: params) {
+  constructor(args: fieldParams) {
     super('number', args);
   }
 
@@ -131,7 +135,7 @@ class NumberConfigurator extends FieldConfigurator<'number', InputProps<'number'
   }
 }
 class PasswordConfigurator extends FieldConfigurator<'password', InputProps<'password'>> {
-  constructor(args: params) {
+  constructor(args: fieldParams) {
     super('password', args);
   }
 
@@ -145,12 +149,12 @@ class PasswordConfigurator extends FieldConfigurator<'password', InputProps<'pas
   }
 }
 class RadioConfigurator extends FieldConfigurator<'radio', RadioProps> {
-  constructor(args: params) {
+  constructor(args: fieldParams) {
     super('radio', args);
   }
 }
 class SelectConfigurator extends FieldConfigurator<'select', SelectProps> {
-  constructor(args: params) {
+  constructor(args: fieldParams) {
     super('select', args);
   }
 
@@ -165,7 +169,7 @@ class SelectConfigurator extends FieldConfigurator<'select', SelectProps> {
   }
 }
 class TimeConfigurator extends FieldConfigurator<'time', InputProps<'time'>> {
-  constructor(args: params) {
+  constructor(args: fieldParams) {
     super('time', args);
   }
 
@@ -183,7 +187,7 @@ class TimeConfigurator extends FieldConfigurator<'time', InputProps<'time'>> {
   }
 }
 class TelConfigurator extends FieldConfigurator<'tel', InputProps<'tel'>> {
-  constructor(args: params) {
+  constructor(args: fieldParams) {
     super('tel', args);
   }
 
@@ -197,12 +201,12 @@ class TelConfigurator extends FieldConfigurator<'tel', InputProps<'tel'>> {
   }
 }
 class TextConfigurator extends FieldConfigurator<'text', InputProps<'text'>> {
-  constructor(args: params) {
+  constructor(args: fieldParams) {
     super('text', args);
   }
 }
 class TextareaConfigurator extends FieldConfigurator<'textarea', TextareaProps> {
-  constructor(args: params) {
+  constructor(args: fieldParams) {
     super('textarea', args);
   }
 
@@ -221,36 +225,52 @@ class TextareaConfigurator extends FieldConfigurator<'textarea', TextareaProps> 
 }
 
 export const field = {
-  checkbox: (...args: params) => new CheckboxConfigurator(args),
-  date: (...args: params) => new DateConfigurator(args),
-  email: (...args: params) => new EmailConfigurator(args),
-  file: (...args: params) => new FileConfigurator(args),
-  number: (...args: params) => new NumberConfigurator(args),
-  password: (...args: params) => new PasswordConfigurator(args),
-  radio: (...args: params) => new RadioConfigurator(args),
-  select: (...args: params) => new SelectConfigurator(args),
-  time: (...args: params) => new TimeConfigurator(args),
-  tel: (...args: params) => new TelConfigurator(args),
-  text: (...args: params) => new TextConfigurator(args),
-  textarea: (...args: params) => new TextareaConfigurator(args),
+  checkbox: (...args: fieldParams) => new CheckboxConfigurator(args),
+  date: (...args: fieldParams) => new DateConfigurator(args),
+  email: (...args: fieldParams) => new EmailConfigurator(args),
+  file: (...args: fieldParams) => new FileConfigurator(args),
+  number: (...args: fieldParams) => new NumberConfigurator(args),
+  password: (...args: fieldParams) => new PasswordConfigurator(args),
+  radio: (...args: fieldParams) => new RadioConfigurator(args),
+  select: (...args: fieldParams) => new SelectConfigurator(args),
+  time: (...args: fieldParams) => new TimeConfigurator(args),
+  tel: (...args: fieldParams) => new TelConfigurator(args),
+  text: (...args: fieldParams) => new TextConfigurator(args),
+  textarea: (...args: fieldParams) => new TextareaConfigurator(args),
 };
 
-abstract class ActionConfigurator<K> {
-  props: K;
+class ButtonConfigurator {
+  props: ButtonProps;
 
-  constructor(props: K) {
-    this.props = props;
+  constructor([text]: [text: string]) {
+    this.props = {
+      text,
+      type: 'button',
+    };
   }
 
-  get $(): K {
+  get $(): ButtonProps {
     return { ...this.props };
   }
-}
 
-class ButtonConfigurator {
-  constructor() {}
+  type(value: 'submit' | 'button') {
+    this.props.type = value;
+    return this;
+  }
+  style(value: StyleType) {
+    this.props.style = value;
+    return this;
+  }
+  intent(value: IntentType) {
+    this.props.intent = value;
+    return this;
+  }
+  icon(value: any) {
+    this.props.icon = value;
+    return this;
+  }
 }
 
 export const action = {
-  button: () => new ButtonConfigurator(),
+  button: (...args: [text: string]) => new ButtonConfigurator(args),
 };

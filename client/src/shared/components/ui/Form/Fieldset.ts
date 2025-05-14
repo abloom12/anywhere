@@ -1,6 +1,6 @@
 import { Component } from '@/core/Component';
-import { html } from '@/shared/util/html';
 import { cn } from '@/shared/util/cn';
+import { html, withRefs } from '@/shared/util/html';
 
 type Props = {
   legend: string;
@@ -8,6 +8,7 @@ type Props = {
 
 export class Fieldset extends Component {
   #props: Props;
+  #fieldset: HTMLElement | null;
 
   constructor(props: Props) {
     super();
@@ -15,13 +16,23 @@ export class Fieldset extends Component {
     this.#props = {
       ...props,
     };
+
+    this.#fieldset = null;
+  }
+
+  append(element: DocumentFragment | HTMLElement) {
+    this.#fieldset?.append(element);
   }
 
   render() {
-    return html`
-      <fieldset>
+    const { ele, refs } = withRefs(html`
+      <fieldset ref="fieldset">
         <legend>${this.#props.legend}</legend>
       </fieldset>
-    `;
+    `);
+
+    this.#fieldset = refs.fieldset;
+
+    return ele;
   }
 }

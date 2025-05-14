@@ -5,7 +5,7 @@ export function html(
   strings: TemplateStringsArray,
   ...values: HtmlValue[]
 ): DocumentFragment {
-  const placeholders = new Map<number, HTMLElement>();
+  const placeholders = new Map<number, HTMLElement | DocumentFragment>();
   const htmlParts: string[] = [];
 
   for (let i = 0; i < strings.length; i++) {
@@ -16,7 +16,7 @@ export function html(
 
       if (value === null || value === undefined) {
         htmlParts.push('');
-      } else if (value instanceof HTMLElement) {
+      } else if (value instanceof HTMLElement || value instanceof DocumentFragment) {
         htmlParts.push(`<!--__placeholder_${i}__-->`);
         placeholders.set(i, value);
       } else {

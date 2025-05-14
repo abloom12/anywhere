@@ -1,13 +1,12 @@
 import { Component } from '@/core/Component';
 import { cn } from '@/shared/util/cn';
+import { html } from '@/shared/util/html';
 
-import {
-  FormField,
-  FieldProps,
-} from '@/shared/components/ui/Form/FormField';
+import { FormField, FieldProps } from '@/shared/components/ui/Form/FormField';
 import { Fieldset } from '@/shared/components/ui/Form/Fieldset';
+import { Props as ButtonProps } from '@/shared/components/ui/Button';
 
-export { field } from './form.config';
+export { field, action } from './form.config';
 
 type FormProps = {
   name: string;
@@ -17,6 +16,7 @@ type FormProps = {
         legend: string;
         fields: FieldProps[];
       }
+    | ButtonProps
   )[];
   autofocus?: string;
 };
@@ -37,6 +37,8 @@ export class Form extends Component {
     this.#form.name = this.#props.name;
 
     for (const field of this.#props.fields) {
+      // console.log(field);
+
       if ('legend' in field) {
         const { fields, legend } = field;
         const fieldset = new Fieldset({ legend });
@@ -44,22 +46,20 @@ export class Form extends Component {
 
         for (const groupedField of fields) {
           const formField = new FormField(groupedField);
+          fieldset.append(formField.render());
         }
       } else {
-        const formField = new FormField(field);
+        const formField = new FormField(field as FieldProps);
+        this.#form.append(formField.render());
       }
     }
 
-    //TEMP:
-    const frag = document.createDocumentFragment();
-    frag.append(this.#form);
-    return frag;
+    return html`${this.#form}`;
   }
 
   populate() {
     // this.#form.elements[name | id]
   }
-
   onChange(e: Event) {}
   onInput(e: Event) {}
   onSubmit(e: SubmitEvent) {

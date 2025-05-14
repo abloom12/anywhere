@@ -21,12 +21,7 @@ const buttonVariants = cva(
     variants: {
       style: {
         contained: ['rounded'],
-        outlined: [
-          'bg-transparent',
-          'border-2',
-          'border-solid',
-          'rounded',
-        ],
+        outlined: ['bg-transparent', 'border-2', 'border-solid', 'rounded'],
         text: ['bg-transparent'],
       },
       intent: {
@@ -73,11 +68,14 @@ const buttonVariants = cva(
   },
 );
 
+export type StyleType = VariantProps<typeof buttonVariants>['style'];
+export type IntentType = VariantProps<typeof buttonVariants>['intent'];
+
 export type Props = VariantProps<typeof buttonVariants> & {
   text: string;
   type?: 'submit' | 'button';
-  style?: string;
-  intent?: string;
+  // style?: string;
+  // intent?: string;
   icon?: string;
 };
 

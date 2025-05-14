@@ -17,8 +17,7 @@ class TrieNode {
         this.dynamicChild = [segment, new TrieNode()];
       }
 
-      this.dynamicChild[1].isComplete =
-        this.dynamicChild[1].isComplete || isCompleted;
+      this.dynamicChild[1].isComplete = this.dynamicChild[1].isComplete || isCompleted;
 
       return this.dynamicChild[1];
     }
@@ -98,14 +97,9 @@ class Trie {
     return currentNode;
   }
 
-  print(
-    node: TrieNode = this.head,
-    prefix: string = '',
-    isLast: boolean = true,
-  ): void {
+  print(node: TrieNode = this.head, prefix: string = '', isLast: boolean = true): void {
     const hasDynamicChild = !!node.dynamicChild;
-    const totalChildrenCount =
-      node.children.size + (hasDynamicChild ? 1 : 0);
+    const totalChildrenCount = node.children.size + (hasDynamicChild ? 1 : 0);
     let index = 0;
 
     if (node === this.head) {
@@ -113,13 +107,10 @@ class Trie {
     }
 
     for (const [segment, childNode] of node.children) {
-      const isLastChild =
-        index === totalChildrenCount - 1 && !hasDynamicChild;
+      const isLastChild = index === totalChildrenCount - 1 && !hasDynamicChild;
       const marker = childNode.isComplete ? '[Complete]' : '';
 
-      console.log(
-        `${prefix}${isLast ? '└── ' : '├── '}${segment} ${marker}`,
-      );
+      console.log(`${prefix}${isLast ? '└── ' : '├── '}${segment} ${marker}`);
 
       const newPrefix = prefix + (isLast ? '    ' : '│   ');
       this.print(childNode, newPrefix, isLastChild);
@@ -128,16 +119,11 @@ class Trie {
     }
 
     if (hasDynamicChild) {
-      const marker =
-        node.dynamicChild![1].isComplete ? '[Complete]' : '';
+      const marker = node.dynamicChild![1].isComplete ? '[Complete]' : '';
       console.log(
         `${prefix}${isLast ? '└── ' : '├── '}${node.dynamicChild![0]} ${marker}`,
       );
-      this.print(
-        node.dynamicChild![1],
-        prefix + (isLast ? '    ' : '│   '),
-        true,
-      );
+      this.print(node.dynamicChild![1], prefix + (isLast ? '    ' : '│   '), true);
     }
   }
 }
@@ -185,8 +171,7 @@ export class Router {
     });
 
     this.#registerFileRoutes();
-    this.#transitionRoute();
-    this.visualizeTrie();
+    // this.#transitionRoute();
   }
 
   #linkHandler(e: MouseEvent) {
@@ -198,9 +183,7 @@ export class Router {
       return false;
     }
 
-    let location =
-      e.target instanceof HTMLElement &&
-      e.target.getAttribute('href');
+    let location = e.target instanceof HTMLElement && e.target.getAttribute('href');
     if (typeof location === 'undefined' || location === null) {
       return false;
     }
@@ -227,9 +210,10 @@ export class Router {
   }
 
   #registerFileRoutes() {
-    const layouts = import.meta.glob(
-      '/src/app/pages/**/layout.ts',
-    ) as Record<string, (() => Promise<LayoutModule>) | undefined>;
+    const layouts = import.meta.glob('/src/app/pages/**/layout.ts') as Record<
+      string,
+      (() => Promise<LayoutModule>) | undefined
+    >;
 
     const pages = import.meta.glob([
       '/src/app/pages/**/!(*layout).ts',
@@ -246,8 +230,7 @@ export class Router {
         .split('/');
 
       const fileName = parts.pop()!;
-      const segments =
-        fileName === 'index' ? parts : [...parts, fileName];
+      const segments = fileName === 'index' ? parts : [...parts, fileName];
       const path = `/${segments.filter(p => !/^\(.*\)$/.test(p)).join('/')}`;
 
       if (this.#routeLoaders[path]) {
@@ -261,8 +244,7 @@ export class Router {
 
       if (Object.hasOwn(layouts, '/src/app/pages/layout.ts')) {
         layoutPaths.push('/');
-        this.#layoutLoaders['/'] =
-          layouts['/src/app/pages/layout.ts']!;
+        this.#layoutLoaders['/'] = layouts['/src/app/pages/layout.ts']!;
       }
 
       let layoutPathKey = '';
@@ -314,18 +296,13 @@ export class Router {
         const layoutModule: LayoutModule = await layoutLoader();
         const layoutClass: LayoutBase = new layoutModule.default();
         const layoutFrag: DocumentFragment = layoutClass.render();
-        const nodes = Array.from(
-          layoutFrag.childNodes,
-        ) as HTMLElement[];
+        const nodes = Array.from(layoutFrag.childNodes) as HTMLElement[];
         parentElement.append(...nodes);
 
-        const outlet =
-          parentElement.querySelector<HTMLElement>('[data-outlet]');
+        const outlet = parentElement.querySelector<HTMLElement>('[data-outlet]');
 
         if (!outlet) {
-          throw new Error(
-            `Layout "${layoutPath}" needs a [data-outlet] element`,
-          );
+          throw new Error(`Layout "${layoutPath}" needs a [data-outlet] element`);
         }
 
         parentElement = outlet;
@@ -338,11 +315,7 @@ export class Router {
 
       // Clean up leftover, unused mounted layouts
       if (this.#mountedChain.length > loader.layouts.length) {
-        for (
-          let j = loader.layouts.length;
-          j < this.#mountedChain.length;
-          j++
-        ) {
+        for (let j = loader.layouts.length; j < this.#mountedChain.length; j++) {
           this.#mountedChain[j].root.forEach(n => n.remove());
         }
 

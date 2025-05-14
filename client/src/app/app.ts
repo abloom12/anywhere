@@ -1,13 +1,12 @@
 import { Router } from '@/core/Router';
-
 import { Permissions } from './permissions';
+
+const isAuthenticated = false;
 
 export const AppRouter = new Router(
   '/webroot',
   document.querySelector('#app')! as HTMLElement,
 );
-
-const isAuthenticated = false;
 
 AppRouter.use(async ({ next, path }) => {
   if (path !== '/login' && !isAuthenticated) {
@@ -21,3 +20,5 @@ AppRouter.use(async ({ next, path }) => {
 export const permissions = new Permissions<boolean | string>({
   token: 'admin',
 });
+
+AppRouter.navigate('/');
