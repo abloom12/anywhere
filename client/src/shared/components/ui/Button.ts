@@ -1,8 +1,8 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { Component } from '@/core/Component';
-import { html } from '@/core/html';
-import { cn } from '@/core/cn';
+import { html } from '@/shared/util/html';
+import { cn } from '@/shared/util/cn';
 
 const buttonVariants = cva(
   [
@@ -21,7 +21,12 @@ const buttonVariants = cva(
     variants: {
       style: {
         contained: ['rounded'],
-        outlined: ['bg-transparent', 'border-2', 'border-solid', 'rounded'],
+        outlined: [
+          'bg-transparent',
+          'border-2',
+          'border-solid',
+          'rounded',
+        ],
         text: ['bg-transparent'],
       },
       intent: {
@@ -68,9 +73,11 @@ const buttonVariants = cva(
   },
 );
 
-type Props = VariantProps<typeof buttonVariants> & {
+export type Props = VariantProps<typeof buttonVariants> & {
   text: string;
   type?: 'submit' | 'button';
+  style?: string;
+  intent?: string;
   icon?: string;
 };
 
@@ -84,12 +91,10 @@ export class Button extends Component {
       type: 'button',
       ...props,
     };
-
-    this.render();
   }
 
-  protected render() {
-    const button = html`
+  render() {
+    return html`
       <button
         type="${this.#props.type}"
         class="${cn(
@@ -102,7 +107,5 @@ export class Button extends Component {
         ${this.#props.text}
       </button>
     `;
-
-    this.rootElement.appendChild(button);
   }
 }

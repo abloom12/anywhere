@@ -55,6 +55,11 @@ class Trie {
   }
 
   add(path: string) {
+    if (path === '/') {
+      this.head.isComplete = true;
+      return;
+    }
+
     const segments: string[] = path
       .split('/')
       .filter((segment: string) => segment.length > 0);
@@ -68,6 +73,10 @@ class Trie {
   }
 
   get(path: string): TrieNode | null {
+    if (path === '/') {
+      return this.head.isComplete ? this.head : null;
+    }
+
     const segments: string[] = path
       .split('/')
       .filter((segment: string) => segment.length > 0);
@@ -177,6 +186,7 @@ export class Router {
 
     this.#registerFileRoutes();
     this.#transitionRoute();
+    this.visualizeTrie();
   }
 
   #linkHandler(e: MouseEvent) {
@@ -282,15 +292,16 @@ export class Router {
     let parentElement: HTMLElement = this.#rootElement;
 
     try {
-      // Layouts
       for (let i = 0; i < loader.layouts.length; i++) {
         const layoutPath = loader.layouts[i];
 
+        // Check for shared layout
         if (this.#mountedChain[i]?.path === layoutPath) {
           parentElement = this.#mountedChain[i].outlet;
           continue;
         }
 
+        // Remove unused layouts
         if (this.#mountedChain[i]) {
           //? add unMount method to layout to clean up things like portals, modals or siblings
           this.#mountedChain[i].root!.forEach(n => n?.remove());
@@ -325,6 +336,7 @@ export class Router {
         });
       }
 
+      // Clean up leftover, unused mounted layouts
       if (this.#mountedChain.length > loader.layouts.length) {
         for (
           let j = loader.layouts.length;
@@ -337,7 +349,7 @@ export class Router {
         this.#mountedChain.length = loader.layouts.length;
       }
 
-      // Page
+      // Mount Page
       const pageModule: PageModule = await loader.page();
       const pageClass: PageBase = new pageModule.default();
       parentElement.innerHTML = '';
@@ -390,10 +402,12 @@ export class Router {
   use(middleware: Middleware) {
     this.#middlewares.push(middleware);
   }
+
   async navigate(url: string) {
     history.pushState(null, '', url);
     await this.#transitionRoute();
   }
+
   visualizeTrie() {
     this.#routeTrie.print();
   }

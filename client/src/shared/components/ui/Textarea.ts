@@ -1,6 +1,6 @@
 import { Component } from '@/core/Component';
-import { html } from '@/core/html';
-import { cn } from '@/core/cn';
+import { html } from '@/shared/util/html';
+import { cn } from '@/shared/util/cn';
 
 export type Props = {
   id: string;
@@ -21,19 +21,15 @@ export class Textarea extends Component {
     super();
 
     this.#props = { ...props };
-
-    this.render();
   }
 
-  protected render() {
-    const textarea = html`
+  render() {
+    return html`
       <textarea
         name="${this.#props.name}"
         id="${this.#props.id}"
-        class="invalid:border-error text-black"
+        class="text-black invalid:border-error"
       ></textarea>
     `;
-
-    this.rootElement.appendChild(textarea);
   }
 }

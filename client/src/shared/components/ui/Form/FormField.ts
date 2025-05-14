@@ -1,12 +1,27 @@
 import { Component } from '@/core/Component';
-import { html } from '@/core/html';
-import { cn } from '@/core/cn';
+import { html } from '@/shared/util/html';
+import { cn } from '@/shared/util/cn';
 
-import { Input, Props as InputProps } from '@/shared/components/ui/Input';
-import { Checkbox, Props as CheckboxProps } from '@/shared/components/ui/Checkbox';
-import { Radio, Props as RadioProps } from '@/shared/components/ui/Radio';
-import { Select, Props as SelectProps } from '@/shared/components/ui/Select';
-import { Textarea, Props as TextareaProps } from '@/shared/components/ui/Textarea';
+import {
+  Input,
+  Props as InputProps,
+} from '@/shared/components/ui/Input';
+import {
+  Checkbox,
+  Props as CheckboxProps,
+} from '@/shared/components/ui/Checkbox';
+import {
+  Radio,
+  Props as RadioProps,
+} from '@/shared/components/ui/Radio';
+import {
+  Select,
+  Props as SelectProps,
+} from '@/shared/components/ui/Select';
+import {
+  Textarea,
+  Props as TextareaProps,
+} from '@/shared/components/ui/Textarea';
 import { Label } from '@/shared/components/ui/Label';
 
 export type FieldProps = {
@@ -33,6 +48,7 @@ export class FormField extends Component {
 
   constructor(props: FieldProps) {
     super();
+
     this.#props = {
       ...props,
     };
@@ -60,10 +76,10 @@ export class FormField extends Component {
   }
 
   render() {
-    const formfield = html`
-      <div class="">${this.#FieldLabel.element} ${this.#Field.element}</div>
+    return html`
+      <div class="">
+        ${this.#FieldLabel.render()} ${this.#Field.render()}
+      </div>
     `;
-
-    this.rootElement.appendChild(formfield);
   }
 }

@@ -2,14 +2,21 @@
 /* eslint-disable */ // for ESLint
 /* tslint:disable */ // for TSLint
 
-// parentElement starts as #root (has no outlet)
-// load layout
-// append layout to parentElement
-// query parentElement for outlet (this will be from the layout we just appended)
-// make the oulet we just got the new parentElement
-// now load next layout, append it to parentElement (which is now the last layouts outlet)
-// query parentElement (last layouts outlet) to get the next outlet down the tree
+//* AFTER USER LOGS IN (fetch: /getLogIn) ---OLD---
+// create cookie with response from /getLogIn
+// fetch: /getStrongPassword !!!ONLY NEEDED FOR CHANING/RESETING PASSWORD
+// setUpGoogleMapsApi() => knob()
+// setSession() (read the cookie we set from /getLogIn, this sets $.session.Token)
+// fetch: /getUserPermissions
+// setSessionVariables() with response from /getUserPermissions
+// checkModulePermissions() This sets which modules user can access
+// fetch: /getDefaultAnywhereSettingsJSON
+// disableModules() Guess this also sets which modules user can access
+// loadApp('home') Navigate to dashboard page
 
-//TODO: ? cache already loaded modules
-
-//* NEW RULE: layout.ts must have page in same dir level to render
+//* AFTER USER LOGS IN (fetch: /getLogIn) ---NEW---
+// set TOKEN (this comes from /getLogIn)
+// FETCH: /getUserPermissions => THEN: setSessionVariables() => THEN: checkModulePermissions()
+// FETCH: /getDefaultAnywhereSettingsJSON => THEN: disableModules()
+//? checkModulePermissions & disableModules both handle hiding/showing nav module links
+// AppRouter.navigate('/')

@@ -1,6 +1,6 @@
 import { Component } from '@/core/Component';
-import { html } from '@/core/html';
-import { cn } from '@/core/cn';
+import { html } from '@/shared/util/html';
+import { cn } from '@/shared/util/cn';
 
 type Props = {
   text: string;
@@ -16,19 +16,15 @@ export class Label extends Component {
     this.#props = {
       ...props,
     };
-
-    this.render();
   }
 
-  protected render() {
-    const label = html`
+  render() {
+    return html`
       <label
         for="${this.#props.for}"
         class="text-sm capitalize"
         >${this.#props.text}</label
       >
     `;
-
-    this.rootElement.appendChild(label);
   }
 }

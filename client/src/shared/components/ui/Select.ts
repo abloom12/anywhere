@@ -1,11 +1,13 @@
 import { Component } from '@/core/Component';
-import { html } from '@/core/html';
-import { cn } from '@/core/cn';
+import { html } from '@/shared/util/html';
+import { cn } from '@/shared/util/cn';
 
 export type Props = {
   id: string;
   name: string;
-  attributes: Partial<Pick<HTMLSelectElement, 'disabled' | 'multiple' | 'required'>>;
+  attributes: Partial<
+    Pick<HTMLSelectElement, 'disabled' | 'multiple' | 'required'>
+  >;
   data?: [];
 };
 
@@ -16,20 +18,16 @@ export class Select extends Component {
     super();
 
     this.#props = { ...props };
-
-    this.render();
   }
 
-  protected render() {
-    const select = html`
+  render() {
+    return html`
       <select
         name="${this.#props.name}"
         id="${this.#props.id}"
         class="invalid:border-erro"
       ></select>
     `;
-
-    this.rootElement.appendChild(select);
   }
 
   populate(data: []) {}

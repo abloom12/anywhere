@@ -1,6 +1,6 @@
 // html.test.ts
 import { describe, expect, it } from 'vitest';
-import { html } from '@/core/html';
+import { html } from '@/shared/util/html';
 
 describe('html function', () => {
   it('should handle strings only', () => {
@@ -133,7 +133,10 @@ describe('html function', () => {
     expect(div).not.toBeNull();
 
     const comments = [];
-    const iterator = document.createNodeIterator(div as Node, NodeFilter.SHOW_COMMENT);
+    const iterator = document.createNodeIterator(
+      div as Node,
+      NodeFilter.SHOW_COMMENT,
+    );
     let node;
     while ((node = iterator.nextNode())) {
       comments.push(node);

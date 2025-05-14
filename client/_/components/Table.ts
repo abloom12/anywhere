@@ -1,4 +1,4 @@
-import { Component } from '@/core/component';
+import { Component } from '@/core/Component';
 
 // table = table ref
 // table.tHead = table header
@@ -49,7 +49,7 @@ class Table extends Component {
     this.render();
   }
 
-  protected render(): void {
+  render(): void {
     const table: HTMLTableElement = document.createElement('table');
 
     const twrap: HTMLDivElement = document.createElement('div');

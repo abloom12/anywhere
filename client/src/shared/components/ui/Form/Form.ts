@@ -1,8 +1,13 @@
 import { Component } from '@/core/Component';
-import { cn } from '@/core/cn';
+import { cn } from '@/shared/util/cn';
 
-import { FormField, FieldProps } from '@/shared/components/ui/Form/FormField';
+import {
+  FormField,
+  FieldProps,
+} from '@/shared/components/ui/Form/FormField';
 import { Fieldset } from '@/shared/components/ui/Form/Fieldset';
+
+export { field } from './form.config';
 
 type FormProps = {
   name: string;
@@ -26,8 +31,6 @@ export class Form extends Component {
     this.#props = {
       ...props,
     };
-
-    this.render();
   }
 
   render() {
@@ -36,8 +39,8 @@ export class Form extends Component {
     for (const field of this.#props.fields) {
       if ('legend' in field) {
         const { fields, legend } = field;
-        const fieldset = Fieldset({ legend });
-        this.#form.appendChild(fieldset);
+        const fieldset = new Fieldset({ legend });
+        this.#form.append(fieldset.render());
 
         for (const groupedField of fields) {
           const formField = new FormField(groupedField);
@@ -47,7 +50,10 @@ export class Form extends Component {
       }
     }
 
-    this.rootElement.appendChild(this.#form);
+    //TEMP:
+    const frag = document.createDocumentFragment();
+    frag.append(this.#form);
+    return frag;
   }
 
   populate() {

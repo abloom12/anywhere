@@ -1,10 +1,16 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Component } from '@/core/Component';
-import { html } from '@/core/html';
-import { cn } from '@/core/cn';
+import { html } from '@/shared/util/html';
+import { cn } from '@/shared/util/cn';
 
 const badgeVariants = cva(
-  ['inline-flex', 'items-center', 'justify-center', 'font-medium', 'rounded-full'],
+  [
+    'inline-flex',
+    'items-center',
+    'justify-center',
+    'font-medium',
+    'rounded-full',
+  ],
   {
     variants: {
       variant: {
@@ -36,11 +42,10 @@ export class Badge extends Component {
   constructor(props: Props) {
     super();
     this.#props = props;
-    this.render();
   }
 
-  protected render() {
-    const span = html`
+  render() {
+    return html`
       <span
         class="${cn(
           badgeVariants({
@@ -52,6 +57,5 @@ export class Badge extends Component {
         ${this.#props.text}
       </span>
     `;
-    this.rootElement.appendChild(span);
   }
 }

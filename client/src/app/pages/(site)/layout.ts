@@ -1,5 +1,5 @@
 import { Layout } from '@/core/Layout';
-import { html } from '@/core/html';
+import { html } from '@/shared/util/html';
 
 export default class SiteLayout extends Layout {
   constructor() {
@@ -7,6 +7,11 @@ export default class SiteLayout extends Layout {
   }
 
   render() {
-    return html`<div data-outlet></div>`;
+    return html`
+      <div>
+        <div>Header</div>
+        <div data-outlet></div>
+      </div>
+    `;
   }
 }

@@ -1,23 +1,27 @@
-import { FC } from '@/core/Component';
+import { Component } from '@/core/Component';
+import { html } from '@/shared/util/html';
+import { cn } from '@/shared/util/cn';
 
 type Props = {
   legend: string;
 };
 
-const classname = {
-  fieldset: '',
-  legend: '',
-};
+export class Fieldset extends Component {
+  #props: Props;
 
-export const Fieldset: FC<Props> = (props: Props) => {
-  const fieldset: HTMLFieldSetElement = document.createElement('fieldset');
-  fieldset.className = classname.fieldset;
+  constructor(props: Props) {
+    super();
 
-  const legend: HTMLLegendElement = document.createElement('legend');
-  legend.className = classname.fieldset;
-  legend.textContent = props.legend;
+    this.#props = {
+      ...props,
+    };
+  }
 
-  fieldset.appendChild(legend);
-
-  return fieldset;
-};
+  render() {
+    return html`
+      <fieldset>
+        <legend>${this.#props.legend}</legend>
+      </fieldset>
+    `;
+  }
+}

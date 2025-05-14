@@ -1,11 +1,13 @@
 import { Component } from '@/core/Component';
-import { html } from '@/core/html';
-import { cn } from '@/core/cn';
+import { html } from '@/shared/util/html';
+import { cn } from '@/shared/util/cn';
 
 export type Props = {
   id: string;
   name: string;
-  attributes: Partial<Pick<HTMLInputElement, 'disabled' | 'required'>>;
+  attributes: Partial<
+    Pick<HTMLInputElement, 'disabled' | 'required'>
+  >;
 };
 
 export class Checkbox extends Component {
@@ -15,20 +17,16 @@ export class Checkbox extends Component {
     super();
 
     this.#props = { ...props };
-
-    this.render();
   }
 
-  protected render() {
-    const input = html`
+  render() {
+    return html`
       <input
         type="checkbox"
         name="${this.#props.name}"
         id="${this.#props.id}"
-        class="invalid:border-error text-black"
+        class="text-black invalid:border-error"
       />
     `;
-
-    this.rootElement.appendChild(input);
   }
 }
