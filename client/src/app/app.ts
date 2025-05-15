@@ -1,5 +1,5 @@
 import { Router } from '@/core/Router';
-import { Permissions } from './permissions';
+import { Permissions } from './services/permissions';
 
 const isAuthenticated = false;
 
@@ -21,4 +21,5 @@ export const permissions = new Permissions<boolean | string>({
   token: 'admin',
 });
 
+// Start App
 AppRouter.navigate('/');

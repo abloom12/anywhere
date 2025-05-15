@@ -2,12 +2,6 @@ import { Page } from '@/core/Page';
 import { html } from '@/shared/util/html';
 import { Form, field, action } from '@/shared/components/ui/Form/Form';
 
-function authenticateUser() {
-  // onSubmit call /getLogIn
-  // getLogInResults === TOKEN
-  // store TOKEN in global store
-}
-
 export default class LoginPage extends Page {
   #LoginForm: Form;
 
