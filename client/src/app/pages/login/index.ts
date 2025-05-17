@@ -13,7 +13,7 @@ export default class LoginPage extends Page {
       fields: [
         field.text('username', 'Login Name').$,
         field.password('password', 'Password').$,
-        //action.button('Login').$,
+        action.button('Login').$,
       ],
     });
   }

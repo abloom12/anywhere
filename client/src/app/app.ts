@@ -1,5 +1,5 @@
 import { Router } from '@/core/Router';
-import { Permissions } from './services/permissions';
+import { Permissions } from './user/permissions';
 
 const isAuthenticated = false;
 
