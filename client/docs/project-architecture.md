@@ -11,16 +11,16 @@ src/
 ├── app/              # App shell and application logic
 │   ├── app.ts
 │   ├── pages/        # Route folders for layout and routing
-│   ├── modules/      # Route-based business features (FSD-style modules)
+│   ├── modules/      # Route-based business features
 │   ├── features/     # Functional, reusable action units
 │   └── widgets/      # Composite UI blocks (layout or display sections)
 ├── core/             # App-wide framework: Router, Layout, Page abstractions
 ├── shared/           # Design system, icons, helpers, and utilities
 │   ├── components/   # Dumb, reusable UI primitives (Button, Input, etc.)
-│   ├── icon/         # Icon components or loaders
+│   ├── icon/         # SVG Icons
 │   ├── lib/          # General-purpose logic (e.g., crypto, date)
 │   └── util/         # Utility functions (e.g., event bus, fetch)
-└── tests/            # Global or unit tests
+└── tests/            # Unit tests
 ```
 
 ---

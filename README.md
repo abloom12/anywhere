@@ -23,9 +23,6 @@
 - No more writting CSS, layout/ui components come with everything baked in
 - Static file caching for improved page load
 
-## Files
+## Docs
 
-main.ts => entry point, global stuff here like google stuff, geolocation?
-app/app.ts => entry point for anyhere, create router and global store
-
-Read the [project guide](client/docs/project-architecture.md)
+[Project Architecture Guide](client/docs/project-architecture.md)
