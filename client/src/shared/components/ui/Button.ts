@@ -4,7 +4,7 @@ import { Component } from '@/core/Component';
 import { html } from '@/shared/util/html';
 import { cn } from '@/shared/util/cn';
 
-const buttonVariants = cva(
+export const buttonVariants = cva(
   [
     'font-medium',
     'text-sm',
@@ -67,9 +67,6 @@ const buttonVariants = cva(
     },
   },
 );
-
-export type StyleType = VariantProps<typeof buttonVariants>['style'];
-export type IntentType = VariantProps<typeof buttonVariants>['intent'];
 
 export type Props = VariantProps<typeof buttonVariants> & {
   text: string;

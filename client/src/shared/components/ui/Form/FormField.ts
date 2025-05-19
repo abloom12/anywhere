@@ -28,8 +28,8 @@ export type FieldProps = {
 
 export class FormField extends Component {
   #props: FieldProps;
-  #Field: Component;
-  #FieldLabel: Component;
+  #field: Component;
+  #label: Component;
 
   constructor(props: FieldProps) {
     super();
@@ -38,42 +38,38 @@ export class FormField extends Component {
       ...props,
     };
 
-    this.#FieldLabel = new Label({ text: this.#props.label });
+    this.#label = new Label({ text: this.#props.label });
 
     const { type, label, ...rest }: FieldProps = this.#props;
+
     switch (this.#props.type) {
       case 'checkbox':
-        this.#Field = new Checkbox(rest);
+        this.#field = new Checkbox(rest);
         break;
       case 'radio':
-        this.#Field = new Radio(rest);
+        this.#field = new Radio(rest);
         break;
       case 'select':
-        this.#Field = new Select(rest);
+        this.#field = new Select(rest);
         break;
       case 'textarea':
-        this.#Field = new Textarea(rest);
+        this.#field = new Textarea(rest);
         break;
       default:
-        this.#Field = new Input({ ...rest, type: this.#props.type });
+        this.#field = new Input({ ...rest, type: this.#props.type });
     }
-
-    this.render();
   }
 
   append() {}
 
   render() {
-    const { ele, refs } = withRefs(html`
+    return html`
       <div
         class="test"
         ref="testRef"
       >
-        ${this.#FieldLabel.render()} ${this.#Field.render()}
+        ${this.#label.render()} ${this.#field.render()}
       </div>
-    `);
-    console.log(refs.testRef);
-
-    return ele;
+    `;
   }
 }

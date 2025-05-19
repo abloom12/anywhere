@@ -4,20 +4,21 @@ import { html } from '@/shared/util/html';
 
 import { FormField, FieldProps } from '@/shared/components/ui/Form/FormField';
 import { Fieldset } from '@/shared/components/ui/Form/Fieldset';
-import { Props as ButtonProps } from '@/shared/components/ui/Button';
+import { Button, Props as ButtonProps } from '@/shared/components/ui/Button';
 
 export { field, action } from './form.config';
 
 type FormProps = {
-  name: string;
+  buttons: ButtonProps[];
   fields: (
     | FieldProps
     | {
         legend: string;
         fields: FieldProps[];
       }
-    | ButtonProps
   )[];
+  name: string;
+  onSubmit: (data: Record<string, FormDataEntryValue>) => any;
   autofocus?: string;
 };
 
@@ -33,19 +34,29 @@ export class Form extends Component {
     };
   }
 
+  #onChange(e: Event) {}
+  #onInput(e: Event) {}
+  #onSubmit(e: SubmitEvent) {
+    e.preventDefault();
+
+    const formData = new FormData(this.#form);
+    const entries = formData.entries();
+    const data = Object.fromEntries(entries);
+
+    this.#props.onSubmit(data);
+  }
+
   render() {
     this.#form.name = this.#props.name;
 
     for (const field of this.#props.fields) {
-      // console.log(field);
-
       if ('legend' in field) {
         const { fields, legend } = field;
         const fieldset = new Fieldset({ legend });
         this.#form.append(fieldset.render());
 
         for (const groupedField of fields) {
-          const formField = new FormField(groupedField);
+          const formField = new FormField(groupedField as FieldProps);
           fieldset.append(formField.render());
         }
       } else {
@@ -54,19 +65,15 @@ export class Form extends Component {
       }
     }
 
+    for (const button of this.#props.buttons) {
+      const formButton = new Button(button as ButtonProps);
+      this.#form.append(formButton.render());
+    }
+
     return html`${this.#form}`;
   }
 
   populate() {
     // this.#form.elements[name | id]
-  }
-  onChange(e: Event) {}
-  onInput(e: Event) {}
-  onSubmit(e: SubmitEvent) {
-    e.preventDefault();
-
-    const formData = new FormData(this.#form);
-    const entries = formData.entries();
-    const data = Object.fromEntries(entries);
   }
 }

@@ -1,25 +1,32 @@
+import { fetchData } from '@/shared/util/fetch';
 import { Router } from '@/core/Router';
-import { Permissions } from './user/permissions';
+import { Store } from '@/core/Store';
 
-const isAuthenticated = false;
+export const permissions = new Store<boolean | string>();
+export const settings = new Store<boolean | string>();
 
-export const AppRouter = new Router(
+export const router = new Router(
   '/webroot',
   document.querySelector('#app')! as HTMLElement,
 );
 
-AppRouter.use(async ({ next, path }) => {
+router.use(async ({ next, path }) => {
+  const isAuthenticated = false;
   if (path !== '/login' && !isAuthenticated) {
-    AppRouter.navigate('/login');
+    router.navigate('/login');
     return;
   }
 
   return next();
 });
 
-export const permissions = new Permissions<boolean | string>({
-  token: 'admin',
+router.use(({ next, path }) => {
+  fetchData('featureLogging', {
+    featureDescription: 'Anywhere __moduleName__',
+  });
+
+  return next();
 });
 
 // Start App
-AppRouter.navigate('/');
+router.navigate('/');
