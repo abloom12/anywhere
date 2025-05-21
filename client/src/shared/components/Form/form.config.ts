@@ -1,11 +1,11 @@
 import { type VariantProps } from 'class-variance-authority';
 import { uniqueId } from '@/shared/util/unique-id';
-import { Props as InputProps, InputType } from '@/shared/components/ui/Input';
-import { Props as CheckboxProps } from '@/shared/components/ui/Checkbox';
-import { Props as RadioProps } from '@/shared/components/ui/Radio';
-import { Props as SelectProps } from '@/shared/components/ui/Select';
-import { Props as TextareaProps } from '@/shared/components/ui/Textarea';
-import { Props as ButtonProps, buttonVariants } from '@/shared/components/ui/Button';
+import { type Props as InputProps, InputType } from '@/shared/components/Input';
+import { type Props as CheckboxProps } from '@/shared/components/Checkbox';
+import { type Props as RadioProps } from '@/shared/components/Radio';
+import { type Props as SelectProps } from '@/shared/components/Select';
+import { type Props as TextareaProps } from '@/shared/components/Textarea';
+import { type Props as ButtonProps, buttonVariants } from '@/shared/components/Button';
 
 type FieldType = InputType | 'checkbox' | 'radio' | 'select' | 'textarea';
 

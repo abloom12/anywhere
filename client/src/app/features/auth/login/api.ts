@@ -55,8 +55,11 @@ export async function login(user: string, password: string) {
   });
 }
 
-export async function logout() {}
+export async function getUserPermissions() {
+  const resp = await fetchData('getUserPermissions', {});
 
-export async function changePassword() {}
-
-export async function resetPassword() {}
+  // the resp from this holds the module permissions for which anywhere module they can use
+}
+export async function getUserSettings() {
+  const resp2 = await fetchData('getDefaultAnywhereSettingsJSON', {});
+}

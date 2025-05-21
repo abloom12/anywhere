@@ -1,13 +1,13 @@
 import { Component } from '@/core/Component';
 import { cn } from '@/shared/util/cn';
-import { html, withRefs } from '@/shared/util/html';
+import { html } from '@/shared/util/html';
 
-import { Input, Props as InputProps, InputType } from '@/shared/components/ui/Input';
-import { Checkbox, Props as CheckboxProps } from '@/shared/components/ui/Checkbox';
-import { Radio, Props as RadioProps } from '@/shared/components/ui/Radio';
-import { Select, Props as SelectProps } from '@/shared/components/ui/Select';
-import { Textarea, Props as TextareaProps } from '@/shared/components/ui/Textarea';
-import { Label } from '@/shared/components/ui/Label';
+import { Input, type Props as InputProps } from '@/shared/components/Input';
+import { Checkbox, type Props as CheckboxProps } from '@/shared/components/Checkbox';
+import { Radio, type Props as RadioProps } from '@/shared/components/Radio';
+import { Select, type Props as SelectProps } from '@/shared/components/Select';
+import { Textarea, type Props as TextareaProps } from '@/shared/components/Textarea';
+import { Label } from '@/shared/components/Label';
 
 export type FieldProps = {
   label: string;

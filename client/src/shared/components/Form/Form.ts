@@ -2,11 +2,9 @@ import { Component } from '@/core/Component';
 import { cn } from '@/shared/util/cn';
 import { html } from '@/shared/util/html';
 
-import { FormField, FieldProps } from '@/shared/components/ui/Form/FormField';
-import { Fieldset } from '@/shared/components/ui/Form/Fieldset';
-import { Button, Props as ButtonProps } from '@/shared/components/ui/Button';
-
-export { field, action } from './form.config';
+import { FormField, FieldProps } from '@/shared/components/Form/FormField';
+import { Fieldset } from '@/shared/components/Form/Fieldset';
+import { Button, type Props as ButtonProps } from '@/shared/components/Button';
 
 type FormProps = {
   buttons: ButtonProps[];
@@ -69,6 +67,10 @@ export class Form extends Component {
       const formButton = new Button(button as ButtonProps);
       this.#form.append(formButton.render());
     }
+
+    this.#form.addEventListener('submit', this.#onSubmit);
+    this.#form.addEventListener('change', this.#onChange);
+    this.#form.addEventListener('input', this.#onInput);
 
     return html`${this.#form}`;
   }

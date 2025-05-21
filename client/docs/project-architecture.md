@@ -37,7 +37,7 @@ src/
 
 - **Primary units of business logic**
 - Each module maps to a route or set of related routes (e.g., `case-notes/`, `roster/`)
-- Should be self-contained: API, hooks, UI, state
+- Should be self-contained: API, UI, etc..
 - Should **not import other modules**
 
 ### `features/`
