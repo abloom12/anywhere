@@ -17,3 +17,7 @@ router.use(async ({ next, path }) => {
 
 // Start App
 router.navigate('/');
+
+//TODO: figure out where to put the following
+// setUpGoogleMapsApi()
+// knob()
