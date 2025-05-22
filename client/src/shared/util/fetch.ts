@@ -1,3 +1,5 @@
+import { CustomError } from './custom-error';
+
 export async function fetchData(
   service: string,
   retrieveData: Record<string, any>,
@@ -22,22 +24,29 @@ export async function fetchData(
     });
 
     if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      throw new CustomError(
+        'network',
+        `Error ${response.status}: ${response.statusText}`,
+      );
     }
 
     return await response.json();
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.name === 'AbortError') {
-        console.log(`Request to ${service} timed out`);
+        throw new CustomError('network', `Request to ${service} was aborted`);
       } else {
-        console.log(`There was a problem with ${service}`, error.message);
+        throw new CustomError(
+          'network',
+          `There was a problem with ${service}. Error: ${error.message}`,
+        );
       }
     } else {
-      console.log(`An unknown error occurred while fetching ${service}`);
+      throw new CustomError(
+        'unkown',
+        `An unknown error occurred while fetching ${service}`,
+      );
     }
-
-    throw error;
   } finally {
     clearTimeout(timeoutId);
   }

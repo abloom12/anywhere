@@ -1,9 +1,14 @@
-export function parseXml(xmlString: string): Document {
+import { CustomError } from './custom-error';
+
+export function parseXml(xmlString: string): XMLDocument {
   const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlString.replace(/@/g, ''), 'text/xml');
+  const xmlDoc = parser.parseFromString(
+    xmlString.replace(/@/g, ''),
+    'text/xml',
+  ) as XMLDocument;
 
   if (xmlDoc?.documentElement.nodeName === 'parsererror') {
-    throw new Error('XML Parsing Error: Invalid XML structure.');
+    throw new CustomError('xml', 'XML Parsing Error: Invalid XML structure.');
   } else {
     return xmlDoc;
   }
