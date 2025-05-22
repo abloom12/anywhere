@@ -1,9 +1,4 @@
-import { fetchData } from '@/shared/util/fetch';
 import { Router } from '@/core/Router';
-import { Store } from '@/core/Store';
-
-export const permissions = new Store<boolean | string>();
-export const settings = new Store<boolean | string>();
 
 export const router = new Router(
   '/webroot',
@@ -16,14 +11,6 @@ router.use(async ({ next, path }) => {
     router.navigate('/login');
     return;
   }
-
-  return next();
-});
-
-router.use(({ next, path }) => {
-  fetchData('featureLogging', {
-    featureDescription: 'Anywhere __moduleName__',
-  });
 
   return next();
 });
