@@ -2,7 +2,7 @@ import { Component } from '@/core/Component';
 import { cn } from '@/shared/util/cn';
 import { html } from '@/shared/util/html';
 
-import { FormField, FieldProps } from '@/shared/components/Form/FormField';
+import { FormField, type FieldProps } from '@/shared/components/Form/FormField';
 import { Fieldset } from '@/shared/components/Form/Fieldset';
 import { Button, type Props as ButtonProps } from '@/shared/components/Button';
 

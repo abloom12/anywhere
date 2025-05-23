@@ -29,7 +29,7 @@ export type FieldProps = {
 export class FormField extends Component {
   #props: FieldProps;
   #field: Component;
-  #label: Component;
+  #label: Label;
 
   constructor(props: FieldProps) {
     super();
@@ -44,16 +44,16 @@ export class FormField extends Component {
 
     switch (this.#props.type) {
       case 'checkbox':
-        this.#field = new Checkbox(rest);
+        this.#field = new Checkbox(rest as CheckboxProps);
         break;
       case 'radio':
-        this.#field = new Radio(rest);
+        this.#field = new Radio(rest as RadioProps);
         break;
       case 'select':
-        this.#field = new Select(rest);
+        this.#field = new Select(rest as SelectProps);
         break;
       case 'textarea':
-        this.#field = new Textarea(rest);
+        this.#field = new Textarea(rest as TextareaProps);
         break;
       default:
         this.#field = new Input({ ...rest, type: this.#props.type });

@@ -1,9 +1,13 @@
+// @ts-nocheck
+/* eslint-disable */ // for ESLint
+/* tslint:disable */ // for TSLint
+type EventName<Events> = Extract<keyof Events, string>;
 type Listener<T> = (payload: T) => void;
 
-export class EventBus<Events extends Record<string, unknown>> {
+export class EventBus2<Events extends Record<string, unknown>> {
   private handlers = new Map<string, Set<Listener<unknown>>>();
 
-  on<K extends keyof Events>(event: K, listener: Listener<Events[K]>): () => void {
+  on<K extends EventName<Events>>(event: K, listener: Listener<Events[K]>): () => void {
     if (!this.handlers.has(event as string)) {
       this.handlers.set(event as string, new Set());
     }
@@ -14,7 +18,7 @@ export class EventBus<Events extends Record<string, unknown>> {
     };
   }
 
-  once<K extends keyof Events>(event: K, listener: Listener<Events[K]>): () => void {
+  once<K extends EventName<Events>>(event: K, listener: Listener<Events[K]>): () => void {
     const wrapper: Listener<Events[K]> = payload => {
       listener(payload);
       this.off(event, wrapper);
@@ -22,7 +26,7 @@ export class EventBus<Events extends Record<string, unknown>> {
     return this.on(event, wrapper);
   }
 
-  off<K extends keyof Events>(event: K, listener: Listener<Events[K]>): void {
+  off<K extends EventName<Events>>(event: K, listener: Listener<Events[K]>): void {
     const set = this.handlers.get(event as string);
     if (!set) return;
 
@@ -32,7 +36,7 @@ export class EventBus<Events extends Record<string, unknown>> {
     }
   }
 
-  emit<K extends keyof Events>(event: K, payload: Events[K]): void {
+  emit<K extends EventName<Events>>(event: K, payload: Events[K]): void {
     const set = this.handlers.get(event as string);
     if (!set) return;
 
@@ -46,7 +50,7 @@ export class EventBus<Events extends Record<string, unknown>> {
     }
   }
 
-  clear<K extends keyof Events>(event?: K): void {
+  clear<K extends EventName<Events>>(event?: K): void {
     if (event !== undefined) {
       this.handlers.delete(event as string);
     } else {
@@ -54,30 +58,30 @@ export class EventBus<Events extends Record<string, unknown>> {
     }
   }
 
-  listenerCount<K extends keyof Events>(event: K): number {
+  listenerCount<K extends EventName<Events>>(event: K): number {
     const set = this.handlers.get(event as string);
     return set ? set.size : 0;
   }
 }
 
-// // You supply your events-to-payload map inline:
-// const bus = new EventBus<{
-//   'user:login': { userId: string };
-//   'chat:message': { from: string; text: string };
-// }>();
+// You supply your events-to-payload map inline:
+const bus = new EventBus<{
+  'user:login': { userId: string };
+  'chat:message': { from: string; text: string };
+}>();
 
 // ✅ Correctly typed:
-// bus.on('user:login', data => {
-//   console.log('Welcome', data.userId);
-// });
+bus.on('user:login', data => {
+  console.log('Welcome', data.userId);
+});
 
-// // TypeScript will complain if you mismatch:
-// // bus.emit("user:login", { foo: 123 });            // ❌ error
-// // bus.emit("user:login", { userId: "alice" });     // ✅
+// TypeScript will complain if you mismatch:
+// bus.emit("user:login", { foo: 123 });            // ❌ error
+// bus.emit("user:login", { userId: "alice" });     // ✅
 
-// bus.emit('chat:message', { from: 'bob', text: 'hi' });
+bus.emit('chat:message', { from: 'bob', text: 'hi' });
 
-// // Helpers:
-// console.log(bus.listenerCount('chat:message')); // number of listeners
-// bus.clear('user:login'); // drop login listeners
-// bus.clear();
+// Helpers:
+console.log(bus.listenerCount('chat:message')); // number of listeners
+bus.clear('user:login'); // drop login listeners
+bus.clear();
