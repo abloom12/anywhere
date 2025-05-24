@@ -2,17 +2,21 @@ import { Component } from '@/core/Component';
 import { cn } from '@/shared/util/cn';
 import { html } from '@/shared/util/html';
 
-import { FormField, type FieldProps } from '@/shared/components/Form/FormField';
+import {
+  FormField,
+  type FieldProps,
+  type FieldTypes,
+} from '@/shared/components/Form/FormField';
 import { Fieldset } from '@/shared/components/Form/Fieldset';
 import { Button, type Props as ButtonProps } from '@/shared/components/Button';
 
 type FormProps = {
   buttons: ButtonProps[];
   fields: (
-    | FieldProps
+    | FieldProps<FieldTypes>
     | {
         legend: string;
-        fields: FieldProps[];
+        fields: FieldProps<FieldTypes>[];
       }
   )[];
   name: string;
@@ -54,11 +58,11 @@ export class Form extends Component {
         this.#form.append(fieldset.render());
 
         for (const groupedField of fields) {
-          const formField = new FormField(groupedField as FieldProps);
+          const formField = new FormField<typeof groupedField.type>(groupedField);
           fieldset.append(formField.render());
         }
       } else {
-        const formField = new FormField(field as FieldProps);
+        const formField = new FormField<typeof field.type>(field);
         this.#form.append(formField.render());
       }
     }

@@ -2,45 +2,49 @@ import { Component } from '@/core/Component';
 import { cn } from '@/shared/util/cn';
 import { html } from '@/shared/util/html';
 
-import { Input, type Props as InputProps } from '@/shared/components/Input';
+import {
+  Input,
+  type Props as InputProps,
+  type InputType,
+} from '@/shared/components/Input';
 import { Checkbox, type Props as CheckboxProps } from '@/shared/components/Checkbox';
 import { Radio, type Props as RadioProps } from '@/shared/components/Radio';
 import { Select, type Props as SelectProps } from '@/shared/components/Select';
 import { Textarea, type Props as TextareaProps } from '@/shared/components/Textarea';
 import { Label } from '@/shared/components/Label';
 
-export type FieldProps = {
+type FieldMap = {
+  checkbox: CheckboxProps & { type: 'checkbox' };
+  radio: RadioProps & { type: 'radio' };
+  select: SelectProps & { type: 'select' };
+  textarea: TextareaProps & { type: 'textarea' };
+  date: InputProps<'date'>;
+  email: InputProps<'email'>;
+  file: InputProps<'file'>;
+  number: InputProps<'number'>;
+  password: InputProps<'password'>;
+  tel: InputProps<'tel'>;
+  text: InputProps<'text'>;
+  time: InputProps<'time'>;
+};
+export type FieldTypes = keyof FieldMap;
+export type FieldProps<T extends FieldTypes> = {
   label: string;
-} & (
-  | (CheckboxProps & { type: 'checkbox' })
-  | (RadioProps & { type: 'radio' })
-  | (SelectProps & { type: 'select' })
-  | (TextareaProps & { type: 'textarea' })
-  | InputProps<'date'>
-  | InputProps<'email'>
-  | InputProps<'file'>
-  | InputProps<'number'>
-  | InputProps<'password'>
-  | InputProps<'tel'>
-  | InputProps<'text'>
-  | InputProps<'time'>
-);
+} & FieldMap[T];
 
-export class FormField extends Component {
-  #props: FieldProps;
+export class FormField<T extends FieldTypes> extends Component {
+  #props: FieldProps<T>;
   #field: Component;
   #label: Label;
 
-  constructor(props: FieldProps) {
+  constructor(props: FieldProps<T>) {
     super();
 
-    this.#props = {
-      ...props,
-    };
+    this.#props = props;
 
     this.#label = new Label({ text: this.#props.label });
 
-    const { type, label, ...rest }: FieldProps = this.#props;
+    const { type, label, ...rest } = this.#props;
 
     switch (this.#props.type) {
       case 'checkbox':
@@ -59,8 +63,6 @@ export class FormField extends Component {
         this.#field = new Input({ ...rest, type: this.#props.type });
     }
   }
-
-  append() {}
 
   render() {
     return html`
