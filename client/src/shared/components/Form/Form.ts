@@ -2,13 +2,10 @@ import { Component } from '@/core/Component';
 import { cn } from '@/shared/util/cn';
 import { html } from '@/shared/util/html';
 
-import {
-  FormField,
-  type FieldProps,
-  type FieldTypes,
-} from '@/shared/components/Form/FormField';
-import { Fieldset } from '@/shared/components/Form/Fieldset';
 import { Button, type Props as ButtonProps } from '@/shared/components/Button';
+
+import { FormField, type FieldProps, type FieldTypes } from './FormField';
+import { Fieldset } from './Fieldset';
 
 type FormProps = {
   buttons: ButtonProps[];

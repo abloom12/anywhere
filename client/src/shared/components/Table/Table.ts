@@ -4,6 +4,7 @@ import { html } from '@/shared/util/html';
 
 type TableProps = {
   caption?: string;
+  data?: [];
 };
 
 export class Table extends Component {
@@ -12,16 +13,14 @@ export class Table extends Component {
   constructor(props: TableProps) {
     super();
 
-    this.#props = {
-      ...props,
-    };
+    this.#props = props;
   }
 
   //? Possible methods
-  #populate() {}
-  #addRow() {}
-  #updateRow() {}
-  #deleteRow() {}
+  populate(data: []) {}
+  addRow() {}
+  updateRow() {}
+  deleteRow() {}
 
   render() {
     return html``;
