@@ -1,5 +1,6 @@
 import './style.css';
 import './app/app';
+import './playground';
 
 // if ('serviceWorker' in navigator) {
 //   navigator.serviceWorker.register(
