@@ -1,4 +1,7 @@
 import { Router } from '@/core/Router';
+import { Store } from '@/core/Store';
+
+export const store = new Store<any>();
 
 export const router = new Router(
   '/webroot',

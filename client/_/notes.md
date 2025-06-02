@@ -8,3 +8,12 @@
 - could truncate the text on some columns
 - word wrapping
 - hide less important columns
+
+# Dir Architecture
+
+How should I handle my global store and the fetch calls that populate it?
+example issue:
+
+I have a bunch of fetch calls related to consumer groups, but one of those fetch calls needs to be global and its data needs stored globally so it can be used globally.
+
+How would you break these files up? pull that one fetch call into its own feature? then leave the rest in another one?
