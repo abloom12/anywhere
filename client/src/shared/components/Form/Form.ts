@@ -7,30 +7,45 @@ import { Button, type Props as ButtonProps } from '@/shared/components/Button';
 import { FormField, type FieldProps, type FieldTypes } from './FormField';
 import { Fieldset } from './Fieldset';
 
-type FormProps = {
-  buttons: ButtonProps[];
-  fields: (
+type SingleFieldName<F> = F extends { name: infer N extends string } ? N : never;
+type GroupFieldName<F> =
+  F extends { fields: infer G extends ReadonlyArray<any> } ?
+    G[number] extends { name: infer NG extends string } ?
+      NG
+    : never
+  : never;
+type UnwrapField<F> = SingleFieldName<F> | GroupFieldName<F>;
+type AllNamesFromTuple<T extends ReadonlyArray<any>> = UnwrapField<T[number]>;
+type DataFromFields<T extends ReadonlyArray<any>> = {
+  [K in AllNamesFromTuple<T>]: FormDataEntryValue;
+};
+
+type FormProps<
+  F extends ReadonlyArray<
     | FieldProps<FieldTypes>
-    | {
-        legend: string;
-        fields: FieldProps<FieldTypes>[];
-      }
-  )[];
+    | { legend: string; fields: ReadonlyArray<FieldProps<FieldTypes>> }
+  >,
+> = {
+  buttons: ButtonProps[];
+  fields: F;
   name: string;
-  onSubmit: (data: Record<string, FormDataEntryValue>, formInstance: Form) => any;
+  onSubmit: (data: DataFromFields<F>, formInstance: Form<F>) => any;
   autofocus?: string;
 };
 
-export class Form extends Component {
-  #props: FormProps;
+export class Form<
+  F extends ReadonlyArray<
+    | FieldProps<FieldTypes>
+    | { legend: string; fields: ReadonlyArray<FieldProps<FieldTypes>> }
+  >,
+> extends Component {
+  #props: FormProps<F>;
   #form: HTMLFormElement = document.createElement('form');
 
-  constructor(props: FormProps) {
+  constructor(props: FormProps<F>) {
     super();
 
-    this.#props = {
-      ...props,
-    };
+    this.#props = props;
   }
 
   #onChange(e: Event) {}
@@ -40,7 +55,7 @@ export class Form extends Component {
 
     const formData = new FormData(this.#form);
     const entries = formData.entries();
-    const data = Object.fromEntries(entries);
+    const data = Object.fromEntries(entries) as DataFromFields<F>;
 
     this.#props.onSubmit(data, this);
   }

@@ -6,11 +6,12 @@ export const loginForm = new Form({
   fields: [
     field.text('username', 'Login Name').$,
     field.password('password', 'Password').$,
-  ],
+    field.checkbox('testing', 'test').$,
+  ] as const,
   buttons: [action.button('Login').$],
   onSubmit: async (data, formInstance) => {
+    console.log(data);
     const loginResp = await loginUser('ash', 'ash');
-
     //? if success
     //? - store token
     //? - get permissions and settings

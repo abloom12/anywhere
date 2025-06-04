@@ -5,9 +5,7 @@ import { cn } from '@/shared/util/cn';
 export type Props = {
   id: string;
   name: string;
-  attributes: Partial<
-    Pick<HTMLInputElement, 'disabled' | 'required'>
-  >;
+  attributes: Partial<Pick<HTMLInputElement, 'disabled' | 'required'>>;
 };
 
 export class Checkbox extends Component {

@@ -9,39 +9,38 @@ import { type Props as ButtonProps, buttonVariants } from '@/shared/components/B
 
 type FieldType = InputType | 'checkbox' | 'radio' | 'select' | 'textarea';
 
-type fieldParams = [name: string, label: string];
+type _CheckboxProps<N extends string> = Omit<CheckboxProps, 'name'> & { name: N };
+type _RadioProps<N extends string> = Omit<RadioProps, 'name'> & { name: N };
+type _SelectProps<N extends string> = Omit<SelectProps, 'name'> & { name: N };
+type _TextareaProps<N extends string> = Omit<TextareaProps, 'name'> & { name: N };
+type _InputProps<T extends InputType, N extends string> = Omit<InputProps<T>, 'name'> & {
+  name: N;
+};
 
-type BaseProps<T extends FieldType> = {
-  checkbox: CheckboxProps;
-  radio: RadioProps;
-  select: SelectProps;
-  textarea: TextareaProps;
-  date: InputProps<'date'>;
-  email: InputProps<'email'>;
-  file: InputProps<'file'>;
-  number: InputProps<'number'>;
-  password: InputProps<'password'>;
-  tel: InputProps<'tel'>;
-  text: InputProps<'text'>;
-  time: InputProps<'time'>;
-}[T];
+type BaseProps<T extends FieldType, N extends string> =
+  T extends 'checkbox' ? _CheckboxProps<N> & { type: 'checkbox' }
+  : T extends 'radio' ? _RadioProps<N> & { type: 'radio' }
+  : T extends 'select' ? _SelectProps<N> & { type: 'select' }
+  : T extends 'textarea' ? _TextareaProps<N> & { type: 'textarea' }
+  : T extends InputType ? _InputProps<T, N>
+  : never;
 
-abstract class FieldConfigurator<T extends FieldType, K extends BaseProps<T>> {
-  props: K;
+abstract class FieldConfigurator<T extends FieldType, N extends string> {
+  props: BaseProps<T, N>;
   label: string;
 
-  constructor(type: T, [name, label]: fieldParams) {
+  constructor(type: T, name: N, label: string) {
     this.props = {
       type,
       id: uniqueId(),
       name,
       attributes: {},
-    } as K;
+    } as BaseProps<T, N>;
 
     this.label = label;
   }
 
-  get $(): K & { label: string } {
+  get $(): BaseProps<T, N> & { label: string } {
     return { ...this.props, label: this.label };
   }
 
@@ -55,14 +54,14 @@ abstract class FieldConfigurator<T extends FieldType, K extends BaseProps<T>> {
   }
 }
 
-class CheckboxConfigurator extends FieldConfigurator<'checkbox', CheckboxProps> {
-  constructor(args: fieldParams) {
-    super('checkbox', args);
+class CheckboxConfigurator<N extends string> extends FieldConfigurator<'checkbox', N> {
+  constructor(name: N, label: string) {
+    super('checkbox', name, label);
   }
 }
-class DateConfigurator extends FieldConfigurator<'date', InputProps<'date'>> {
-  constructor(args: fieldParams) {
-    super('date', args);
+class DateConfigurator<N extends string> extends FieldConfigurator<'date', N> {
+  constructor(name: N, label: string) {
+    super('date', name, label);
   }
 
   min(value: string) {
@@ -78,9 +77,9 @@ class DateConfigurator extends FieldConfigurator<'date', InputProps<'date'>> {
     return this;
   }
 }
-class EmailConfigurator extends FieldConfigurator<'email', InputProps<'email'>> {
-  constructor(args: fieldParams) {
-    super('email', args);
+class EmailConfigurator<N extends string> extends FieldConfigurator<'email', N> {
+  constructor(name: N, label: string) {
+    super('email', name, label);
   }
 
   minlength(length: number) {
@@ -92,9 +91,9 @@ class EmailConfigurator extends FieldConfigurator<'email', InputProps<'email'>> 
     return this;
   }
 }
-class FileConfigurator extends FieldConfigurator<'file', InputProps<'file'>> {
-  constructor(args: fieldParams) {
-    super('file', args);
+class FileConfigurator<N extends string> extends FieldConfigurator<'file', N> {
+  constructor(name: N, label: string) {
+    super('file', name, label);
   }
 
   accept(value: string) {
@@ -112,9 +111,9 @@ class FileConfigurator extends FieldConfigurator<'file', InputProps<'file'>> {
     return this;
   }
 }
-class NumberConfigurator extends FieldConfigurator<'number', InputProps<'number'>> {
-  constructor(args: fieldParams) {
-    super('number', args);
+class NumberConfigurator<N extends string> extends FieldConfigurator<'number', N> {
+  constructor(name: N, label: string) {
+    super('number', name, label);
   }
 
   min(value: string) {
@@ -130,9 +129,9 @@ class NumberConfigurator extends FieldConfigurator<'number', InputProps<'number'
     return this;
   }
 }
-class PasswordConfigurator extends FieldConfigurator<'password', InputProps<'password'>> {
-  constructor(args: fieldParams) {
-    super('password', args);
+class PasswordConfigurator<N extends string> extends FieldConfigurator<'password', N> {
+  constructor(name: N, label: string) {
+    super('password', name, label);
   }
 
   minlength(length: number) {
@@ -144,14 +143,14 @@ class PasswordConfigurator extends FieldConfigurator<'password', InputProps<'pas
     return this;
   }
 }
-class RadioConfigurator extends FieldConfigurator<'radio', RadioProps> {
-  constructor(args: fieldParams) {
-    super('radio', args);
+class RadioConfigurator<N extends string> extends FieldConfigurator<'radio', N> {
+  constructor(name: N, label: string) {
+    super('radio', name, label);
   }
 }
-class SelectConfigurator extends FieldConfigurator<'select', SelectProps> {
-  constructor(args: fieldParams) {
-    super('select', args);
+class SelectConfigurator<N extends string> extends FieldConfigurator<'select', N> {
+  constructor(name: N, label: string) {
+    super('select', name, label);
   }
 
   data(data: []) {
@@ -164,9 +163,9 @@ class SelectConfigurator extends FieldConfigurator<'select', SelectProps> {
     return this;
   }
 }
-class TimeConfigurator extends FieldConfigurator<'time', InputProps<'time'>> {
-  constructor(args: fieldParams) {
-    super('time', args);
+class TimeConfigurator<N extends string> extends FieldConfigurator<'time', N> {
+  constructor(name: N, label: string) {
+    super('time', name, label);
   }
 
   min(value: string) {
@@ -182,9 +181,9 @@ class TimeConfigurator extends FieldConfigurator<'time', InputProps<'time'>> {
     return this;
   }
 }
-class TelConfigurator extends FieldConfigurator<'tel', InputProps<'tel'>> {
-  constructor(args: fieldParams) {
-    super('tel', args);
+class TelConfigurator<N extends string> extends FieldConfigurator<'tel', N> {
+  constructor(name: N, label: string) {
+    super('tel', name, label);
   }
 
   minlength(length: number) {
@@ -196,14 +195,14 @@ class TelConfigurator extends FieldConfigurator<'tel', InputProps<'tel'>> {
     return this;
   }
 }
-class TextConfigurator extends FieldConfigurator<'text', InputProps<'text'>> {
-  constructor(args: fieldParams) {
-    super('text', args);
+class TextConfigurator<N extends string> extends FieldConfigurator<'text', N> {
+  constructor(name: N, label: string) {
+    super('text', name, label);
   }
 }
-class TextareaConfigurator extends FieldConfigurator<'textarea', TextareaProps> {
-  constructor(args: fieldParams) {
-    super('textarea', args);
+class TextareaConfigurator<N extends string> extends FieldConfigurator<'textarea', N> {
+  constructor(name: N, label: string) {
+    super('textarea', name, label);
   }
 
   autosize(value: boolean) {
@@ -221,18 +220,29 @@ class TextareaConfigurator extends FieldConfigurator<'textarea', TextareaProps> 
 }
 
 export const field = {
-  checkbox: (...args: fieldParams) => new CheckboxConfigurator(args),
-  date: (...args: fieldParams) => new DateConfigurator(args),
-  email: (...args: fieldParams) => new EmailConfigurator(args),
-  file: (...args: fieldParams) => new FileConfigurator(args),
-  number: (...args: fieldParams) => new NumberConfigurator(args),
-  password: (...args: fieldParams) => new PasswordConfigurator(args),
-  radio: (...args: fieldParams) => new RadioConfigurator(args),
-  select: (...args: fieldParams) => new SelectConfigurator(args),
-  time: (...args: fieldParams) => new TimeConfigurator(args),
-  tel: (...args: fieldParams) => new TelConfigurator(args),
-  text: (...args: fieldParams) => new TextConfigurator(args),
-  textarea: (...args: fieldParams) => new TextareaConfigurator(args),
+  checkbox: <N extends string>(name: N, label: string) =>
+    new CheckboxConfigurator<N>(name, label),
+  date: <N extends string>(name: N, label: string) =>
+    new DateConfigurator<N>(name, label),
+  email: <N extends string>(name: N, label: string) =>
+    new EmailConfigurator<N>(name, label),
+  file: <N extends string>(name: N, label: string) =>
+    new FileConfigurator<N>(name, label),
+  number: <N extends string>(name: N, label: string) =>
+    new NumberConfigurator<N>(name, label),
+  password: <N extends string>(name: N, label: string) =>
+    new PasswordConfigurator<N>(name, label),
+  radio: <N extends string>(name: N, label: string) =>
+    new RadioConfigurator<N>(name, label),
+  select: <N extends string>(name: N, label: string) =>
+    new SelectConfigurator<N>(name, label),
+  time: <N extends string>(name: N, label: string) =>
+    new TimeConfigurator<N>(name, label),
+  tel: <N extends string>(name: N, label: string) => new TelConfigurator<N>(name, label),
+  text: <N extends string>(name: N, label: string) =>
+    new TextConfigurator<N>(name, label),
+  textarea: <N extends string>(name: N, label: string) =>
+    new TextareaConfigurator<N>(name, label),
 };
 
 class ButtonConfigurator {

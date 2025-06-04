@@ -2,8 +2,6 @@ import { Page } from '@/core/Page';
 import { html } from '@/shared/util/html';
 import { loginForm } from '@/app/features/auth/login';
 
-//TODO: add forgot/chage password buttons
-
 export default class Login extends Page {
   #form;
 
