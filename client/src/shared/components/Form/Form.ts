@@ -17,7 +17,7 @@ type FormProps = {
       }
   )[];
   name: string;
-  onSubmit: (data: Record<string, FormDataEntryValue>) => any;
+  onSubmit: (data: Record<string, FormDataEntryValue>, formInstance: Form) => any;
   autofocus?: string;
 };
 
@@ -42,7 +42,7 @@ export class Form extends Component {
     const entries = formData.entries();
     const data = Object.fromEntries(entries);
 
-    this.#props.onSubmit(data);
+    this.#props.onSubmit(data, this);
   }
 
   render() {

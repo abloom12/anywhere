@@ -1,4 +1,4 @@
-import { login, type LoginResp } from './api';
+import { login, type LoginResp, getPermissions, getSettings } from './api';
 
 type LoginResult =
   | { kind: 'success'; token: string; isPSI: boolean }
@@ -15,7 +15,7 @@ const LOGIN_ERRORS = {
   'No recipient': `Two-Factor authentication is enabled for your organization. There was no valid email address or cell phone number found for your account. Please contact your system administrator to login to Anywhere.`,
 };
 
-export async function getLogin(user: string, password: string): Promise<LoginResult> {
+export async function loginUser(user: string, password: string): Promise<LoginResult> {
   try {
     const responseXML: LoginResp = await login(user, password);
     const windowNameNode = responseXML.getElementsByTagName('window_name')[0];
@@ -60,5 +60,21 @@ export async function getLogin(user: string, password: string): Promise<LoginRes
     }
 
     return { kind: 'error', error: `Unkown error with /getLogIn` };
+  }
+}
+
+export async function getUserPermissions() {
+  try {
+    const resp = await getPermissions();
+  } catch (error) {
+    //
+  }
+}
+
+export async function getUserSettings() {
+  try {
+    const resp = await getSettings();
+  } catch (error) {
+    //
   }
 }

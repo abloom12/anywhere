@@ -11,23 +11,22 @@ type FieldType = InputType | 'checkbox' | 'radio' | 'select' | 'textarea';
 
 type fieldParams = [name: string, label: string];
 
-abstract class FieldConfigurator<
-  T extends FieldType,
-  K extends {
-    checkbox: CheckboxProps;
-    radio: RadioProps;
-    select: SelectProps;
-    textarea: TextareaProps;
-    date: InputProps<'date'>;
-    email: InputProps<'email'>;
-    file: InputProps<'file'>;
-    number: InputProps<'number'>;
-    password: InputProps<'password'>;
-    tel: InputProps<'tel'>;
-    text: InputProps<'text'>;
-    time: InputProps<'time'>;
-  }[T],
-> {
+type BaseProps<T extends FieldType> = {
+  checkbox: CheckboxProps;
+  radio: RadioProps;
+  select: SelectProps;
+  textarea: TextareaProps;
+  date: InputProps<'date'>;
+  email: InputProps<'email'>;
+  file: InputProps<'file'>;
+  number: InputProps<'number'>;
+  password: InputProps<'password'>;
+  tel: InputProps<'tel'>;
+  text: InputProps<'text'>;
+  time: InputProps<'time'>;
+}[T];
+
+abstract class FieldConfigurator<T extends FieldType, K extends BaseProps<T>> {
   props: K;
   label: string;
 
