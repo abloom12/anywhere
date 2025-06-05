@@ -8,7 +8,7 @@ export default class Login extends Page {
   constructor() {
     super();
 
-    this.#form = loginForm;
+    this.#form = loginForm(data => {});
   }
 
   render() {
