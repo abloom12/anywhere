@@ -2,8 +2,6 @@ import { Router } from '@/core/Router';
 import { Store } from '@/core/Store';
 
 export const store = new Store<any>();
-export const permissions = new Store<boolean | string>();
-export const settings = new Store<boolean | string>();
 
 export const router = new Router(
   '/webroot',

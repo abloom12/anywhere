@@ -3,7 +3,7 @@
 // Import worker using Vite syntax
 // import FetchWorker from 'shared/workers/fetchWorker?worker';
 
-import { fetchData } from '../util/fetch';
+import { fetchData } from '@/shared/lib/fetch';
 
 type FetchRequest = {
   service: string;

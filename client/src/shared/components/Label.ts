@@ -1,5 +1,5 @@
 import { Component } from '@/core/Component';
-import { html } from '@/shared/util/html';
+import { html } from '@/core/html';
 import { cn } from '@/shared/util/cn';
 
 type Props = {

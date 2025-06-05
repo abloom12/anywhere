@@ -1,13 +1,11 @@
 import { Component } from '@/core/Component';
-import { html } from '@/shared/util/html';
+import { html } from '@/core/html';
 import { cn } from '@/shared/util/cn';
 
 export type Props = {
   id: string;
   name: string;
-  attributes: Partial<
-    Pick<HTMLSelectElement, 'disabled' | 'multiple' | 'required'>
-  >;
+  attributes: Partial<Pick<HTMLSelectElement, 'disabled' | 'multiple' | 'required'>>;
   data?: [];
 };
 

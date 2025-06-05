@@ -1,6 +1,6 @@
 import { Component } from '@/core/Component';
 import { cn } from '@/shared/util/cn';
-import { html } from '@/shared/util/html';
+import { html } from '@/core/html';
 
 import {
   Input,

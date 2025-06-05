@@ -1,5 +1,5 @@
 import { Layout } from '@/core/Layout';
-import { html } from '@/shared/util/html';
+import { html } from '@/core/html';
 
 export default class LoginLayout extends Layout {
   constructor() {

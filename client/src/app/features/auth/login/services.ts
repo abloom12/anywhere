@@ -1,4 +1,4 @@
-import { login, type LoginResp, getPermissions, getSettings } from './api';
+import { login, type LoginResp } from './api';
 
 export type LoginResult =
   | { kind: 'success'; token: string; isPSI: boolean }
@@ -60,21 +60,5 @@ export async function loginUser(user: string, password: string): Promise<LoginRe
     }
 
     return { kind: 'error', error: `Unkown error with /getLogIn` };
-  }
-}
-
-export async function getUserPermissions() {
-  try {
-    const resp = await getPermissions();
-  } catch (error) {
-    //
-  }
-}
-
-export async function getUserSettings() {
-  try {
-    const resp = await getSettings();
-  } catch (error) {
-    //
   }
 }

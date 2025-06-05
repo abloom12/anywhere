@@ -1,4 +1,4 @@
-import { CustomError } from './custom-error';
+import { CustomError } from '../util/custom-error';
 
 export function parseXml(xmlString: string): XMLDocument {
   const parser = new DOMParser();

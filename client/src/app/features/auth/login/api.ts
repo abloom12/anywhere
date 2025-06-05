@@ -1,6 +1,6 @@
 import { md5 } from '@/shared/lib/crypto';
-import { fetchData } from '@/shared/util/fetch';
-import { parseXml } from '@/shared/util/parse-xml';
+import { fetchData } from '@/shared/lib/fetch';
+import { parseXml } from '@/shared/lib/parse-xml';
 
 export type LoginResp = XMLDocument;
 
@@ -11,15 +11,4 @@ export async function login(user: string, password: string): Promise<LoginResp> 
   });
 
   return parseXml(response) as LoginResp;
-}
-
-export async function getPermissions(): Promise<any> {
-  // all permissions including module view permissions (hide/show link and guard route)
-  const response = await fetchData('getUserPermissions', {});
-  return response;
-}
-
-export async function getSettings(): Promise<any> {
-  const response = await fetchData('getDefaultAnywhereSettingsJSON', {});
-  return response;
 }

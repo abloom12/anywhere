@@ -1,6 +1,6 @@
 import { Component } from '@/core/Component';
 import { cn } from '@/shared/util/cn';
-import { html, withRefs } from '@/shared/util/html';
+import { html, withRefs } from '@/core/html';
 
 type Props = {
   legend: string;

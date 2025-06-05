@@ -1,5 +1,5 @@
 import { Page } from '@/core/Page';
-import { html } from '@/shared/util/html';
+import { html } from '@/core/html';
 import { getLoginForm } from '@/app/features/auth/login';
 
 import { store } from '@/app/app';

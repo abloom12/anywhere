@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { Component } from '@/core/Component';
-import { html } from '@/shared/util/html';
+import { html } from '@/core/html';
 import { cn } from '@/shared/util/cn';
 
 export const buttonVariants = cva(

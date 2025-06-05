@@ -1,5 +1,5 @@
 import { Page } from '@/core/Page';
-import { html } from '@/shared/util/html';
+import { html } from '@/core/html';
 
 export default class DashboardPage extends Page {
   constructor() {

@@ -1,5 +1,4 @@
 type HtmlValue = string | number | null | undefined | HTMLElement | DocumentFragment;
-// ...values: HtmlValue[] (old was) any[]
 
 export function html(
   strings: TemplateStringsArray,
