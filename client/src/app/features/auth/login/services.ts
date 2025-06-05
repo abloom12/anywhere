@@ -1,6 +1,6 @@
 import { login, type LoginResp, getPermissions, getSettings } from './api';
 
-type LoginResult =
+export type LoginResult =
   | { kind: 'success'; token: string; isPSI: boolean }
   | { kind: 'mfa'; deviceId: string }
   | { kind: 'failed attempts'; count: string }

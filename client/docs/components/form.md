@@ -1,5 +1,5 @@
+```ts
 import { Form, field, action, type DataFromFields } from '@/shared/components/Form';
-import { loginUser, type LoginResult } from './services';
 
 const fields = [
   field.text('username', 'Login Name').$,
@@ -17,8 +17,9 @@ export function getLoginForm(
     fields,
     buttons: [action.button('Login').$],
     onSubmit: async (data, formInstance) => {
-      const resp = await loginUser('ash', 'ash');
-      onSubmit({ data, resp });
+      const loginResp = await loginUser('ash', 'ash');
+      onSubmit({ data, resp: loginResp });
     },
   });
 }
+```

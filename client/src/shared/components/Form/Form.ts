@@ -16,7 +16,8 @@ type GroupFieldName<F> =
   : never;
 type UnwrapField<F> = SingleFieldName<F> | GroupFieldName<F>;
 type AllNamesFromTuple<T extends ReadonlyArray<any>> = UnwrapField<T[number]>;
-type DataFromFields<T extends ReadonlyArray<any>> = {
+
+export type DataFromFields<T extends ReadonlyArray<any>> = {
   [K in AllNamesFromTuple<T>]: FormDataEntryValue;
 };
 
