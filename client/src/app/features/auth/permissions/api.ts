@@ -4,14 +4,14 @@ type getPermissionsResp = {
   permission: string;
   special_data: string;
   window_name: string;
-};
+}[];
 
 type getSettingsResp = Record<string, string | null>;
 
 export async function getPermissions(): Promise<getPermissionsResp> {
   // all permissions including module view permissions (hide/show link and guard route)
-  const response = (await fetchData('getUserPermissions', {})) as getPermissionsResp[];
-  return response[0];
+  const response = (await fetchData('getUserPermissions', {})) as getPermissionsResp;
+  return response;
 }
 
 export async function getSettings(): Promise<getSettingsResp> {

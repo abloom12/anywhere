@@ -1,6 +1,9 @@
 import { Router } from '@/core/Router';
 import { Store } from '@/core/Store';
 
+//TODO: change store, router to appStore, appRouter
+//TODO: also change permissions and settings stores to appPermissions, appSettings
+
 export const store = new Store<any>();
 
 export const router = new Router(
