@@ -1,10 +1,10 @@
-import { login, type LoginResp } from './api';
+import { login } from './api';
 
 export type LoginResult =
   | { kind: 'success'; token: string; isPSI: boolean }
   | { kind: 'mfa'; deviceId: string }
   | { kind: 'failed attempts'; count: string }
-  | { kind: 'error'; error: string };
+  | { kind: 'error'; message: string };
 
 const LOGIN_ERRORS = {
   'Failed attempts': '',
@@ -17,7 +17,7 @@ const LOGIN_ERRORS = {
 
 export async function loginUser(user: string, password: string): Promise<LoginResult> {
   try {
-    const responseXML: LoginResp = await login(user, password);
+    const responseXML = await login(user, password);
     const windowNameNode = responseXML.getElementsByTagName('window_name')[0];
     const specialDataNode = responseXML.getElementsByTagName('special_data')[0];
     const windowName = windowNameNode?.innerHTML;
@@ -31,34 +31,32 @@ export async function loginUser(user: string, password: string): Promise<LoginRe
       // if (''.indexOf('608')) {
       //   //? user name does not exist
       // }
+      return { kind: 'error', message: `Error: Empty <results>` };
     }
 
     if (windowName === 'Token') {
-      return { kind: 'success', token: specialData, isPSI: user === 'psi' };
+      return { kind: 'success', token: specialData, isPSI: user.toLowerCase() === 'psi' };
     }
 
     if (windowName === '2FA') {
       return { kind: 'mfa', deviceId: specialData };
     }
 
-    //? do we need to return count or for failed attempts and teh rest we just return kind: error along with custom error message?
     if (windowName.toLowerCase() === 'failed attempts') {
       return { kind: 'failed attempts', count: specialData };
     }
 
-    //TODO: get login error and swap it for the string below
-    // if (windowName === 'Invalid username') {}
-    // if (windowName === 'Expired password') {}
-    // if (windowName === 'Not active') {}
-    // if (windowName === 'No demogrphics record') {}
-    // if (windowName === 'No recipient') {}
-
-    return { kind: 'error', error: `Login Error` };
+    return {
+      kind: 'error',
+      message:
+        LOGIN_ERRORS[windowName as keyof typeof LOGIN_ERRORS] ||
+        'Unkown error with /getLogIn',
+    };
   } catch (error) {
     if (error instanceof Error) {
-      return { kind: 'error', error: `Login Error: ${error.message}` };
+      return { kind: 'error', message: `Login Error: ${error.message}` };
     }
 
-    return { kind: 'error', error: `Unkown error with /getLogIn` };
+    return { kind: 'error', message: `Unkown error with /getLogIn` };
   }
 }

@@ -1,21 +1,10 @@
 import { CustomError } from '@/shared/util/custom-error';
-import { mockData } from './mock';
 
-const USE_MOCK = true;
-
-export async function fetchData(
+export async function fetchData<ResponseType>(
   service: string,
   retrieveData: Record<string, any>,
   controller?: AbortController,
-): Promise<any> {
-  if (USE_MOCK) {
-    if (mockData.hasOwnProperty(service)) {
-      return Promise.resolve(mockData[service]);
-    } else {
-      throw new CustomError('mock', `No mock data found for service: ${service}`);
-    }
-  }
-
+): Promise<ResponseType> {
   const URL_BASE = `https://gk-unit-test.primarysolutions.net:443/./service/Anywhere.svc`;
   const URL = `${URL_BASE}/${service}/`;
 
@@ -41,7 +30,7 @@ export async function fetchData(
       );
     }
 
-    return await response.json();
+    return (await response.json()) as ResponseType;
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.name === 'AbortError') {

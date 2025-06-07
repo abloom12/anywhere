@@ -9,7 +9,6 @@ export default class LoginLayout extends Layout {
   render() {
     return html`
       <div>
-        <div>Header</div>
         <div data-outlet></div>
       </div>
     `;

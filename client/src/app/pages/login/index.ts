@@ -2,7 +2,7 @@ import { Page } from '@/core/Page';
 import { html } from '@/core/html';
 import { getLoginForm } from '@/app/features/auth/login';
 
-import { store } from '@/app/app';
+import { router } from '@/app/app';
 
 export default class Login extends Page {
   #loginForm;
@@ -10,16 +10,36 @@ export default class Login extends Page {
   constructor() {
     super();
 
-    this.#loginForm = getLoginForm(({ data, resp }) => {
-      //? if success
-      //? - store token
-      //? - get permissions and settings
-      //? - navigate to home page with router
+    this.#loginForm = getLoginForm({
+      onSubmit: ({ resp }) => {
+        if (resp.kind === 'success') {
+          //TODO: - store token
+          //TODO: - get permissions and settings
+          router.navigate('/');
+          return;
+        }
+
+        if (resp.kind === 'mfa') {
+          //TODO: mfa shit
+          return;
+        }
+
+        if (resp.kind === 'failed attempts') {
+          //TODO: need to keep track of # of failed attempts
+          return;
+        }
+
+        if (resp.kind === 'error') {
+          //TODO: display resp.message
+          return;
+        }
+
+        //TODO: handle unexpected?
+      },
     });
   }
 
   render() {
-    return html`<h1>Login Page</h1>
-      ${this.#loginForm.render()}`;
+    return html`${this.#loginForm.render()}`;
   }
 }

@@ -66,12 +66,7 @@ export class FormField<T extends FieldTypes> extends Component {
 
   render() {
     return html`
-      <div
-        class="test"
-        ref="testRef"
-      >
-        ${this.#label.render()} ${this.#field.render()}
-      </div>
+      <div class="grid">${this.#label.render()} ${this.#field.render()}</div>
     `;
   }
 }
