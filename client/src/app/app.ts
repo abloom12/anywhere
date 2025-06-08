@@ -1,20 +1,16 @@
 import { Router } from '@/core/Router';
 import { Store } from '@/core/Store';
 
-//TODO: change store, router to appStore, appRouter
-//TODO: also change permissions and settings stores to appPermissions, appSettings
-
-export const store = new Store<any>();
-
-export const router = new Router(
+export const appStore = new Store<any>();
+export const appRouter = new Router(
   '/webroot',
   document.querySelector('#app')! as HTMLElement,
 );
 
-router.use(async ({ next, path }) => {
+appRouter.use(async ({ next, path }) => {
   const isAuthenticated = false;
   if (path !== '/login' && !isAuthenticated) {
-    router.navigate('/login');
+    appRouter.navigate('/login');
     return;
   }
 
@@ -22,7 +18,7 @@ router.use(async ({ next, path }) => {
 });
 
 // Start App
-router.navigate('/');
+appRouter.navigate('/');
 
 //TODO: figure out where to put the following
 // setUpGoogleMapsApi()

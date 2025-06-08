@@ -2,7 +2,7 @@ import { Page } from '@/core/Page';
 import { html } from '@/core/html';
 import { getLoginForm } from '@/app/features/auth/login';
 
-import { router } from '@/app/app';
+import { appRouter } from '@/app/app';
 
 export default class Login extends Page {
   #loginForm;
@@ -15,7 +15,7 @@ export default class Login extends Page {
         if (resp.kind === 'success') {
           //TODO: - store token
           //TODO: - get permissions and settings
-          router.navigate('/');
+          appRouter.navigate('/');
           return;
         }
 

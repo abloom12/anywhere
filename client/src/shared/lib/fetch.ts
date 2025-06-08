@@ -30,7 +30,9 @@ export async function fetchData<ResponseType>(
       );
     }
 
-    return (await response.json()) as ResponseType;
+    const parsedResponse = await response.json();
+    const responseKey = `${service}Result`;
+    return parsedResponse[responseKey] as ResponseType;
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.name === 'AbortError') {
