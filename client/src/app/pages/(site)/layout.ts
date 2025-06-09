@@ -9,7 +9,7 @@ export default class SiteLayout extends Layout {
   render() {
     return html`
       <div>
-        <div>Header</div>
+        <div>*Site Layout</div>
         <div data-outlet></div>
       </div>
     `;

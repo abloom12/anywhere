@@ -8,16 +8,14 @@ const fields = [
 
 type FormData = DataFromFields<typeof fields>;
 
-export function getLoginForm(props: {
-  onSubmit: (args: { data: FormData; resp: LoginResult }) => any;
-}) {
+export function getLoginForm(onLoginCallback: (resp: LoginResult) => void) {
   return new Form({
     name: 'loginForm',
     fields,
     buttons: [action.button('Login').$],
-    onSubmit: async (data, formInstance) => {
+    onSubmit: async data => {
       const resp = await loginUser(data.username as string, data.password as string);
-      props.onSubmit({ data, resp });
+      onLoginCallback(resp);
     },
   });
 }

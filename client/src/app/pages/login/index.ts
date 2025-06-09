@@ -1,6 +1,8 @@
 import { Page } from '@/core/Page';
 import { html } from '@/core/html';
-import { getLoginForm } from '@/app/features/auth/login';
+
+import { getLoginForm, type LoginResult } from '@/app/features/auth/login';
+import { appPermissions, setUserPermissions } from '@/app/features/permissions';
 
 import { appRouter } from '@/app/app';
 
@@ -10,33 +12,29 @@ export default class Login extends Page {
   constructor() {
     super();
 
-    this.#loginForm = getLoginForm({
-      onSubmit: ({ resp }) => {
-        if (resp.kind === 'success') {
-          //TODO: - store token
-          //TODO: - get permissions and settings
-          appRouter.navigate('/');
-          return;
-        }
+    this.#loginForm = getLoginForm(this.#onLogin);
+  }
 
-        if (resp.kind === 'mfa') {
-          //TODO: mfa shit
-          return;
-        }
+  async #onLogin(resp: LoginResult) {
+    if (resp.type === 'success') {
+      appPermissions.set('token', resp.token);
+      await setUserPermissions();
+      appRouter.navigate('/');
+      return;
+    }
 
-        if (resp.kind === 'failed attempts') {
-          //TODO: need to keep track of # of failed attempts
-          return;
-        }
+    if (resp.type === 'mfa') {
+      //TODO: mfa shit
+      //? resp.deviceId === localDeviceId ? navigate to home '/'
+      //? resp.deviceId !== localDeviceId ? cache resp.deviceId (then) mfa.init()
+      //? have user enter their code: then: /authenticatedLogin/
+      //? if /authenticatedLogin/ resp is good then we login like normal
+      return;
+    }
 
-        if (resp.kind === 'error') {
-          //TODO: display resp.message
-          return;
-        }
-
-        //TODO: handle unexpected?
-      },
-    });
+    if (resp.type === 'expired password') {
+      //? navigate to ('/change-password')
+    }
   }
 
   render() {

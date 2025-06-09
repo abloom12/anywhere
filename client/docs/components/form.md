@@ -17,8 +17,8 @@ export function getLoginForm(
     fields,
     buttons: [action.button('Login').$],
     onSubmit: async (data, formInstance) => {
-      const loginResp = await loginUser('ash', 'ash');
-      onSubmit({ data, resp: loginResp });
+      const resp = await loginUser(data.username as string, data.password as string);
+      onSubmit({ data, resp });
     },
   });
 }
