@@ -1,73 +1,197 @@
 // @ts-nocheck
 //! do not delete above
 
-//1: checkModulePermissions()
-//2: getDefaultAnywhereSettings()
-//3: disableModules();
-//4: loadApp();
+function checkModulePermissions() {
+  if ($.session.DayServiceView == false) {
+    $('#dayservicesettingsdiv').addClass('disabledModule');
+  }
+  if ($.session.GoalsView == false) {
+    $('#goalssettingsdiv').addClass('disabledModule');
+  }
+  if (
+    $.session.CaseNotesView == false ||
+    $.session.CaseNotesTablePermissionView == false
+  ) {
+    $('#casenotessettingsdiv').addClass('disabledModule');
+  }
+  if ($.session.SingleEntryView == false) {
+    $('#singleentrysettingsdiv').addClass('disabledModule');
+  }
+  if ($.session.WorkshopView == false) {
+    $('#workshopsettingsdiv').addClass('disabledModule');
+  }
+  if ($.session.incidentTrackingView == false) {
+    $('#incidenttrackingsettingsdiv').addClass('disabledModule');
+  }
+  if ($.session.schedulingView == false) {
+    $('#schedulersettingsdiv').addClass('disabledModule');
+  }
+  if ($.session.authorizationsView == false) {
+    $('#authorizationsdiv').addClass('disabledModule');
+  }
+  if ($.session.planView == false) {
+    $('#plansettingsdiv').addClass('disabledModule');
+  }
+  if ($.session.transportationView == false) {
+    $('#transportationsettingsdiv').addClass('disabledModule');
+  }
+  if ($.session.emarView == false) {
+    $('#emarsettingsdiv').addClass('disabledModule');
+  }
+  if ($.session.formsView == false) {
+    $('#PDFFormssettingsdiv').addClass('disabledModule');
+  }
+  if ($.session.OODView == false) {
+    $('#OODsettingsdiv').addClass('disabledModule');
+  }
+  if ($.session.ResetPasswordView == false) {
+    $('#Adminsettingdiv').addClass('disabledModule');
+  }
+  if ($.session.EmploymentView == false) {
+    $('#Employmentsettingsdiv').addClass('disabledModule');
+  }
+  if ($.session.FSSView == false) {
+    $('#fSSdiv').addClass('disabledModule');
+  }
+  if ($.session.CFView == false) {
+    $('#cfAccountDiv').addClass('disabledModule');
+  }
+  if ($.session.CFViewEditAccounts == false) {
+    $('#cfEditAccountDiv').addClass('disabledModule');
+  }
 
-function checkforErrors(xmlReturn) {
-  //check for Errors
-  var retVal = 0;
-  //alert("checkForErrors" + xmlReturn);
-  var ErrorText = $('Error', xmlReturn).text();
-  //alert('Error text: ' + ErrorText);
-  //session didn't exist
-  if (ErrorText == 'Error:606') {
-    //setCookieOnFail("<Errors><Error>Please log in again.</Error></Errors>");
-    errorMessage = 'Please log in again.';
-    retVal = -1;
+  if ($.session.CFView == false && $.session.CFViewEditAccounts == false) {
+    $('#consumerfinancessettingsdiv').addClass('disabledModule');
   }
-  //session expired
-  if (ErrorText == 'Error:607') {
-    //setCookieOnFail("<Errors><Error>Session has timed out, please log in again.</Error></Errors>");
-    errorMessage = 'Session has timed out, please log in again.';
-    retVal = -1;
+
+  $('#adminsingleentrysettingsdiv').hide();
+  if ($.session.ViewAdminSingleEntry === true) {
+    if ($.session.SEViewAdminWidget === true) {
+      $('#adminsingleentrysettingsdiv').show();
+    }
   }
-  //session didn't exist
-  if (ErrorText == 'Error:608') {
-    //setCookieOnFail("<Errors><Error>This user name does not exist in demographics.</Error></Errors>");
-    errorMessage = 'This user name does not exist in demographics.';
-    retVal = -1;
-  }
-  if (ErrorText == 'Error:609') {
-    //setCookieOnFail("<Errors><Error>Password has expired</Error></Errors>");
-    errorMessage = 'Password has expired.';
-    retVal = -1;
-  }
-  if (ErrorText == 'Error:610') {
-    //setCookieOnFail("<Errors><Error>Previous Password is invalid</Error></Errors>");
-    errorMessage = 'Previous Password is invalid.';
-    retVal = -1;
-  }
-  return retVal;
 }
 
-//
-windowName === 'Expired password';
-customPasswordChange();
-//
-if (res.indexOf('609') > -1) {
-  customPasswordChange();
-}
-//
-if ($('#error').hasClass('hippaRestriction')) {
-  $('#errortext').text('Password cannot match a recently used password');
-} else if ($('#error').hasClass('userInputError')) {
-  $('#errortext').text('Invalid username or password');
-} else if (res.indexOf('608') > -1) {
-  $('#errortext').text('This user name does not exist in demographics.');
-} else {
-  $('#errortext').text('Login unsuccessful');
-}
+function disableModules() {
+  if ($.session.applicationName == 'Gatekeeper') {
+    $('#singleentrysettingsdiv').css('display', 'none');
+    $('#adminsingleentrysettingsdiv').css('display', 'none');
+    $('#transportationsettingsdiv').css('display', 'none');
+    $('#OODsettingsdiv').css('display', 'none');
 
-if (!windowNameNode) {
-  //TODO: idk yet (this would be responseXML === "<results></results>\" ?? I think at least)
-  // if (''.indexOf('609')) {
-  //   //? custom password change
-  // }
-  // if (''.indexOf('608')) {
-  //   //? user name does not exist
-  // }
-  return { kind: 'error', message: `Error: Empty <results>` };
+    $('#customlinks').css('display', 'none');
+  }
+
+  if ($.session.applicationName == 'Advisor') {
+    $('#authorizationsdiv').css('display', 'none');
+    $('#waitingListdiv').css('display', 'none');
+    $('#fSSdiv').css('display', 'none');
+  }
+
+  if ($.session.dayServicesPermission == 'Anywhere_DayServices') {
+    // leave module on
+  } else {
+    $('#dayservicesettingsdiv').css('display', 'none');
+  }
+
+  if ($.session.outcomesPermission == 'Anywhere_Outcomes') {
+    // leave module on
+  } else {
+    $('#goalssettingsdiv').css('display', 'none');
+    //MAT - commented this out because it is in wrong spot.
+    //$("#singlebuttondiv").css("display", "none");
+  }
+
+  if ($.session.workshopPermission == 'Anywhere_Workshop') {
+    // leave module on
+  } else {
+    $('#workshopsettingsdiv').hide();
+  }
+
+  if ($.session.intellivuePermission == 'Intellivue') {
+    // leave module on
+  } else {
+    $('#intellivuesettingsdiv').hide();
+  }
+
+  if ($.session.caseNotesPermission == 'Anywhere_CaseNotes') {
+    // leave module on
+  } else {
+    $('#casenotessettingsdiv').css('display', 'none');
+  }
+
+  if ($.session.singleEntryPermission == 'Anywhere_SingleEntry') {
+    // leave module on
+  } else {
+    $('#singleentrysettingsdiv').css('display', 'none');
+  }
+  if ($.session.singleEntryApproveEnabled == 'Y') {
+    //Leave module on
+  } else {
+    //$("#adminsingleentrysettingsdiv").css("display", "none");
+  }
+  if ($.session.incidentTrackingPermission == 'Anywhere_Incident_Tracking') {
+    //Leave module on
+  } else {
+    $('#incidenttrackingsettingsdiv').css('display', 'none');
+  }
+  if ($.session.anywhereSchedulingPermission == 'Anywhere_Scheduling') {
+    //Leave module on
+  } else {
+    $('#schedulersettingsdiv').css('display', 'none');
+  }
+  if ($.session.covidPermission == 'COVID_19') {
+    //Leave module on
+  } else {
+    $('#covidchecklistsettingsdiv').css('display', 'none');
+  }
+  if ($.session.transportationPermission == 'Anywhere_Transportation') {
+    //Leave module on
+  } else {
+    $('#transportationsettingsdiv').css('display', 'none');
+  }
+  if ($.session.emarPermission == 'Anywhere_eMAR') {
+    //Leave module on
+  } else {
+    $('#emarsettingsdiv').css('display', 'none');
+  }
+  if ($.session.formsPermission == 'Anywhere_Forms') {
+    //Leave module on
+  } else {
+    $('#PDFFormssettingsdiv').css('display', 'none');
+  }
+  if ($.session.OODPermission == 'Anywhere_OOD') {
+    //Leave module on
+  } else {
+    $('#OODsettingsdiv').css('display', 'none');
+  }
+  if ($.session.anywherePlanPermission == 'Anywhere_Plan') {
+    //Leave module on
+  } else {
+    $('#plansettingsdiv').css('display', 'none');
+  }
+
+  if ($.session.anywhereResetPasswordPermission == 'Anywhere_Administration') {
+    //Leave module on
+  } else {
+    $('#Adminsettingdiv').css('display', 'none');
+  }
+
+  if ($.session.anywhereConsumerFinancesPermission == 'Anywhere_Consumer_Finances') {
+    //Leave module on
+  } else {
+    $('#consumerfinancessettingsdiv').css('display', 'none');
+  }
+
+  if ($.session.anywhereEmploymentPermission == 'Anywhere_Employment') {
+    //Leave module on
+  } else {
+    $('#Employmentsettingsdiv').css('display', 'none');
+  }
+
+  if ($.session.anywhereFSSPermission == 'Anywhere_FSS') {
+    //Leave module on
+  } else {
+    $('#fSSdiv').css('display', 'none');
+  }
 }

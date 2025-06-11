@@ -7,6 +7,9 @@ export const appRouter = new Router(
   document.querySelector('#app')! as HTMLElement,
 );
 
+//TODO: blacklist route paths
+//TODO: get isAuthenticated
+
 appRouter.use(async ({ next, path }) => {
   const isAuthenticated = false;
   if (path !== '/login' && !isAuthenticated) {

@@ -2,10 +2,12 @@ import { CustomError } from '@/shared/util/custom-error';
 
 export async function fetchData<ResponseType>(
   service: string,
-  retrieveData: Record<string, any>,
+  retrieveData?: Record<string, any>,
   controller?: AbortController,
 ): Promise<ResponseType> {
-  const URL_BASE = `https://gk-unit-test.primarysolutions.net:443/./service/Anywhere.svc`;
+  // const OLD_BASE = `${$.webServer.protocol}://${$.webServer.address}:${$.webServer.port}/${$.webServer.serviceName}`;
+  // const URL_BASE = `https://gk-unit-test.primarysolutions.net:443/./service/Anywhere.svc`;
+  const URL_BASE = __SERVICE_URL__;
   const URL = `${URL_BASE}/${service}/`;
 
   if (!controller) {
@@ -14,6 +16,8 @@ export async function fetchData<ResponseType>(
 
   const timeout = 10000;
   const timeoutId = setTimeout(() => controller.abort(), timeout);
+  const requestData =
+    retrieveData ? { token: 'AUTH_TOKEN', ...retrieveData } : { token: 'AUTH_TOKEN' };
 
   try {
     const response = await fetch(URL, {

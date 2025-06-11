@@ -2,7 +2,7 @@ import { Page } from '@/core/Page';
 import { html } from '@/core/html';
 
 import { getLoginForm, type LoginResult } from '@/app/features/auth/login';
-import { appPermissions, setUserPermissions } from '@/app/features/permissions';
+import { appPermissions, setUserPermissions } from '@/app/features/user/permissions';
 
 import { appRouter } from '@/app/app';
 

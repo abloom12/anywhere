@@ -6,7 +6,12 @@ import { defineConfig, loadEnv } from 'vite';
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
+  const serviceUrl = `${env.VITE_PROTOCOL}://${env.VITE_ADDRESS}:${env.VITE_PORT}/${env.VITE_SERVICE_NAME}`;
+
   return {
+    define: {
+      __SERVICE_URL__: JSON.stringify(serviceUrl),
+    },
     build: {
       target: ['chrome112', 'edge112', 'safari17'],
       // rollupOptions: {
