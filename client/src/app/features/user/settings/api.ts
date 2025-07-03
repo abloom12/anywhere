@@ -1,8 +1,7 @@
 import { fetchData } from '@/shared/lib/fetch';
+import { type SettingsStore } from './types';
 
-export type SettingsResp = Record<string, string | null>;
-
-export async function getSettings(): Promise<SettingsResp> {
-  const response = await fetchData<SettingsResp[]>('getDefaultAnywhereSettingsJSON', {});
+export async function getSettings(): Promise<SettingsStore> {
+  const response = await fetchData<SettingsStore[]>('getDefaultAnywhereSettingsJSON', {});
   return response[0];
 }

@@ -98,8 +98,6 @@ function disableModules() {
     // leave module on
   } else {
     $('#goalssettingsdiv').css('display', 'none');
-    //MAT - commented this out because it is in wrong spot.
-    //$("#singlebuttondiv").css("display", "none");
   }
 
   if ($.session.workshopPermission == 'Anywhere_Workshop') {
